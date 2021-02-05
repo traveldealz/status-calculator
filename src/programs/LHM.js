@@ -2,7 +2,7 @@ function calculateSegements(segments) {
   return segments.filter(segment => ['EN','OS','SN','OU','EW','LO','LH','LG','LX'].includes(segment.carrier)).length;
 }
 function calculateExecutivebonus(segments, data) {
-  // If >35000 miles, take executive Bonus
+  // If >35000 miles, take Executive Bonus
   console.log(data);
   return data.reduce((miles, itinerary) => {
         let item = itinerary.value.totals.find(item => 'LHM' === item.id);
