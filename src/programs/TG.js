@@ -61,7 +61,7 @@ export default {
                     number: 40,
                     qualificationPeriod: 12,
                     validity: 24,
-                    calculate: calculateSegements,
+                    calculate: calculateSegments,
                     note: {
                         en: '40 international segments on THAI',
                         de: '40 internationale Segmente mit THAI',
