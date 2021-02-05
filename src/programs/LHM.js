@@ -1,3 +1,19 @@
+function calculateSegements(segments) {
+  return segments.filter(segment => ['EN','OS','SN','OU','EW','LO','LH','LG','LX'].includes(segment.carrier)).length;
+}
+function calculateExecutivebonus(segments, data) {
+  // If >35000 miles, take executive Bonus
+  console.log(data);
+  return data.reduce((miles, itinerary) => {
+        let item = itinerary.value.totals.find(item => 'LHM' === item.id);
+        if(!item) {
+          return miles;
+        }
+        return 35000 < miles ? miles + item.rdm[1] : miles + item.rdm[0];
+      }, 0 );
+
+}
+
 export default {
   name: 'Miles & More',
   alliance: 'Star Alliance',
@@ -18,7 +34,7 @@ export default {
           number: 30,
           qualificationPeriod: 12,
           validity: 24,
-          calculate: segments => segments.filter(segment => ['EN','OS','SN','OU','EW','LO','LH','LG','LX'].includes(segment.carrier)).length,
+          calculate: calculateSegements,
           note: {
             en: 'Only segments on Miles & More Member airline partners counts.',
             de: 'Nur Segmente durchgeführt von Miles & More Partnerairlines zahlen.',
@@ -36,6 +52,12 @@ export default {
           number: 100000,
           qualificationPeriod: 12,
           validity: 24,
+          calculate: calculateExecutivebonus,
+          note: {
+            en: 'After reaching the Frequent Traveller status you get 25 percentage points Executive Bonus.',
+            de: 'Nachdem man den Frequenz Traveller Status erreicht hat, erhält man 25 Prozentpunkte Excutive Bonus.',
+            es: '',
+          },
         },
       ],
     },
