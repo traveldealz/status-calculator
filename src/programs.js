@@ -5,6 +5,11 @@ import MS from './programs/MS';
 import OZ from './programs/OZ';
 import SK from './programs/SK';
 import TK from './programs/TK';
+import CA from './programs/CA';
+import SQ from './programs/SQ';
+import TG from './programs/TG';
+import CM from './programs/CM';
+import AC from './programs/AC';
 
 
 export default {
@@ -12,7 +17,12 @@ export default {
   ET,
   LHM,
   MS,
+  CM,
   OZ,
+  SQ,
+  CA,
   SK,
+  TG,
   TK,
+  AC,
 };
