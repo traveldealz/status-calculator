@@ -2,7 +2,6 @@ function calculateSegments(segments) {
     return segments.filter(segment => ['CM'].includes(segment.carrier)).length;
 }
 
-//TODO: Checken, was mit den verschiedenen Segment-Gewichtungen passiert, ggfs. Quali via Segmente entfernen. Min. 4 Segmente mit Copa muss aber drinbleiben.
 
 export default {
     name: 'Copa Airlines ConnectMiles',
@@ -27,18 +26,6 @@ export default {
                         es: '',
                     },
                 },
-                {
-                    type: 'segments',
-                    number: 20,
-                    secCalculate: calculateSegments,
-                    qualificationPeriod: 12,
-                    validity: 12,
-                    note: {
-                        en: 'Only segments on Copa Airlines.',
-                        de: 'Nur Segmente mit Copa Airlines.',
-                        es: '',
-                    },
-                },
             ],
             note: {
                 en: '',
@@ -50,18 +37,6 @@ export default {
             name: 'Gold',
             allianceStatus: 'Star Alliance Gold',
             qualification: [
-                {
-                    type: 'segments',
-                    number: 40,
-                    secCalculate: calculateSegments,
-                    qualificationPeriod: 12,
-                    validity: 12,
-                    note: {
-                        en: 'Only segments on Copa Airlines.',
-                        de: 'Nur Segmente mit Copa Airlines.',
-                        es: '',
-                    },
-                },
                 {
                     type: 'miles',
                     number: 45000,
@@ -88,18 +63,6 @@ export default {
             allianceStatus: 'Star Alliance Gold',
             qualification: [
                 {
-                    type: 'segments',
-                    number: 70,
-                    secCalculate: calculateSegments,
-                    qualificationPeriod: 12,
-                    validity: 12,
-                    note: {
-                        en: 'Only segments on Copa Airlines.',
-                        de: 'Nur Segmente mit Copa Airlines.',
-                        es: '',
-                    },
-                },
-                {
                     type: 'miles',
                     number: 75000,
                     secType: 'segments',
@@ -124,18 +87,6 @@ export default {
             name: 'Presidential',
             allianceStatus: 'Star Alliance Gold',
             qualification: [
-                {
-                    type: 'segments',
-                    number: 90,
-                    secCalculate: calculateSegments,
-                    qualificationPeriod: 12,
-                    validity: 12,
-                    note: {
-                        en: 'Only segments on Copa Airlines.',
-                        de: 'Nur Segmente mit Copa Airlines.',
-                        es: '',
-                    },
-                },
                 {
                     type: 'miles',
                     number: 95000,

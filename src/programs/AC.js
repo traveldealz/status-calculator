@@ -1,6 +1,6 @@
 function countSegments( segments, data ) {
     return data.reduce((acc,itinerary) => {
-        let mileage = itinerary.value?.totals?.find(item => 'ET' === item.id);
+        let mileage = itinerary.value?.totals?.find(item => 'AC' === item.id);
         if(!mileage) {
             return acc;
         }
