@@ -16,6 +16,7 @@ template.innerHTML = /*html*/`
     <button type="submit">Calculate</button>
   </form>
   <ol id="list" data-columns="3"></ol>
+  <p><small>Data provided by <a href="https://www.wheretocredit.com">wheretocredit.com</a></small></p>
 `;
 
 // const needed = {
@@ -101,7 +102,8 @@ class StatusCalculator extends HTMLElement {
       body: JSON.stringify(itineraries.map( itinerary => { return { segments: [itinerary] } } )),
     })
       .then(response => response.json())
-      .then(data => this.display(data.value));
+      .then(data => this.display(data.value))
+      .catch(error => alert(`Where to Credit ${error.toString()}`));
   }
 
   display( data ) {
