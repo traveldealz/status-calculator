@@ -130,12 +130,12 @@ class StatusCalculator extends HTMLElement {
             return status.qualification.map(qualification => {
 
               let build = {
-                ...qualification,
-                programName: program.name,
-                statusName: status.name,
+                program,
+                status,
+                qualification,
               };
 
-              switch(build.type) {
+              switch(qualification.type) {
                 case 'miles': 
                   build.needed = qualification.number;
                   build.collected = totals[id];
@@ -152,9 +152,9 @@ class StatusCalculator extends HTMLElement {
                 build.progress = build.collected / build.needed;
               }
 
-              if(build.secType) {
+              if(qualification.secType) {
 
-                switch(build.secType) {
+                switch(qualification.secType) {
                   case 'miles': 
                     build.secNeeded = qualification.secNumber;
                     build.secCollected = totals[id];
@@ -184,14 +184,18 @@ class StatusCalculator extends HTMLElement {
       .forEach(item => {
         let el = document.createElement('li');
         el.innerHTML = `
-        <strong>${item.programName}: ${item.statusName}</strong><br />
-        <small>${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.collected.toLocaleString()} of ${item.needed.toLocaleString()} ${item.type}</small><br />
+        <strong>${item.program.name}: ${item.status.name}</strong><br />
+        <small>${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.collected.toLocaleString()} of ${item.needed.toLocaleString()} ${item.qualification.type}</small><br />
         <progress value="${item.progress}">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
         ${'undefined' === typeof item.secProgress ? '' : `
-          <br /><small>${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.secCollected.toLocaleString()} of ${item.secNeeded.toLocaleString()} ${item.secType}</small><br />
+          <br /><small>${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.secCollected.toLocaleString()} of ${item.secNeeded.toLocaleString()} ${item.qualification.secType}</small><br />
           <progress value="${item.secProgress}">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
           `}
-        ${ item.note ? `<br /><small>${item.note.en}</small>`: '' }
+        ${ item.qualification.note?.en ? `<br /><small>${item.qualification.note.en}</small>`: '' }
+        ${ item.status.note?.en ? `<br /><small>${item.status.note.en}</small>`: '' }
+        ${ item.program.note?.en ? `<br /><small>${item.program.note.en}</small>`: '' }
+        <br /><small>Qualification period: ${item.qualification.qualificationPeriod} month (${item.program.qualificationPeriodType})</small>
+        <br /><small>Validity: at least ${item.qualification.validity} months</small>
         `;
         this.el_list.appendChild(el);
       });
