@@ -5,7 +5,7 @@ function calculateSegments(segments) {
 export default {
     name: 'Thai Royal Orchid Plus',
     alliance: 'Star Alliance',
-    qualificationPeriodType: '12 consecutive months',
+    qualificationPeriodType: 'Consecutive months',
     status: [
         {
             name: 'Silver',

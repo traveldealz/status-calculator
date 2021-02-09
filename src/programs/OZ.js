@@ -5,7 +5,7 @@ function countSegments( segments ) {
 export default {
   name: 'Asiana Club',
   alliance: 'Star Alliance',
-  qualificationPeriodType: '24 membership months',
+  qualificationPeriodType: 'Membership months',
   status: [
     {
       name: 'Gold',

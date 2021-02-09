@@ -1,7 +1,7 @@
 export default {
   name: 'Egyptair Plus',
   alliance: 'Star Alliance',
-  qualificationPeriodType: '24 consecutive months',
+  qualificationPeriodType: 'Consecutive months',
   status: [
     {
       name: 'Silver',

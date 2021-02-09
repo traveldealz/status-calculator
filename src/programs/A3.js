@@ -5,7 +5,7 @@ function calculateSegments(segments) {
 export default {
   name: 'Aegean Miles+Bonus',
   alliance: 'Star Alliance',
-  qualificationPeriodType: '12 consecutive months',
+  qualificationPeriodType: 'Consecutive months',
   status: [
     {
       name: 'Silver',

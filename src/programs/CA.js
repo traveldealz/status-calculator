@@ -12,7 +12,7 @@ function countSegments( segments, data ) {
 export default {
     name: 'Air China PhoenixMiles',
     alliance: 'Star Alliance',
-    qualificationPeriodType: '12 consecutive months',
+    qualificationPeriodType: 'Consecutive months',
     status: [
         {
             name: 'Silver Card',
