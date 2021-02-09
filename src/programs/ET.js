@@ -26,6 +26,8 @@ export default {
         {
           type: 'segments',
           number: 20,
+          qualificationPeriod: 12,
+          validity: 12,
           calculate: countSegments,
           note: {
             en: 'Only segments with mileage credit count.',
@@ -53,6 +55,8 @@ export default {
         {
           type: 'segments',
           number: 40,
+          qualificationPeriod: 12,
+          validity: 12,
           calculate: countSegments,
           note: {
             en: 'Only segments with mileage credit count.',
@@ -80,6 +84,8 @@ export default {
         {
           type: 'segments',
           number: 80,
+          qualificationPeriod: 12,
+          validity: 12,
           calculate: countSegments,
           note: {
             en: 'Only segments with mileage credit count.',
