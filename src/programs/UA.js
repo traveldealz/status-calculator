@@ -11,17 +11,17 @@ function calculateSegments( segments, data ) {
 function calculateMiles(segments, data) {
     return data.reduce((acc,itinerary) => {
         let mileage = itinerary.value?.totals?.find(item => 'UA' === item.id);
-        if(segments.filter(segment => ['AC','CA','EN','NZ','NH','OZ', 'AV','AD', 'SN','CM', 'WK','EW','LH','LX'].includes(segment.carrier))) {
-            if(segments.filter(segment => ['F','A','J','C','D','Z', 'P'].includes(segment.bookingClass))) {
+        if(['AC','CA','EN','NZ','NH','OZ', 'AV','AD', 'SN','CM','WK','EW','LH','LX'].includes(itinerary.carrier)) {
+            if(['F','A','J','C','D','Z', 'P'].includes(itinerary.bookingClass)) {
                 return (mileage.rdm[0] / 5) > 1500 ? 1500 : parseInt((mileage.rdm[0] / 5));
             }else{
                 return (mileage.rdm[0] / 5) > 750 ? 750 : parseInt((mileage.rdm[0] / 5));
             }
         }
-        if(segments.filter(segment => ['UA'].includes(segment.carrier))) {
+        if(['UA'].includes(itinerary.carrier)) {
             return 0;
         }
-        if(segments.filter(segment => ['F','A','J','C','D','Z'].includes(segment.bookingClass))) {
+        if(['F','A','J','C','D','Z'].includes(itinerary.bookingClass)) {
             return (mileage.rdm[0] / 6) > 1000 ? 1000 : parseInt((mileage.rdm[0] / 6));
         }else{
             return (mileage.rdm[0] / 6) > 500 ? 500 : parseInt((mileage.rdm[0] / 6));
