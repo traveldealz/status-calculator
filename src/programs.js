@@ -11,6 +11,7 @@ import TG from './programs/TG';
 import CM from './programs/CM';
 import AC from './programs/AC';
 import UA from './programs/UA';
+import BR from './programs/BR';
 
 
 export default {
@@ -26,5 +27,6 @@ export default {
   TG,
   TK,
   UA,
+  BR,
   AC,
 };
