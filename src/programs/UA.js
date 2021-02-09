@@ -9,7 +9,6 @@ function calculateSegments( segments, data ) {
 }
 
 function calculateMiles(segments, data) {
-    // Divide by 5 / 6
     return data.reduce((acc,itinerary) => {
         let mileage = itinerary.value?.totals?.find(item => 'UA' === item.id);
         if(segments.filter(segment => ['AC','CA','EN','NZ','NH','OZ', 'AV','AD', 'SN','CM', 'WK','EW','LH','LX'].includes(segment.carrier))) {
