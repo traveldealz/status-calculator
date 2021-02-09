@@ -12,6 +12,8 @@ function calculateMiles(segments, data) {
     // Divide by 5 / 6
     return data.reduce((acc,itinerary) => {
         let mileage = itinerary.value?.totals?.find(item => 'UA' === item.id);
+        console.log(segments.carrier);
+        console.log(segments.bookingClass);
         if(segments.filter(segment => ['AC','CA','EN','NZ','NH','OZ', 'AV','AD', 'SN','CM', 'WK','EW','LH','LX'].includes(segment.carrier))) {
             if(segments.filter(segment => ['F','A','J','C','D','Z', 'P'].includes(segment.bookingClass))) {
                 return (mileage.rdm[0] / 5) > 1500 ? 1500 : parseInt((mileage.rdm[0] / 5));
