@@ -145,7 +145,7 @@ export default {
             },
         },
         {
-            name: 'Premier Gold',
+            name: 'Premier 1K',
             allianceStatus: 'Star Alliance Gold',
             qualification: [
                 {
