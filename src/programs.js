@@ -10,6 +10,7 @@ import SQ from './programs/SQ';
 import TG from './programs/TG';
 import CM from './programs/CM';
 import AC from './programs/AC';
+import UA from './programs/UA';
 
 
 export default {
@@ -24,5 +25,6 @@ export default {
   SK,
   TG,
   TK,
+  UA,
   AC,
 };
