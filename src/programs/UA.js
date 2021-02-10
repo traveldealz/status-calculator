@@ -14,20 +14,24 @@ function calculateMiles(segments, data) {
     // Bei anderen Airlines -> Meilen / 6 - mit 750/500 Limit je nach Klasse
     return data.reduce((acc,itinerary) => {
         let mileage = itinerary.value?.totals?.find(item => 'UA' === item.id);
-        if(segments.filter(segment => ['AC','CA','EN','NZ','NH','OZ', 'AV','AD', 'SN','CM', 'WK','EW','LH','LX'].includes(segment.carrier))) {
-            if(segments.filter(segment => ['F','A','J','C','D','Z', 'P'].includes(segment.bookingClass))) {
-                return (mileage.rdm[0] / 5) > 1500 ? 1500 : parseInt((mileage.rdm[0] / 5));
+        if(!mileage) {
+          return acc;
+        }
+        if(['AC','CA','EN','NZ','NH','OZ', 'AV','AD', 'SN','CM', 'WK','EW','LH','LX'].includes(segments[0].carrier)) {
+            console.log('YEAH');
+            if(['F','A','J','C','D','Z', 'P'].includes(segments[0].bookingClass)) {
+                return (mileage.rdm[0] / 5) > 1500 ? acc + 1500 : acc + parseInt((mileage.rdm[0] / 5));
             }else{
-                return (mileage.rdm[0] / 5) > 750 ? 750 : parseInt((mileage.rdm[0] / 5));
+                return (mileage.rdm[0] / 5) > 750 ? acc + 750 : acc + parseInt((mileage.rdm[0] / 5));
             }
         }
-        if(segments.filter(segment => ['UA'].includes(segment.carrier))) {
+        if(['UA'].includes(segments[0].carrier)) {
             return 0;
         }
-        if(segments.filter(segment => ['F','A','J','C','D','Z'].includes(segment.bookingClass))) {
-            return (mileage.rdm[0] / 6) > 1000 ? 1000 : parseInt((mileage.rdm[0] / 6));
+        if(['F','A','J','C','D','Z'].includes(segments[0].bookingClass)) {
+            return (mileage.rdm[0] / 6) > 1000 ? acc + 1000 : acc + parseInt((mileage.rdm[0] / 6));
         }else{
-            return (mileage.rdm[0] / 6) > 500 ? 500 : parseInt((mileage.rdm[0] / 6));
+            return (mileage.rdm[0] / 6) > 500 ? acc + 500 : acc + parseInt((mileage.rdm[0] / 6));
         }    }, 0);
 }
 
