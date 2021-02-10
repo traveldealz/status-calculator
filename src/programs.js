@@ -13,14 +13,12 @@ import AC from './programs/AC';
 import UA from './programs/UA';
 import BR from './programs/BR';
 import TP from './programs/TP';
-import AI from './programs/AI';
 
 
 export default {
   A3,
   ET,
   LHM,
-  AI,
   MS,
   TP,
   CM,

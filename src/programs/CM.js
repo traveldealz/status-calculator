@@ -6,7 +6,7 @@ function calculateSegments(segments) {
 export default {
     name: 'Copa Airlines ConnectMiles',
     alliance: 'Star Alliance',
-    qualificationPeriodType: 'Calendar Year',
+    qualificationPeriodType: 'Calendar year',
     status: [
         {
             name: 'Silver',
@@ -20,6 +20,11 @@ export default {
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
                     validity: 12,
+                    note: {
+                        en: '4 segments on Copa Airlines needed.',
+                        de: '4 Segmente mit Copa Airlines benötigt.',
+                        es: '',
+                    },
                 },
             ],
             note: {
@@ -40,9 +45,18 @@ export default {
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
                     validity: 12,
+                    note: {
+                        en: '4 segments on Copa Airlines needed.',
+                        de: '4 Segmente mit Copa Airlines benötigt.',
+                        es: '',
+                    },
                 },
             ],
-
+            note: {
+                en: '',
+                de: '',
+                es: '',
+            },
         },
         {
             name: 'Platinum',
@@ -56,7 +70,11 @@ export default {
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
                     validity: 12,
-
+                    note: {
+                        en: '4 segments on Copa Airlines needed.',
+                        de: '4 Segmente mit Copa Airlines benötigt.',
+                        es: '',
+                    },
                 },
             ],
             note: {
@@ -77,7 +95,11 @@ export default {
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
                     validity: 12,
-
+                    note: {
+                        en: '4 segments on Copa Airlines needed.',
+                        de: '4 Segmente mit Copa Airlines benötigt.',
+                        es: '',
+                    },
                 },
             ],
             note: {
@@ -88,8 +110,8 @@ export default {
         },
     ],
     note: {
-        en: 'At least 4 segments with Copa Airlines required.',
-        de: 'Mind. 4 Segmente mit Copa Airlines benötigt.',
+        en: '',
+        de: '',
         es: '',
     },
 };

@@ -1,61 +1,55 @@
 import programs from './programs';
+import translate from './helper/translate';
+import trans_de from './languages/de.json';
+import trans_es from './languages/es.json';
 
-const template = document.createElement("template");
-template.innerHTML = /*html*/`
+const translations = {
+	en: [],
+	de: trans_de,
+	es: trans_es,
+};
+
+const template = /*html*/`
   <style>
   li {
     margin-bottom: 1rem;
   }
   </style>
   <form>
-    <textarea name="route">LH:A:FRA-HKG</textarea><br />
-    <select name="status">
-      <option>Star Alliance Silver</option>
-      <option selected>Star Alliance Gold</option>
-    </select>
-    <button type="submit">Calculate</button>
+    <label for="route">__(Routings):</label>
+    <textarea name="route" class="w-full my-1">LH:A:FRA-HKG-MUC</textarea>
+    <small></small>
+    <div class="my-3">
+      <label for="status">__(Status)</label>
+      <select name="status">
+        <option>Star Alliance Silver</option>
+        <option selected>Star Alliance Gold</option>
+      </select>
+    </div>
+    <button class="px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
   </form>
   <ol id="list" data-columns="3"></ol>
-  <p><small>Data provided by <a href="https://www.wheretocredit.com">wheretocredit.com</a></small></p>
+  <p><small>__(Data provided by) <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a></small></p>
 `;
-
-// const needed = {
-//   A3: 72000,
-//   UA: 50000,
-//   OZ: 40000,
-//   TK: 40000,
-//   SK: 45000,
-//   LHM: 100000,
-//   SQ: 50000,
-//   ET: 50000,
-//   CA: 80000,
-//   MS: 60000,
-//   TG: 50000,
-//   NZ: 900,
-//   CM: 45000,
-//   AC: 50000,
-//   NH: 50000,
-//   AV: 40000,
-//   BR: 50000,
-//   SA: 60000,
-//   TP: 70000,
-//   AI: 50000,
-// };
 
 class StatusCalculator extends HTMLElement {
   constructor() {
     super();
     this.count = 0;
-    this.attachShadow({ mode: "open" });
     this.$status = 'Star Alliance Gold';
     this.$segments = [];
   }
 
   connectedCallback() {
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
-    this.el_route = this.shadowRoot.querySelector('[name="route"]');
-    this.el_list = this.shadowRoot.querySelector('#list');
-    this.shadowRoot.querySelector('form').addEventListener('submit', (event) => {
+
+    this.$locale = this.hasAttribute('locale') ? this.getAttribute('locale') : navigator.language ? navigator.language : 'en';
+    this.$locale = this.$locale.split('-')[0];
+
+    this.innerHTML = translate(template, translations[this.$locale] ? translations[this.$locale] : []);
+
+    this.el_route = this.querySelector('[name="route"]');
+    this.el_list = this.querySelector('#list');
+    this.querySelector('form').addEventListener('submit', (event) => {
       event.preventDefault();
       this.calculate();
     });
@@ -63,7 +57,7 @@ class StatusCalculator extends HTMLElement {
 
   calculate() {
 
-    this.$status = this.shadowRoot.querySelector('[name="status"]').value;
+    this.$status = this.querySelector('[name="status"]').value;
 
     let itineraries = this.el_route.value
       .trim()
@@ -183,20 +177,22 @@ class StatusCalculator extends HTMLElement {
       .sort((a,b) => b.progress-a.progress )
       .forEach(item => {
         let el = document.createElement('li');
-        el.innerHTML = `
+        let text = `
         <strong>${item.program.name}: ${item.status.name}</strong><br />
-        <small>${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.collected.toLocaleString()} of ${item.needed.toLocaleString()} ${item.qualification.type}</small><br />
+        <small>${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.collected.toLocaleString()} __(of) ${item.needed.toLocaleString()} __(${item.qualification.type})</small><br />
         <progress value="${item.progress}">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
         ${'undefined' === typeof item.secProgress ? '' : `
-          <br /><small>${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.secCollected.toLocaleString()} of ${item.secNeeded.toLocaleString()} ${item.qualification.secType}</small><br />
+          <br /><small>${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.secCollected.toLocaleString()} __(of) ${item.secNeeded.toLocaleString()} __(${item.qualification.secType})</small><br />
           <progress value="${item.secProgress}">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
           `}
-        ${ item.qualification.note?.en ? `<br /><small>${item.qualification.note.en}</small>`: '' }
-        ${ item.status.note?.en ? `<br /><small>${item.status.note.en}</small>`: '' }
-        ${ item.program.note?.en ? `<br /><small>${item.program.note.en}</small>`: '' }
-        <br /><small>Qualification period: ${item.qualification.qualificationPeriod} month (${item.program.qualificationPeriodType})</small>
-        <br /><small>Validity: at least ${item.qualification.validity} months</small>
+        ${ item.qualification.note && item.qualification.note[this.$locale] ? `<br /><small>${item.qualification.note[this.$locale]}</small>`: '' }
+        ${ item.status.note && item.status.note[this.$locale] ? `<br /><small>${item.status.note[this.$locale]}</small>`: '' }
+        ${ item.program.note && item.program.note[this.$locale] ? `<br /><small>${item.program.note[this.$locale]}</small>`: '' }
+        <br /><small>__(Qualification period): ${item.qualification.qualificationPeriod} __(months) (__(${item.program.qualificationPeriodType}))</small>
+        <br /><small>__(Validity): __(at least) ${item.qualification.validity} __(months)</small>
         `;
+
+        el.innerHTML = translate(text, translations[this.$locale] ? translations[this.$locale] : []);;
         this.el_list.appendChild(el);
       });
 

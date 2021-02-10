@@ -104,8 +104,8 @@ export default {
           qualificationPeriod: 0,
           validity: 0,
           note: {
-            en: 'Miles accumulated since joining Asiana Club.',
-            de: 'Gesammelte Meilen seit der Registrierung bei Asiana Club.',
+            en: 'Miles accumulated from joining Asiana Club.',
+            de: 'Gesammelte Meilen ab dem Beitritt zum Asiana Club.',
             es: '',
           },
         },
@@ -116,8 +116,8 @@ export default {
           qualificationPeriod: 24,
           validity: 24,
           note: {
-            en: 'Segments with Asiana accumulated since joining Asiana Club.',
-            de: 'Von Asiana durchgeführte Segmente seit der Registrierung bei Asiana Club.',
+            en: 'Segments with Asiana accumulated from joining Asiana Club.',
+            de: 'Gesammelte Segmente durchgeführt von Asiana ab dem Beitritt zum Asiana Club.',
             es: '',
           },
         },

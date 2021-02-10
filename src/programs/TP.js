@@ -26,7 +26,7 @@ export default {
                     calculate: calculateSegements,
                     note: {
                         en: 'Only segments with TAP count.',
-                        de: 'Nur Segmente mit TAP zählen.',
+                        de: 'Nur Segmente durchgeführt von TAP zählen.',
                         es: '',
                     },
                 },
@@ -55,7 +55,7 @@ export default {
                     calculate: calculateSegements,
                     note: {
                         en: 'Only segments with TAP count.',
-                        de: 'Nur Segmente mit TAP zählen.',
+                        de: 'Nur Segmente durchgeführt von TAP zählen.',
                         es: '',
                     },
                 },

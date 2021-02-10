@@ -46,7 +46,7 @@ export default {
                 },
             ],
             note: {
-                en: '',
+                en: 'After reaching the Silver status you get 25 percentage points Executive Bonus.',
                 de: '',
                 es: '',
             },

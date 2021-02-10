@@ -49,8 +49,8 @@ export default {
         },
       ],
       note: {
-        en: 'The qualification period of 2 years starts after reaching Gold status to collect further 300.000 miles',
-        de: 'Der Qualifikationszeitraum von 2 Jahren startet ab Erreichen des Gold Status, um weitere 300.000 Meilen zu sammeln.',
+        en: 'Qualification period of 2 years starts after reaching Gold status to collect further 300.000 miles',
+        de: 'Qualifikationszeitraum von 2 Jahren startet ab erreichen des Gold Status, um weitere 300.000 Meilen zu sammeln.',
         es: '',
       },
     }

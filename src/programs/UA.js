@@ -13,29 +13,22 @@ function calculateMiles(segments, data) {
     // Bei Partnerairlines -> Meilen / 5 -  mit 1500/750 Limit je nach Klasse
     // Bei anderen Airlines -> Meilen / 6 - mit 750/500 Limit je nach Klasse
     return data.reduce((acc,itinerary) => {
-
         let mileage = itinerary.value?.totals?.find(item => 'UA' === item.id);
-        console.log("segment: " + acc[1]);
-        console.log(mileage.rdm[0]);
-        if(!mileage) {
-          return [acc[0], acc[1]+1];
-        }
-        if(['AC','CA','EN','NZ','NH','OZ', 'AV','AD', 'SN','CM', 'WK','EW','LH','LX'].includes(segments[acc[1]].carrier)) {
-            if(['F','A','J','C','D','Z', 'P'].includes(segments[acc[1]].bookingClass)) {
-                return (mileage.rdm[0] / 5) > 1500 ? [acc[0] + 1500, acc[1]+1] : [acc[0] + parseInt(mileage.rdm[0] / 5), acc[1]+1];
+        if(segments.filter(segment => ['AC','CA','EN','NZ','NH','OZ', 'AV','AD', 'SN','CM', 'WK','EW','LH','LX'].includes(segment.carrier))) {
+            if(segments.filter(segment => ['F','A','J','C','D','Z', 'P'].includes(segment.bookingClass))) {
+                return (mileage.rdm[0] / 5) > 1500 ? 1500 : parseInt((mileage.rdm[0] / 5));
             }else{
-                return (mileage.rdm[0] / 5) > 750 ? [acc[0] + 750, acc[1]+1] : [acc[0] + parseInt((mileage.rdm[0] / 5)), acc[1]+1];
+                return (mileage.rdm[0] / 5) > 750 ? 750 : parseInt((mileage.rdm[0] / 5));
             }
         }
-        if(['UA'].includes(segments[acc[1]].carrier)) {
-            return [0, acc[1]+1];
+        if(segments.filter(segment => ['UA'].includes(segment.carrier))) {
+            return 0;
         }
-        if(['F','A','J','C','D','Z'].includes(segments[acc[1]].bookingClass)) {
-                return (mileage.rdm[0] / 5) > 1000 ? [acc[0] + 1000, acc[1]+1] : [acc[0] + parseInt(mileage.rdm[0] / 5), acc[1]+1];
-            }else{
-                return (mileage.rdm[0] / 5) > 500 ? [acc[0] + 500, acc[1]+1] : [acc[0] + parseInt((mileage.rdm[0] / 5)), acc[1]+1];
-            }   
-        }, [0, 0])[0];
+        if(segments.filter(segment => ['F','A','J','C','D','Z'].includes(segment.bookingClass))) {
+            return (mileage.rdm[0] / 6) > 1000 ? 1000 : parseInt((mileage.rdm[0] / 6));
+        }else{
+            return (mileage.rdm[0] / 6) > 500 ? 500 : parseInt((mileage.rdm[0] / 6));
+        }    }, 0);
 }
 
 
@@ -65,12 +58,17 @@ export default {
                     qualificationPeriod: 12,
                     validity: 12,
                     note: {
-                        en: 'Segments in Basic Economy do not count',
-                        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+                        en: 'Only if not issued & operated by UA. Segments in Basic Economy do not count.',
+                        de: 'Nur wenn weder von UA ausgestellt noch ausgeführt. Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
                         es: '',
                     },
                 },
             ],
+            note: {
+                en: '',
+                de: '',
+                es: '',
+            },
         },
         {
             name: 'Premier Gold',
@@ -99,7 +97,7 @@ export default {
                     validity: 12,
                     note: {
                         en: 'Segments in Basic Economy do not count',
-                        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+                        de: 'Nur wenn weder von UA ausgestellt noch ausgeführt. Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
                         es: '',
                     },
                 },
@@ -137,7 +135,7 @@ export default {
                     validity: 12,
                     note: {
                         en: 'Segments in Basic Economy do not count',
-                        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+                        de: 'Nur wenn weder von UA ausgestellt noch ausgeführt. Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
                         es: '',
                     },
                 },
@@ -175,7 +173,7 @@ export default {
                     validity: 12,
                     note: {
                         en: 'Segments in Basic Economy do not count',
-                        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+                        de: 'Nur wenn weder von UA ausgestellt noch ausgeführt. Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
                         es: '',
                     },
                 },
@@ -188,8 +186,8 @@ export default {
         },
     ],
     note: {
-        en: 'This calculation only works for flights that are not issued & operated by UA. At least 4 United Segments required to obtain a status',
-        de: 'Diese Berechnung stimmt nur wenn die Flüge weder von UA ausgestellt noch ausgeführt werden. 4 United-Segmente benötigt um einen Status zu bekommen.',
+        en: '4 United Segments required',
+        de: '4 United-Segmente benötigt',
         es: '',
     },
 };
