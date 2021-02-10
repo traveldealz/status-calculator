@@ -13,26 +13,29 @@ function calculateMiles(segments, data) {
     // Bei Partnerairlines -> Meilen / 5 -  mit 1500/750 Limit je nach Klasse
     // Bei anderen Airlines -> Meilen / 6 - mit 750/500 Limit je nach Klasse
     return data.reduce((acc,itinerary) => {
+
         let mileage = itinerary.value?.totals?.find(item => 'UA' === item.id);
+        console.log("segment: " + acc[1]);
+        console.log(mileage.rdm[0]);
         if(!mileage) {
-          return acc;
+          return [acc[0], acc[1]+1];
         }
-        if(['AC','CA','EN','NZ','NH','OZ', 'AV','AD', 'SN','CM', 'WK','EW','LH','LX'].includes(segments[0].carrier)) {
-            console.log('YEAH');
-            if(['F','A','J','C','D','Z', 'P'].includes(segments[0].bookingClass)) {
-                return (mileage.rdm[0] / 5) > 1500 ? acc + 1500 : acc + parseInt((mileage.rdm[0] / 5));
+        if(['AC','CA','EN','NZ','NH','OZ', 'AV','AD', 'SN','CM', 'WK','EW','LH','LX'].includes(segments[acc[1]].carrier)) {
+            if(['F','A','J','C','D','Z', 'P'].includes(segments[acc[1]].bookingClass)) {
+                return (mileage.rdm[0] / 5) > 1500 ? [acc[0] + 1500, acc[1]+1] : [acc[0] + parseInt(mileage.rdm[0] / 5), acc[1]+1];
             }else{
-                return (mileage.rdm[0] / 5) > 750 ? acc + 750 : acc + parseInt((mileage.rdm[0] / 5));
+                return (mileage.rdm[0] / 5) > 750 ? [acc[0] + 750, acc[1]+1] : [acc[0] + parseInt((mileage.rdm[0] / 5)), acc[1]+1];
             }
         }
-        if(['UA'].includes(segments[0].carrier)) {
-            return 0;
+        if(['UA'].includes(segments[acc[1]].carrier)) {
+            return [0, acc[1]+1];
         }
-        if(['F','A','J','C','D','Z'].includes(segments[0].bookingClass)) {
-            return (mileage.rdm[0] / 6) > 1000 ? acc + 1000 : acc + parseInt((mileage.rdm[0] / 6));
-        }else{
-            return (mileage.rdm[0] / 6) > 500 ? acc + 500 : acc + parseInt((mileage.rdm[0] / 6));
-        }    }, 0);
+        if(['F','A','J','C','D','Z'].includes(segments[acc[1]].bookingClass)) {
+                return (mileage.rdm[0] / 5) > 1000 ? [acc[0] + 1000, acc[1]+1] : [acc[0] + parseInt(mileage.rdm[0] / 5), acc[1]+1];
+            }else{
+                return (mileage.rdm[0] / 5) > 500 ? [acc[0] + 500, acc[1]+1] : [acc[0] + parseInt((mileage.rdm[0] / 5)), acc[1]+1];
+            }   
+        }, [0, 0])[0];
 }
 
 
