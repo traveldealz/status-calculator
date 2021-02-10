@@ -178,18 +178,33 @@ class StatusCalculator extends HTMLElement {
       .forEach(item => {
         let el = document.createElement('li');
         let text = `
-        <strong>${item.program.name}: ${item.status.name}</strong><br />
-        <small>${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.collected.toLocaleString()} __(of) ${item.needed.toLocaleString()} __(${item.qualification.type})</small><br />
-        <progress value="${item.progress}">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
+        <h3>${item.program.name}: ${item.status.name}</h3>
+        <div class="grid grid-cols-2 gap-4 my-3" style="gap: .75rem;">
+          <div class="${'undefined' === typeof item.secProgress ? 'col-span-2' : ''}">
+            <div class="text-sm">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.collected.toLocaleString()} __(of) ${item.needed.toLocaleString()} __(${item.qualification.type})</div>
+            <progress class="w-full" value="${item.progress}">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
+          </div>
         ${'undefined' === typeof item.secProgress ? '' : `
-          <br /><small>${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.secCollected.toLocaleString()} __(of) ${item.secNeeded.toLocaleString()} __(${item.qualification.secType})</small><br />
-          <progress value="${item.secProgress}">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
+          <div>
+            <div class="text-sm">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.secCollected.toLocaleString()} __(of) ${item.secNeeded.toLocaleString()} __(${item.qualification.secType})</div>
+            <progress class="w-full" value="${item.secProgress}">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
+          </div>
           `}
-        ${ item.qualification.note && item.qualification.note[this.$locale] ? `<br /><small>${item.qualification.note[this.$locale]}</small>`: '' }
-        ${ item.status.note && item.status.note[this.$locale] ? `<br /><small>${item.status.note[this.$locale]}</small>`: '' }
-        ${ item.program.note && item.program.note[this.$locale] ? `<br /><small>${item.program.note[this.$locale]}</small>`: '' }
-        <br /><small>__(Qualification period): ${item.qualification.qualificationPeriod} __(months) (__(${item.program.qualificationPeriodType}))</small>
-        <br /><small>__(Validity): __(at least) ${item.qualification.validity} __(months)</small>
+          <div class="col-span-2 text-sm">
+            ${ item.qualification.note && item.qualification.note[this.$locale] ? `<div>${item.qualification.note[this.$locale]}</div>`: '' }
+            ${ item.status.note && item.status.note[this.$locale] ? `<div>${item.status.note[this.$locale]}</div>`: '' }
+            ${ item.program.note && item.program.note[this.$locale] ? `<div>${item.program.note[this.$locale]}</div>`: '' }
+          </div>
+          <div class="text-center">
+            <div class="text-sm">__(Qualification period)</div>
+            <div>${item.qualification.qualificationPeriod} __(months)</div>
+            <div class="text-sm">__(${item.program.qualificationPeriodType})</div>
+          </div>
+          <div class="text-center">
+            <div class="text-sm">__(Validity)</div>
+            <div>__(at least) ${item.qualification.validity} __(months)</div>
+          </div>
+        </div>
         `;
 
         el.innerHTML = translate(text, translations[this.$locale] ? translations[this.$locale] : []);;
