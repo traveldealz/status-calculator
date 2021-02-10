@@ -672,7 +672,7 @@ function calculateExecutivebonus$1(segments, data) {
 }
 
 var SQ = {
-  name: 'Singapore Airlinse KrisFlyer',
+  name: 'Singapore Airlines KrisFlyer',
   alliance: 'Star Alliance',
   qualificationPeriodType: 'Consecutive months',
   status: [{
@@ -1382,6 +1382,7 @@ function translate (text, trans = []) {
 }
 
 var trans_de = {
+  "Routings": "Strecken",
   "Calculate": "Berechnen",
   "Data provided by": "Daten bereitgestellt von",
   "miles": "Meilen",
@@ -1415,17 +1416,17 @@ const template =
   }
   </style>
   <form>
-    <label for="route">__(Routings):</label>
+    <label for="route">__(Routings)</label>
     <textarea name="route" class="w-full my-1">LH:A:FRA-HKG-MUC</textarea>
     <small></small>
     <div class="my-3">
+      <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
       <label for="status">__(Status)</label>
       <select name="status">
         <option>Star Alliance Silver</option>
         <option selected>Star Alliance Gold</option>
       </select>
     </div>
-    <button class="px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
   </form>
   <ol id="list" data-columns="3"></ol>
   <p><small>__(Data provided by) <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a></small></p>
