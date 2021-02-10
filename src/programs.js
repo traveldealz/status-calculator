@@ -12,6 +12,7 @@ import CM from './programs/CM';
 import AC from './programs/AC';
 import UA from './programs/UA';
 import BR from './programs/BR';
+import TP from './programs/TP';
 
 
 export default {
@@ -19,6 +20,7 @@ export default {
   ET,
   LHM,
   MS,
+  TP,
   CM,
   OZ,
   SQ,

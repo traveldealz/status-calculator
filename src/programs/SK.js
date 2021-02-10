@@ -20,6 +20,8 @@ export default {
         {
           type: 'segments',
           number: 10,
+          qualificationPeriod: 12,
+          validity: 12,
           calculate: calculateSegments,
           note: {
             en: 'Only segments with SAS or Widerøe counts.',
@@ -74,6 +76,8 @@ export default {
         {
           type: 'segments',
           number: 90,
+          qualificationPeriod: 12,
+          validity: 12,
           calculate: calculateSegments,
           note: {
             en: 'Only segments with SAS or Widerøe counts.',
