@@ -12,7 +12,7 @@ function calculateExecutivebonus(segments, data) {
 }
 
 export default {
-    name: 'Singapore Airlinse KrisFlyer',
+    name: 'Singapore Airlines KrisFlyer',
     alliance: 'Star Alliance',
     qualificationPeriodType: 'Consecutive months',
     status: [
