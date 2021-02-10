@@ -65,17 +65,12 @@ export default {
                     qualificationPeriod: 12,
                     validity: 12,
                     note: {
-                        en: 'Only if not issued & operated by UA. Segments in Basic Economy do not count.',
-                        de: 'Nur wenn weder von UA ausgestellt noch ausgeführt. Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+                        en: 'Segments in Basic Economy do not count',
+                        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
                         es: '',
                     },
                 },
             ],
-            note: {
-                en: '',
-                de: '',
-                es: '',
-            },
         },
         {
             name: 'Premier Gold',
@@ -104,7 +99,7 @@ export default {
                     validity: 12,
                     note: {
                         en: 'Segments in Basic Economy do not count',
-                        de: 'Nur wenn weder von UA ausgestellt noch ausgeführt. Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+                        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
                         es: '',
                     },
                 },
@@ -142,7 +137,7 @@ export default {
                     validity: 12,
                     note: {
                         en: 'Segments in Basic Economy do not count',
-                        de: 'Nur wenn weder von UA ausgestellt noch ausgeführt. Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+                        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
                         es: '',
                     },
                 },
@@ -180,7 +175,7 @@ export default {
                     validity: 12,
                     note: {
                         en: 'Segments in Basic Economy do not count',
-                        de: 'Nur wenn weder von UA ausgestellt noch ausgeführt. Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+                        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
                         es: '',
                     },
                 },
@@ -193,8 +188,8 @@ export default {
         },
     ],
     note: {
-        en: '4 United Segments required',
-        de: '4 United-Segmente benötigt',
+        en: 'This calculation only works for flights that are not issued & operated by UA. At least 4 United Segments required to obtain a status',
+        de: 'Diese Berechnung stimmt nur wenn die Flüge weder von UA ausgestellt noch ausgeführt werden. 4 United-Segmente benötigt um einen Status zu bekommen.',
         es: '',
     },
 };

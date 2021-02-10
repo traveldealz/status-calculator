@@ -36,8 +36,8 @@ export default {
           validity: 24,
           calculate: calculateSegements,
           note: {
-            en: 'Only segments on Miles & More Member airline partners counts.',
-            de: 'Nur Segmente durchgeführt von Miles & More Partnerairlines zahlen.',
+            en: 'Only segments on Miles & More Member airline partners count.',
+            de: 'Nur Segmente mit Miles & More Partnerairlines zählen.',
             es: '',
           },
         },
@@ -54,8 +54,8 @@ export default {
           validity: 24,
           calculate: calculateExecutivebonus,
           note: {
-            en: 'After reaching the Frequent Traveller status you get 25 percentage points Executive Bonus.',
-            de: 'Nachdem man den Frequenz Traveller Status erreicht hat, erhält man 25 Prozentpunkte Excutive Bonus.',
+            en: '',
+            de: '',
             es: '',
           },
         },

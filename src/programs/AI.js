@@ -1,7 +1,7 @@
 function calculateExecutivebonus(segments, data) {
     console.log(data);
     return data.reduce((miles, itinerary) => {
-        let item = itinerary.value.totals.find(item => 'SQ' === item.id);
+        let item = itinerary.value.totals.find(item => 'AI' === item.id);
         if(!item) {
             return miles;
         }

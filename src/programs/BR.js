@@ -14,11 +14,6 @@ export default {
                     number: 30000,
                     qualificationPeriod: 12,
                     validity: 24,
-                    note: {
-                        en: '4 segments on Eva Air or UNI Air needed.',
-                        de: '4 Segmente mit Eva Air oder UNI Air benötigt.',
-                        es: '',
-                    },
                 },
             ],
             note: {
@@ -36,11 +31,6 @@ export default {
                     number: 50000,
                     qualificationPeriod: 12,
                     validity: 24,
-                    note: {
-                        en: '4 segments on Eva Air or UNI Air needed.',
-                        de: '4 Segmente mit Eva Air oder UNI Air benötigt.',
-                        es: '',
-                    },
                 },
             ],
             note: {
@@ -58,11 +48,6 @@ export default {
                     number: 120000,
                     qualificationPeriod: 12,
                     validity: 24,
-                    note: {
-                        en: '4 segments on Eva Air or UNI Air needed.',
-                        de: '4 Segmente mit Eva Air oder UNI Air benötigt.',
-                        es: '',
-                    },
                 },
             ],
             note: {
@@ -73,8 +58,8 @@ export default {
         },
     ],
     note: {
-        en: '',
-        de: '',
+        en: 'At least 4 segments with Eva Air or UNI Air are required.',
+        de: 'Mind. 4 Segmente mit Eva Air oder UNI Air benötigt.',
         es: '',
     },
 };
