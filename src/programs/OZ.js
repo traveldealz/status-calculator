@@ -94,40 +94,40 @@ export default {
         es: '',
       },
     },
-    {
-      name: 'Platinum',
-      allianceStatus: 'Star Alliance Gold',
-      qualification: [
-        {
-          type: 'miles',
-          number: 1000000,
-          qualificationPeriod: 0,
-          validity: 0,
-          note: {
-            en: 'Miles accumulated from joining Asiana Club.',
-            de: 'Gesammelte Meilen ab dem Beitritt zum Asiana Club.',
-            es: '',
-          },
-        },
-        {
-          type: 'segments',
-          number: 1000,
-          calculate: countSegments,
-          qualificationPeriod: 24,
-          validity: 24,
-          note: {
-            en: 'Segments with Asiana accumulated from joining Asiana Club.',
-            de: 'Gesammelte Segmente durchgeführt von Asiana ab dem Beitritt zum Asiana Club.',
-            es: '',
-          },
-        },
-      ],
-      note: {
-        en: 'Lifetime Status',
-        de: 'Lebenslanger Status',
-        es: '',
-      },
-    }
+    // {
+    //   name: 'Platinum',
+    //   allianceStatus: 'Star Alliance Gold',
+    //   qualification: [
+    //     {
+    //       type: 'miles',
+    //       number: 1000000,
+    //       qualificationPeriod: 0,
+    //       validity: 0,
+    //       note: {
+    //         en: 'Miles accumulated from joining Asiana Club.',
+    //         de: 'Gesammelte Meilen ab dem Beitritt zum Asiana Club.',
+    //         es: '',
+    //       },
+    //     },
+    //     {
+    //       type: 'segments',
+    //       number: 1000,
+    //       calculate: countSegments,
+    //       qualificationPeriod: 24,
+    //       validity: 24,
+    //       note: {
+    //         en: 'Segments with Asiana accumulated from joining Asiana Club.',
+    //         de: 'Gesammelte Segmente durchgeführt von Asiana ab dem Beitritt zum Asiana Club.',
+    //         es: '',
+    //       },
+    //     },
+    //   ],
+    //   note: {
+    //     en: 'Lifetime Status',
+    //     de: 'Lebenslanger Status',
+    //     es: '',
+    //   },
+    // }
   ],
   note: {
     en: '',

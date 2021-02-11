@@ -49,6 +49,8 @@ export default {
         {
           type: 'segments',
           number: 45,
+          qualificationPeriod: 12,
+          validity: 12,
           calculate: calculateSegments,
           note: {
             en: 'Only segments with SAS or Widerøe counts.',

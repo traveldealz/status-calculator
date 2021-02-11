@@ -180,12 +180,12 @@ class StatusCalculator extends HTMLElement {
         let text = `
         <h3>${item.program.name}: ${item.status.name}</h3>
         <div class="grid grid-cols-2 gap-4 my-3" style="gap: .75rem;">
-          <div class="${'undefined' === typeof item.secProgress ? 'col-span-2' : ''}">
+          <div class="${'undefined' === typeof item.secProgress ? 'col-span-2 ' : ''}flex flex-col justify-end">
             <div class="text-sm">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.collected.toLocaleString()} __(of) ${item.needed.toLocaleString()} __(${item.qualification.type})</div>
             <progress class="w-full" value="${item.progress}">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
           </div>
         ${'undefined' === typeof item.secProgress ? '' : `
-          <div>
+          <div class="flex flex-col justify-end">
             <div class="text-sm">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.secCollected.toLocaleString()} __(of) ${item.secNeeded.toLocaleString()} __(${item.qualification.secType})</div>
             <progress class="w-full" value="${item.secProgress}">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
           </div>
