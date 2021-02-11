@@ -392,37 +392,41 @@ var OZ = {
       de: '',
       es: ''
     }
-  }, {
-    name: 'Platinum',
-    allianceStatus: 'Star Alliance Gold',
-    qualification: [{
-      type: 'miles',
-      number: 1000000,
-      qualificationPeriod: 0,
-      validity: 0,
-      note: {
-        en: 'Miles accumulated from joining Asiana Club.',
-        de: 'Gesammelte Meilen ab dem Beitritt zum Asiana Club.',
-        es: ''
-      }
-    }, {
-      type: 'segments',
-      number: 1000,
-      calculate: countSegments$1,
-      qualificationPeriod: 24,
-      validity: 24,
-      note: {
-        en: 'Segments with Asiana accumulated from joining Asiana Club.',
-        de: 'Gesammelte Segmente durchgeführt von Asiana ab dem Beitritt zum Asiana Club.',
-        es: ''
-      }
-    }],
-    note: {
-      en: 'Lifetime Status',
-      de: 'Lebenslanger Status',
-      es: ''
-    }
-  }],
+  } // {
+  //   name: 'Platinum',
+  //   allianceStatus: 'Star Alliance Gold',
+  //   qualification: [
+  //     {
+  //       type: 'miles',
+  //       number: 1000000,
+  //       qualificationPeriod: 0,
+  //       validity: 0,
+  //       note: {
+  //         en: 'Miles accumulated from joining Asiana Club.',
+  //         de: 'Gesammelte Meilen ab dem Beitritt zum Asiana Club.',
+  //         es: '',
+  //       },
+  //     },
+  //     {
+  //       type: 'segments',
+  //       number: 1000,
+  //       calculate: countSegments,
+  //       qualificationPeriod: 24,
+  //       validity: 24,
+  //       note: {
+  //         en: 'Segments with Asiana accumulated from joining Asiana Club.',
+  //         de: 'Gesammelte Segmente durchgeführt von Asiana ab dem Beitritt zum Asiana Club.',
+  //         es: '',
+  //       },
+  //     },
+  //   ],
+  //   note: {
+  //     en: 'Lifetime Status',
+  //     de: 'Lebenslanger Status',
+  //     es: '',
+  //   },
+  // }
+  ],
   note: {
     en: '',
     de: '',
@@ -474,6 +478,8 @@ var SK = {
     }, {
       type: 'segments',
       number: 45,
+      qualificationPeriod: 12,
+      validity: 12,
       calculate: calculateSegments$1,
       note: {
         en: 'Only segments with SAS or Widerøe counts.',
@@ -1397,7 +1403,8 @@ var trans_de = {
   "Membership year": "Mitgliedsjahr",
   "Consecutive months": "aufeinanderfolgende Monate",
   "at least": "mind.",
-  "of": "von"
+  "of": "von",
+  "Loading & calculating...": "Laden & berechnen..."
 };
 
 var trans_es = {};
@@ -1411,8 +1418,8 @@ const template =
 /*html*/
 `
   <style>
-  li {
-    margin-bottom: 1rem;
+  button[disabled] {
+    background-color: gray;
   }
   </style>
   <form>
@@ -1428,7 +1435,9 @@ const template =
       </select>
     </div>
   </form>
-  <ol id="list" data-columns="3"></ol>
+  <div class="loading hidden">__(Loading & calculating...)</div>
+  <div class="error hidden"></div>
+  <ol id="list"></ol>
   <p><small>__(Data provided by) <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a></small></p>
 `;
 
@@ -1446,8 +1455,12 @@ class StatusCalculator extends HTMLElement {
     this.innerHTML = translate(template, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_route = this.querySelector('[name="route"]');
     this.el_list = this.querySelector('#list');
+    this.el_button = this.querySelector('button[type="submit"]');
+    this.el_loading = this.querySelector('.loading');
+    this.el_error = this.querySelector('.error');
     this.querySelector('form').addEventListener('submit', event => {
       event.preventDefault();
+      this.loading_start();
       this.calculate();
     });
   }
@@ -1488,10 +1501,15 @@ class StatusCalculator extends HTMLElement {
           segments: [itinerary]
         };
       }))
-    }).then(response => response.json()).then(data => this.display(data.value)).catch(error => alert(`Where to Credit ${error.toString()}`));
+    }).then(response => response.json()).then(data => this.display(data.value)).catch(error => {
+      this.loading_end();
+      this.el_error.innerHTML = `Where to Credit ${error.toString()}`;
+      this.el_error.classList.remove('hidden');
+    });
   }
 
   display(data) {
+    this.loading_end();
     let totals = data.reduce((totals, itinerary) => {
       itinerary.value.totals.forEach(item => {
         totals[item.id] = totals[item.id] ? totals[item.id] + item.rdm[0] : item.rdm[0];
@@ -1559,8 +1577,8 @@ class StatusCalculator extends HTMLElement {
       let el = document.createElement('li');
       let text = `
         <h3>${item.program.name}: ${item.status.name}</h3>
-        <div class="grid grid-cols-2 gap-4 my-3" style="gap: .75rem;">
-          <div class="${'undefined' === typeof item.secProgress ? 'col-span-2' : ''}">
+        <div class="grid grid-cols-2 gap-x-4 gab-y-8 my-3" style="row-gap: 1rem; column-gap: 2rem;">
+          <div class="${'undefined' === typeof item.secProgress ? 'col-span-2 ' : ''}flex flex-col justify-end">
             <div class="text-sm">${item.progress.toLocaleString(undefined, {
         style: 'percent',
         minimumFractionDigits: 0
@@ -1571,7 +1589,7 @@ class StatusCalculator extends HTMLElement {
       })}</progress>
           </div>
         ${'undefined' === typeof item.secProgress ? '' : `
-          <div>
+          <div class="flex flex-col justify-end">
             <div class="text-sm">${item.secProgress.toLocaleString(undefined, {
         style: 'percent',
         minimumFractionDigits: 0
@@ -1601,6 +1619,19 @@ class StatusCalculator extends HTMLElement {
       el.innerHTML = translate(text, translations[this.$locale] ? translations[this.$locale] : []);
       this.el_list.appendChild(el);
     });
+  }
+
+  loading_start() {
+    this.el_button.disabled = true;
+    this.el_list.innerHTML = '';
+    this.el_loading.classList.remove('hidden');
+    this.el_error.classList.add('hidden');
+    this.el_error.innerHTML = '';
+  }
+
+  loading_end() {
+    this.el_button.disabled = false;
+    this.el_loading.classList.add('hidden');
   }
 
 }
