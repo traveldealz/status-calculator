@@ -192,7 +192,7 @@ class StatusCalculator extends HTMLElement {
         let el = document.createElement('li');
         let text = `
         <h3>${item.program.name}: ${item.status.name}</h3>
-        <div class="grid grid-cols-2 gap-4 my-3" style="gap: .75rem;">
+        <div class="grid grid-cols-2 gap-x-4 gab-y-8 my-3" style="row-gap: 1rem; column-gap: 2rem;">
           <div class="${'undefined' === typeof item.secProgress ? 'col-span-2 ' : ''}flex flex-col justify-end">
             <div class="text-sm">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.collected.toLocaleString()} __(of) ${item.needed.toLocaleString()} __(${item.qualification.type})</div>
             <progress class="w-full" value="${item.progress}">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
