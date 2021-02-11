@@ -11,8 +11,8 @@ const translations = {
 
 const template = /*html*/`
   <style>
-  li {
-    margin-bottom: 1rem;
+  button[disabled] {
+    background-color: gray;
   }
   </style>
   <form>
@@ -28,7 +28,9 @@ const template = /*html*/`
       </select>
     </div>
   </form>
-  <ol id="list" data-columns="3"></ol>
+  <div class="loading hidden">__(Loading & calculating...)</div>
+  <div class="error hidden"></div>
+  <ol id="list"></ol>
   <p><small>__(Data provided by) <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a></small></p>
 `;
 
@@ -49,8 +51,13 @@ class StatusCalculator extends HTMLElement {
 
     this.el_route = this.querySelector('[name="route"]');
     this.el_list = this.querySelector('#list');
+    this.el_button = this.querySelector('button[type="submit"]');
+    this.el_loading = this.querySelector('.loading');
+    this.el_error = this.querySelector('.error');
+
     this.querySelector('form').addEventListener('submit', (event) => {
       event.preventDefault();
+      this.loading_start();
       this.calculate();
     });
   }
@@ -97,10 +104,16 @@ class StatusCalculator extends HTMLElement {
     })
       .then(response => response.json())
       .then(data => this.display(data.value))
-      .catch(error => alert(`Where to Credit ${error.toString()}`));
+      .catch(error => {
+        this.loading_end();
+        this.el_error.innerHTML = `Where to Credit ${error.toString()}`;
+        this.el_error.classList.remove('hidden');
+      });
   }
 
   display( data ) {
+
+    this.loading_end();
 
     let totals = data.reduce((totals, itinerary) => {
         itinerary.value.totals.forEach(item => {
@@ -211,6 +224,19 @@ class StatusCalculator extends HTMLElement {
         this.el_list.appendChild(el);
       });
 
+  }
+
+  loading_start() {
+    this.el_button.disabled = true;
+    this.el_list.innerHTML = '';
+    this.el_loading.classList.remove('hidden');
+    this.el_error.classList.add('hidden');
+    this.el_error.innerHTML = '';
+  }
+
+  loading_end() {
+    this.el_button.disabled = false;
+    this.el_loading.classList.add('hidden');
   }
 
 
