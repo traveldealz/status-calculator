@@ -1463,6 +1463,10 @@ class StatusCalculator extends HTMLElement {
       this.loading_start();
       this.calculate();
     });
+
+    if (location.hash) {
+      this.loadParameters();
+    }
   }
 
   calculate() {
@@ -1487,6 +1491,7 @@ class StatusCalculator extends HTMLElement {
       }, []);
     }).flat();
     this.$segments = itineraries.flat();
+    this.update_hash();
     this.query(itineraries);
   }
 
@@ -1632,6 +1637,26 @@ class StatusCalculator extends HTMLElement {
   loading_end() {
     this.el_button.disabled = false;
     this.el_loading.classList.add('hidden');
+  }
+
+  loadParameters() {
+    let searchParams = new URLSearchParams(location.hash.replace('#', ''));
+    let el = {};
+
+    for (let key of searchParams.keys()) {
+      el = this.querySelector(`[name="${key}"]`);
+
+      if (el) {
+        'checkbox' === el.type ? el.checked = 'true' === searchParams.get(key) : el.value = searchParams.get(key);
+      }
+    }
+  }
+
+  update_hash() {
+    let parameters = {}; //parameters.routes = this.querySelector('[name="routes"]').value;
+
+    [...this.querySelectorAll('[name]')].forEach(el => parameters[el.name] = 'checkbox' === el.type ? el.checked : el.value);
+    location.hash = new URLSearchParams(parameters).toString();
   }
 
 }
