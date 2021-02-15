@@ -18,9 +18,9 @@ function getLimit(carrier, bookingClass){
     }
     if(['A3'].includes(carrier)) {
         if(['C','D', 'Z', 'A'].includes(bookingClass)) {
-            return 1500;
+            return 1000;
         }else{
-            return 750;
+            return 500;
         }
     }
     if(['CA'].includes(carrier)) {
@@ -67,9 +67,9 @@ function getLimit(carrier, bookingClass){
     }
     if(['CM'].includes(carrier)) {
         if(['C','D','J', 'R'].includes(bookingClass)) {
-            return 1000;
+            return 1500;
         }else{
-            return 500;
+            return 750;
         }
     }
     if(['LO'].includes(carrier)) {
@@ -116,9 +116,9 @@ function getLimit(carrier, bookingClass){
     }
     if(['AV'].includes(carrier)) {
         if(['C','D','J', 'K', 'A'].includes(bookingClass)) {
-            return 1000;
+            return 1500;
         }else{
-            return 500;
+            return 750;
         }
     }
     if(['ET', 'BR'].includes(carrier)) {
