@@ -1074,9 +1074,9 @@ function getLimit(carrier, bookingClass) {
 
   if (['A3'].includes(carrier)) {
     if (['C', 'D', 'Z', 'A'].includes(bookingClass)) {
-      return 1500;
+      return 1000;
     } else {
-      return 750;
+      return 500;
     }
   }
 
@@ -1130,9 +1130,9 @@ function getLimit(carrier, bookingClass) {
 
   if (['CM'].includes(carrier)) {
     if (['C', 'D', 'J', 'R'].includes(bookingClass)) {
-      return 1000;
+      return 1500;
     } else {
-      return 500;
+      return 750;
     }
   }
 
@@ -1186,9 +1186,9 @@ function getLimit(carrier, bookingClass) {
 
   if (['AV'].includes(carrier)) {
     if (['C', 'D', 'J', 'K', 'A'].includes(bookingClass)) {
-      return 1000;
+      return 1500;
     } else {
-      return 500;
+      return 750;
     }
   }
 
@@ -1282,7 +1282,7 @@ var UA = {
       validity: 12,
       note: {
         en: 'Segments in Basic Economy do not count',
-        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+        de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
         es: ''
       }
     }]
@@ -1311,7 +1311,7 @@ var UA = {
       validity: 12,
       note: {
         en: 'Segments in Basic Economy do not count',
-        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+        de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
         es: ''
       }
     }],
@@ -1345,7 +1345,7 @@ var UA = {
       validity: 12,
       note: {
         en: 'Segments in Basic Economy do not count',
-        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+        de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben ',
         es: ''
       }
     }],
@@ -1379,7 +1379,7 @@ var UA = {
       validity: 12,
       note: {
         en: 'Segments in Basic Economy do not count',
-        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+        de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
         es: ''
       }
     }],
