@@ -1063,199 +1063,31 @@ function calculateSegments$4(segments, data) {
   }, 0);
 }
 
-function getLimit(carrier, bookingClass) {
-  if (['AC', 'OS', 'SN'].includes(carrier)) {
-    if (['C', 'D', 'J', 'Z', 'P'].includes(bookingClass)) {
-      return 1500;
-    } else {
-      return 750;
-    }
-  }
-
-  if (['A3'].includes(carrier)) {
-    if (['C', 'D', 'Z', 'A'].includes(bookingClass)) {
-      return 1000;
-    } else {
-      return 500;
-    }
-  }
-
-  if (['CA'].includes(carrier)) {
-    if (['F', 'A', 'J', 'C', 'D', 'Z', 'R'].includes(bookingClass)) {
-      return 1500;
-    } else {
-      return 750;
-    }
-  }
-
-  if (['EN'].includes(carrier)) {
-    if (['F', 'A', 'C', 'D', 'J', 'Z', 'P', 'Y', 'B', 'M'].includes(bookingClass)) {
-      return 1500;
-    } else {
-      return 750;
-    }
-  }
-
-  if (['NZ'].includes(carrier)) {
-    if (['C', 'D', 'J', 'Z'].includes(bookingClass)) {
-      return 1500;
-    } else {
-      return 750;
-    }
-  }
-
-  if (['NH', 'LH', 'LX'].includes(carrier)) {
-    if (['C', 'D', 'J', 'Z', 'P', 'F', 'A'].includes(bookingClass)) {
-      return 1500;
-    } else {
-      return 750;
-    }
-  }
-
-  if (['AD'].includes(carrier)) {
-    if (['C', 'D', 'J', 'I'].includes(bookingClass)) {
-      return 1500;
-    } else {
-      return 750;
-    }
-  }
-
-  if (['EW'].includes(carrier)) {
-    if (['D', 'J'].includes(bookingClass)) {
-      return 1500;
-    } else {
-      return 750;
-    }
-  }
-
-  if (['CM'].includes(carrier)) {
-    if (['C', 'D', 'J', 'R'].includes(bookingClass)) {
-      return 1500;
-    } else {
-      return 750;
-    }
-  }
-
-  if (['LO'].includes(carrier)) {
-    if (['C', 'D', 'Z', 'F'].includes(bookingClass)) {
-      return 1000;
-    } else {
-      return 500;
-    }
-  }
-
-  if (['OZ', 'SQ'].includes(carrier)) {
-    if (['F', 'A', 'J', 'C', 'D', 'Z', 'U'].includes(bookingClass)) {
-      return 1000;
-    } else {
-      return 500;
-    }
-  }
-
-  if (['OU'].includes(carrier)) {
-    if (['C', 'D', 'Z'].includes(bookingClass)) {
-      return 1000;
-    } else {
-      return 500;
-    }
-  }
-
-  if (['MS', 'TG'].includes(carrier)) {
-    if (['F', 'A', 'P', 'C', 'D', 'J', 'Z'].includes(bookingClass)) {
-      return 1000;
-    } else {
-      return 500;
-    }
-  }
-
-  if (['SK', 'TP'].includes(carrier)) {
-    if (['C', 'D', 'J', 'Z'].includes(bookingClass)) {
-      return 1000;
-    } else {
-      return 500;
-    }
-  }
-
-  if (['AI'].includes(carrier)) {
-    if (['C', 'D', 'J', 'Z', 'F', 'A'].includes(bookingClass)) {
-      return 1000;
-    } else {
-      return 500;
-    }
-  }
-
-  if (['AV'].includes(carrier)) {
-    if (['C', 'D', 'J', 'K', 'A'].includes(bookingClass)) {
-      return 1500;
-    } else {
-      return 750;
-    }
-  }
-
-  if (['ET', 'BR'].includes(carrier)) {
-    if (['C', 'D', 'J'].includes(bookingClass)) {
-      return 1000;
-    } else {
-      return 500;
-    }
-  }
-
-  if (['ZH'].includes(carrier)) {
-    if (['C', 'D', 'J', 'R', 'Z'].includes(bookingClass)) {
-      return 1000;
-    } else {
-      return 500;
-    }
-  }
-
-  if (['TK'].includes(carrier)) {
-    if (['C', 'D', 'J', 'Z', 'K'].includes(bookingClass)) {
-      return 1000;
-    } else {
-      return 500;
-    }
-  }
-
-  if (['SA'].includes(carrier)) {
-    if (['C', 'D', 'J', 'P', 'Z'].includes(bookingClass)) {
-      return 1000;
-    } else {
-      return 500;
-    }
-  }
-
-  if (['OA'].includes(carrier)) {
-    if (['C', 'D', 'Z', 'A'].includes(bookingClass)) {
-      return 1000;
-    } else {
-      return 500;
-    }
-  }
-}
-
 function calculateMiles(segments, data) {
   // Berechnet Statuspunkte. Bei UA -> 0, da Umsatzbasiert.
   // Bei Partnerairlines -> Meilen / 5 -  mit 1500/750 Limit je nach Klasse
   // Bei anderen Airlines -> Meilen / 6 - mit 750/500 Limit je nach Klasse
   return data.reduce((acc, itinerary) => {
     let mileage = itinerary.value?.totals?.find(item => 'UA' === item.id);
-    console.log("segment: " + acc[1]);
-    console.log(mileage.rdm[0]);
 
-    if (!mileage) {
-      return [acc[0], acc[1] + 1];
+    if (segments.filter(segment => ['AC', 'CA', 'EN', 'NZ', 'NH', 'OZ', 'AV', 'AD', 'SN', 'CM', 'WK', 'EW', 'LH', 'LX'].includes(segment.carrier))) {
+      if (segments.filter(segment => ['F', 'A', 'J', 'C', 'D', 'Z', 'P'].includes(segment.bookingClass))) {
+        return mileage.rdm[0] / 5 > 1500 ? 1500 : parseInt(mileage.rdm[0] / 5);
+      } else {
+        return mileage.rdm[0] / 5 > 750 ? 750 : parseInt(mileage.rdm[0] / 5);
+      }
     }
 
-    let limit = getLimit(segments[acc[1]].carrier, segments[acc[1]].bookingClass);
+    if (segments.filter(segment => ['UA'].includes(segment.carrier))) {
+      return 0;
+    }
 
-    if (['AC', 'CA', 'EN', 'NZ', 'NH', 'OZ', 'AV', 'AD', 'SN', 'CM', 'WK', 'EW', 'LH', 'LX'].includes(segments[acc[1]].carrier)) {
-      return mileage.rdm[0] / 5 > limit ? [acc[0] + limit, acc[1] + 1] : [acc[0] + parseInt(mileage.rdm[0] / 5), acc[1] + 1];
-    } else if (['UA'].includes(segments[acc[1]].carrier)) {
-      return [acc[0] + 0, acc[1] + 1];
+    if (segments.filter(segment => ['F', 'A', 'J', 'C', 'D', 'Z'].includes(segment.bookingClass))) {
+      return mileage.rdm[0] / 6 > 1000 ? 1000 : parseInt(mileage.rdm[0] / 6);
     } else {
-      return mileage.rdm[0] / 5 > limit ? [acc[0] + limit, acc[1] + 1] : [acc[0] + parseInt(mileage.rdm[0] / 5), acc[1] + 1];
+      return mileage.rdm[0] / 6 > 500 ? 500 : parseInt(mileage.rdm[0] / 6);
     }
-  }, [0, 0])[0];
+  }, 0);
 }
 
 var UA = {
@@ -1281,11 +1113,16 @@ var UA = {
       qualificationPeriod: 12,
       validity: 12,
       note: {
-        en: 'Segments in Basic Economy do not count',
-        de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
+        en: 'Only if not issued & operated by UA. Segments in Basic Economy do not count.',
+        de: 'Nur wenn weder von UA ausgestellt noch ausgeführt. Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
         es: ''
       }
-    }]
+    }],
+    note: {
+      en: '',
+      de: '',
+      es: ''
+    }
   }, {
     name: 'Premier Gold',
     allianceStatus: 'Star Alliance Gold',
@@ -1311,7 +1148,7 @@ var UA = {
       validity: 12,
       note: {
         en: 'Segments in Basic Economy do not count',
-        de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
+        de: 'Nur wenn weder von UA ausgestellt noch ausgeführt. Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
         es: ''
       }
     }],
@@ -1345,7 +1182,7 @@ var UA = {
       validity: 12,
       note: {
         en: 'Segments in Basic Economy do not count',
-        de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben ',
+        de: 'Nur wenn weder von UA ausgestellt noch ausgeführt. Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
         es: ''
       }
     }],
@@ -1379,7 +1216,7 @@ var UA = {
       validity: 12,
       note: {
         en: 'Segments in Basic Economy do not count',
-        de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
+        de: 'Nur wenn weder von UA ausgestellt noch ausgeführt. Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
         es: ''
       }
     }],
@@ -1390,8 +1227,8 @@ var UA = {
     }
   }],
   note: {
-    en: 'This calculation only works for flights that are not issued & operated by UA. At least 4 United Segments required to obtain a status',
-    de: 'Diese Berechnung stimmt nur wenn die Flüge weder von UA ausgestellt noch ausgeführt werden. 4 United-Segmente benötigt um einen Status zu bekommen.',
+    en: '4 United Segments required',
+    de: '4 United-Segmente benötigt',
     es: ''
   }
 };
@@ -1587,7 +1424,7 @@ const template =
   </style>
   <form>
     <label for="route">__(Routings)</label>
-    <textarea name="route" class="w-full my-1">LH:A:FRA-HKG-MUC</textarea>
+    <textarea name="route" class="w-full my-1" rows="8">LH:A:FRA-HKG-MUC</textarea>
     <small></small>
     <div class="my-3">
       <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
