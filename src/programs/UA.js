@@ -213,7 +213,7 @@ export default {
                     validity: 12,
                     note: {
                         en: 'Segments in Basic Economy do not count',
-                        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+                        de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
                         es: '',
                     },
                 },
@@ -246,7 +246,7 @@ export default {
                     validity: 12,
                     note: {
                         en: 'Segments in Basic Economy do not count',
-                        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+                        de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
                         es: '',
                     },
                 },
@@ -284,7 +284,7 @@ export default {
                     validity: 12,
                     note: {
                         en: 'Segments in Basic Economy do not count',
-                        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+                        de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben ',
                         es: '',
                     },
                 },
@@ -322,7 +322,7 @@ export default {
                     validity: 12,
                     note: {
                         en: 'Segments in Basic Economy do not count',
-                        de: 'Interkontinentale Segmente im billigsten Economy-Tarif ohne Gepäck zählen nicht. ',
+                        de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
                         es: '',
                     },
                 },
