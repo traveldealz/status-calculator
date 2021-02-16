@@ -25,7 +25,7 @@ export default {
           secCalculate: calculateSegments,
           qualificationPeriod: 12,
           validity: 12,
-          note: {
+          secNote: {
             en: '2 segments on Aegean or Olympic Air needed.',
             de: '2 Segmente mit Aegean oder Olympic Air benötigt.',
             es: '',

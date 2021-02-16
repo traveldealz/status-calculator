@@ -172,11 +172,13 @@ class StatusCalculator extends HTMLElement {
                     build.secNeeded = qualification.secNumber;
                     build.secCollected = totals[id];
                     build.secProgress = build.secCollected / build.secNeeded;
+                    build.secNote = qualification.secNote;
                     break;
                   case 'segments':
                     build.secNeeded = qualification.secNumber;
                     build.secCollected = this.$segments.length;
                     build.secProgress = build.secCollected / build.secNeeded;
+                    build.secNote = qualification.secNote;
                 }
 
                 if(qualification.secCalculate) {
@@ -207,7 +209,8 @@ class StatusCalculator extends HTMLElement {
           <div class="flex flex-col justify-end">
             <div class="text-sm">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.secCollected.toLocaleString()} __(of) ${item.secNeeded.toLocaleString()} __(${item.qualification.secType})</div>
             <progress class="w-full" value="${item.secProgress}">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
-          </div>
+            ${ item.secNote && item.secNote[this.$locale] ? `<div class="text-sm">${item.secNote[this.$locale]}</div>`:''}
+           </div>
           `}
           <div class="col-span-2 text-sm">
             ${ item.qualification.note && item.qualification.note[this.$locale] ? `<div>${item.qualification.note[this.$locale]}</div>`: '' }

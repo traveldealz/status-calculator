@@ -211,7 +211,7 @@ export default {
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
                     validity: 12,
-                    note: {
+                    secNote: {
                         en: 'Segments in Basic Economy do not count',
                         de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
                         es: '',
@@ -244,7 +244,7 @@ export default {
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
                     validity: 12,
-                    note: {
+                    secNote: {
                         en: 'Segments in Basic Economy do not count',
                         de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
                         es: '',
@@ -282,7 +282,7 @@ export default {
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
                     validity: 12,
-                    note: {
+                    secNote: {
                         en: 'Segments in Basic Economy do not count',
                         de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben ',
                         es: '',
@@ -320,7 +320,7 @@ export default {
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
                     validity: 12,
-                    note: {
+                    secNote: {
                         en: 'Segments in Basic Economy do not count',
                         de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
                         es: '',
