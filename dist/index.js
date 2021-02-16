@@ -22,7 +22,7 @@ var A3 = {
       secCalculate: calculateSegments,
       qualificationPeriod: 12,
       validity: 12,
-      note: {
+      secNote: {
         en: '2 segments on Aegean or Olympic Air needed.',
         de: '2 Segmente mit Aegean oder Olympic Air benötigt.',
         es: ''
@@ -812,7 +812,7 @@ var CM = {
       secCalculate: calculateSegments$3,
       qualificationPeriod: 12,
       validity: 12,
-      note: {
+      secNote: {
         en: '4 segments on Copa Airlines needed.',
         de: '4 Segmente mit Copa Airlines benötigt.',
         es: ''
@@ -834,7 +834,7 @@ var CM = {
       secCalculate: calculateSegments$3,
       qualificationPeriod: 12,
       validity: 12,
-      note: {
+      secNote: {
         en: '4 segments on Copa Airlines needed.',
         de: '4 Segmente mit Copa Airlines benötigt.',
         es: ''
@@ -856,7 +856,7 @@ var CM = {
       secCalculate: calculateSegments$3,
       qualificationPeriod: 12,
       validity: 12,
-      note: {
+      secNote: {
         en: '4 segments on Copa Airlines needed.',
         de: '4 Segmente mit Copa Airlines benötigt.',
         es: ''
@@ -878,7 +878,7 @@ var CM = {
       secCalculate: calculateSegments$3,
       qualificationPeriod: 12,
       validity: 12,
-      note: {
+      secNote: {
         en: '4 segments on Copa Airlines needed.',
         de: '4 Segmente mit Copa Airlines benötigt.',
         es: ''
@@ -1280,7 +1280,7 @@ var UA = {
       secCalculate: calculateSegments$4,
       qualificationPeriod: 12,
       validity: 12,
-      note: {
+      secNote: {
         en: 'Segments in Basic Economy do not count',
         de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
         es: ''
@@ -1309,7 +1309,7 @@ var UA = {
       secCalculate: calculateSegments$4,
       qualificationPeriod: 12,
       validity: 12,
-      note: {
+      secNote: {
         en: 'Segments in Basic Economy do not count',
         de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
         es: ''
@@ -1343,7 +1343,7 @@ var UA = {
       secCalculate: calculateSegments$4,
       qualificationPeriod: 12,
       validity: 12,
-      note: {
+      secNote: {
         en: 'Segments in Basic Economy do not count',
         de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben ',
         es: ''
@@ -1377,7 +1377,7 @@ var UA = {
       secCalculate: calculateSegments$4,
       qualificationPeriod: 12,
       validity: 12,
-      note: {
+      secNote: {
         en: 'Segments in Basic Economy do not count',
         de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
         es: ''
@@ -1724,12 +1724,14 @@ class StatusCalculator extends HTMLElement {
                 build.secNeeded = qualification.secNumber;
                 build.secCollected = totals[id];
                 build.secProgress = build.secCollected / build.secNeeded;
+                build.secNote = qualification.secNote;
                 break;
 
               case 'segments':
                 build.secNeeded = qualification.secNumber;
                 build.secCollected = this.$segments.length;
                 build.secProgress = build.secCollected / build.secNeeded;
+                build.secNote = qualification.secNote;
             }
 
             if (qualification.secCalculate) {
@@ -1746,6 +1748,11 @@ class StatusCalculator extends HTMLElement {
       let text = `
         <h3>${item.program.name}: ${item.status.name}</h3>
         <div class="grid grid-cols-2 gap-x-4 gab-y-8 my-3" style="row-gap: 1rem; column-gap: 2rem;">
+          ${item.program.note ? `
+          <div class="col-span-2 text-sm">
+            ${item.program.note && item.program.note[this.$locale] ? `<div>${item.program.note[this.$locale]}</div>` : ''}
+          </div>
+          ` : ''}
           <div class="${'undefined' === typeof item.secProgress ? 'col-span-2 ' : ''}flex flex-col justify-end">
             <div class="text-sm">${item.progress.toLocaleString(undefined, {
         style: 'percent',
@@ -1756,7 +1763,7 @@ class StatusCalculator extends HTMLElement {
         minimumFractionDigits: 0
       })}</progress>
           </div>
-        ${'undefined' === typeof item.secProgress ? '' : `
+          ${'undefined' === typeof item.secProgress ? '' : `
           <div class="flex flex-col justify-end">
             <div class="text-sm">${item.secProgress.toLocaleString(undefined, {
         style: 'percent',
@@ -1766,13 +1773,23 @@ class StatusCalculator extends HTMLElement {
         style: 'percent',
         minimumFractionDigits: 0
       })}</progress>
-          </div>
+           </div>
           `}
-          <div class="col-span-2 text-sm">
+          ${item.note || item.secNote ? `
+          <div class="text-sm${'undefined' === typeof item.secNote ? ' col-span-2 ' : ''}">
             ${item.qualification.note && item.qualification.note[this.$locale] ? `<div>${item.qualification.note[this.$locale]}</div>` : ''}
-            ${item.status.note && item.status.note[this.$locale] ? `<div>${item.status.note[this.$locale]}</div>` : ''}
-            ${item.program.note && item.program.note[this.$locale] ? `<div>${item.program.note[this.$locale]}</div>` : ''}
           </div>
+          ${'undefined' !== typeof item.secProgress && item.secNote ? `
+          <div class="text-sm">
+            ${item.secNote && item.secNote[this.$locale] ? item.secNote[this.$locale] : ''}
+          </div>
+          ` : ''}
+          ` : ''}
+          ${item.status.note ? `
+          <div class="col-span-2 text-sm">
+            ${item.status.note && item.status.note[this.$locale] ? `<div>${item.status.note[this.$locale]}</div>` : ''}
+          </div>
+          ` : ''}
           <div class="text-center">
             <div class="text-sm">__(Qualification period)</div>
             <div>${item.qualification.qualificationPeriod} __(months)</div>
