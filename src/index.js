@@ -216,13 +216,13 @@ class StatusCalculator extends HTMLElement {
             <progress class="w-full" value="${item.secProgress}">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
            </div>
           `}
-          ${ item.note || item.secNote ? `
-          <div class="text-sm${'undefined' === typeof item.secNote ? ' col-span-2 ' : ''}">
+          ${ item.qualification.note || item.qualification.secNote ? `
+          <div class="text-sm${'undefined' === typeof item.qualification.secNote ? ' col-span-2 ' : ''}">
             ${ item.qualification.note && item.qualification.note[this.$locale] ? `<div>${item.qualification.note[this.$locale]}</div>`: '' }
           </div>
-          ${'undefined' !== typeof item.secProgress && item.secNote ? `
+          ${'undefined' !== typeof item.secProgress && item.qualification.secNote ? `
           <div class="text-sm">
-            ${ item.secNote && item.secNote[this.$locale] ? item.secNote[this.$locale] : '' }
+            ${ item.qualification.secNote && item.qualification.secNote[this.$locale] ? item.qualification.secNote[this.$locale] : '' }
           </div>
           ` : '' }
           ` : '' }

@@ -62,8 +62,13 @@ export default {
           qualificationPeriod: 12,
           validity: 12,
           note: {
-            en: 'Qualification period of 12 months starts after reaching Silver status to collect further 24.000 miles + 4 segments with Aegean or Olympic Air.',
-            de: 'Qualifikationszeitraum von 12 Monaten beginnt nach Erreichen des Silver Status, um weitere 24.000 Meilen + 4 Segmente mit Aegean oder Olympic Air zu sammeln.',
+            en: 'Qualification period of 12 months starts after reaching Silver status to collect further 24.000 miles (total 36.000)',
+            de: 'Qualifikationszeitraum von 12 Monaten beginnt nach Erreichen des Silver Status, um weitere 24.000 Meilen (insgesamt 36.000)',
+            es: '',
+          },
+          secNote: {
+            en: 'and 4 (total 6) segments with Aegean or Olympic Air.',
+            de: 'und 4 (insgesamt 6) Segmente mit Aegean oder Olympic Air zu sammeln.',
             es: '',
           },
         },
