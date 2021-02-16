@@ -201,22 +201,36 @@ class StatusCalculator extends HTMLElement {
         let text = `
         <h3>${item.program.name}: ${item.status.name}</h3>
         <div class="grid grid-cols-2 gap-x-4 gab-y-8 my-3" style="row-gap: 1rem; column-gap: 2rem;">
+          ${ item.program.note ? `
+          <div class="col-span-2 text-sm">
+            ${ item.program.note && item.program.note[this.$locale] ? `<div>${item.program.note[this.$locale]}</div>`: '' }
+          </div>
+          ` : '' }
           <div class="${'undefined' === typeof item.secProgress ? 'col-span-2 ' : ''}flex flex-col justify-end">
             <div class="text-sm">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.collected.toLocaleString()} __(of) ${item.needed.toLocaleString()} __(${item.qualification.type})</div>
             <progress class="w-full" value="${item.progress}">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
           </div>
-        ${'undefined' === typeof item.secProgress ? '' : `
+          ${'undefined' === typeof item.secProgress ? '' : `
           <div class="flex flex-col justify-end">
             <div class="text-sm">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.secCollected.toLocaleString()} __(of) ${item.secNeeded.toLocaleString()} __(${item.qualification.secType})</div>
             <progress class="w-full" value="${item.secProgress}">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
-            ${ item.secNote && item.secNote[this.$locale] ? `<div class="text-sm">${item.secNote[this.$locale]}</div>`:''}
            </div>
           `}
-          <div class="col-span-2 text-sm">
+          ${ item.note || item.secNote ? `
+          <div class="text-sm${'undefined' === typeof item.secNote ? ' col-span-2 ' : ''}">
             ${ item.qualification.note && item.qualification.note[this.$locale] ? `<div>${item.qualification.note[this.$locale]}</div>`: '' }
-            ${ item.status.note && item.status.note[this.$locale] ? `<div>${item.status.note[this.$locale]}</div>`: '' }
-            ${ item.program.note && item.program.note[this.$locale] ? `<div>${item.program.note[this.$locale]}</div>`: '' }
           </div>
+          ${'undefined' !== typeof item.secProgress && item.secNote ? `
+          <div class="text-sm">
+            ${ item.secNote && item.secNote[this.$locale] ? item.secNote[this.$locale] : '' }
+          </div>
+          ` : '' }
+          ` : '' }
+          ${ item.status.note ? `
+          <div class="col-span-2 text-sm">
+            ${ item.status.note && item.status.note[this.$locale] ? `<div>${item.status.note[this.$locale]}</div>`: '' }
+          </div>
+          ` : '' }
           <div class="text-center">
             <div class="text-sm">__(Qualification period)</div>
             <div>${item.qualification.qualificationPeriod} __(months)</div>
