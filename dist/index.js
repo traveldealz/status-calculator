@@ -195,6 +195,22 @@ function calculateExecutivebonus(segments, data) {
   }, 0);
 }
 
+function calc2021(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'LHM' === item.id);
+
+    if (!mileage) {
+      return [acc[0], acc[1] + 1];
+    }
+
+    if (['EN', 'OS', 'SN', 'OU', 'EW', 'LO', 'LH', 'LG', 'LX', 'WK'].includes(segments[acc[1]].carrier)) {
+      return acc[0] > 35000 ? [acc[0] + mileage.rdm[0] * 1.25 * 2, acc[1] + 1] : [acc[0] + mileage.rdm[0] * 2, acc[1] + 1];
+    } else {
+      return acc[0] > 35000 ? [acc[0] + mileage.rdm[0] * 1.25, acc[1] + 1] : [acc[0] + mileage.rdm[0], acc[1] + 1];
+    }
+  }, [0, 0])[0];
+}
+
 var LHM = {
   name: 'Miles & More',
   alliance: 'Star Alliance',
@@ -229,8 +245,38 @@ var LHM = {
       validity: 24,
       calculate: calculateExecutivebonus,
       note: {
-        en: 'After reaching the Frequent Traveller status you get 25 percentage points Executive Bonus.',
-        de: 'Nachdem man den Frequenz Traveller Status erreicht hat, erhält man 25 Prozentpunkte Excutive Bonus.',
+        en: '',
+        de: '',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Frequent Traveller 2021',
+    allianceStatus: 'Star Alliance Silver',
+    qualification: [{
+      type: 'miles',
+      number: 35000,
+      qualificationPeriod: 12,
+      validity: 24,
+      calculate: calc2021,
+      note: {
+        en: 'In 2021 you will get double status miles on Lufthansa-Group flights',
+        de: 'Im Jahr 2021 gibt es ausnahmsweise doppelte Statusmeilen auf Flügen der Lufthansa-Group',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Senator 2021',
+    allianceStatus: 'Star Alliance Gold',
+    qualification: [{
+      type: 'miles',
+      number: 100000,
+      qualificationPeriod: 12,
+      validity: 24,
+      calculate: calc2021,
+      note: {
+        en: 'In 2021 you will get double status miles on Lufthansa-Group flights',
+        de: 'Im Jahr 2021 gibt es ausnahmsweise doppelte Statusmeilen auf Flügen der Lufthansa-Group',
         es: ''
       }
     }]
