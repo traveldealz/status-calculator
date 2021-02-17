@@ -157,6 +157,7 @@ class StatusCalculator extends HTMLElement {
                   build.needed = qualification.number;
                   build.collected = totals[id];
                   build.progress = build.collected / build.needed;
+                  qualification.milesName? build.milesname = qualification.milesName[this.$locale] : build.milesname = qualification.type;
                   break;
                 case 'segments':
                   build.needed = qualification.number;
@@ -183,6 +184,8 @@ class StatusCalculator extends HTMLElement {
                     build.secCollected = this.$segments.length;
                     build.secProgress = build.secCollected / build.secNeeded;
                     build.secNote = qualification.secNote;
+                    qualification.secmilesName? build.secmilesname = qualification.secmilesName[this.$locale] : build.secmilesname = qualification.type;
+
                 }
 
                 if(qualification.secCalculate) {
@@ -211,12 +214,12 @@ class StatusCalculator extends HTMLElement {
           </div>
           ` : '' }
           <div class="${'undefined' === typeof item.secProgress ? 'col-span-2 ' : ''}flex flex-col justify-end">
-            <div class="text-sm">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.collected.toLocaleString()} __(of) ${item.needed.toLocaleString()} __(${item.qualification.type})</div>
+            <div class="text-sm">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.collected.toLocaleString()} __(of) ${item.needed.toLocaleString()} __(${item.milesname})</div>
             <progress class="w-full" value="${item.progress}">${item.progress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
           </div>
           ${'undefined' === typeof item.secProgress ? '' : `
           <div class="flex flex-col justify-end">
-            <div class="text-sm">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.secCollected.toLocaleString()} __(of) ${item.secNeeded.toLocaleString()} __(${item.qualification.secType})</div>
+            <div class="text-sm">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})} = ${item.secCollected.toLocaleString()} __(of) ${item.secNeeded.toLocaleString()} __(${item.secmilesname})</div>
             <progress class="w-full" value="${item.secProgress}">${item.secProgress.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 0})}</progress>
            </div>
           `}

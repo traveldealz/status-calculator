@@ -21,13 +21,17 @@ export default {
           type: 'miles',
           number: 12000,
           secType: 'segments',
+          secmilesName: {
+                        en: 'Segments with Aegean or Olympic Air',
+                        de: 'Segmenten mit Aegean oder Olympic Air',
+                    },
           secNumber: 2,
           secCalculate: calculateSegments,
           qualificationPeriod: 12,
           validity: 12,
           secNote: {
-            en: '2 segments on Aegean or Olympic Air needed.',
-            de: '2 Segmente mit Aegean oder Olympic Air benötigt.',
+            en: '',
+            de: '',
             es: '',
           },
         },
@@ -59,25 +63,21 @@ export default {
           secType: 'segments',
           secNumber: 6,
           secCalculate: calculateSegments,
-          qualificationPeriod: 12,
-          validity: 12,
-          note: {
-            en: 'Qualification period of 12 months starts after reaching Silver status to collect further 24.000 miles (total 36.000)',
-            de: 'Qualifikationszeitraum von 12 Monaten beginnt nach Erreichen des Silver Status, um weitere 24.000 Meilen (insgesamt 36.000)',
-            es: '',
-          },
-          secNote: {
-            en: 'and 4 (total 6) segments with Aegean or Olympic Air.',
-            de: 'und 4 (insgesamt 6) Segmente mit Aegean oder Olympic Air zu sammeln.',
-            es: '',
-          },
-        },
-      ],
-      note: {
-        en: '',
-        de: '',
+           note: {
+        en: 'Qualification period of 12 months starts after reaching Silver status to collect further 24.000 miles (total 36.000) and 4 (total 6) segments with Aegean or Olympic Air.',
+        de: 'Qualifikationszeitraum von 12 Monaten beginnt nach Erreichen des Silver Status, um weitere 24.000 Meilen (insgesamt 36.000) und 4 (insgesamt 6) Segmente mit Aegean oder Olympic Air zu sammeln.',
         es: '',
       },
+          secmilesName: {
+                        en: 'Segments with Aegean or Olympic Air',
+                        de: 'Segmenten mit Aegean oder Olympic Air',
+                    },
+          qualificationPeriod: 12,
+          validity: 12,
+         
+        },
+      ],
+     
     },
   ],
   note: {

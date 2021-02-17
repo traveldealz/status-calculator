@@ -44,6 +44,10 @@ export default {
           number: 35000,
           qualificationPeriod: 12,
           validity: 24,
+          milesName: {
+                        en: 'status miles',
+                        de: 'Statusmeilen',
+                    },
         },
         {
           type: 'segments',
@@ -68,6 +72,10 @@ export default {
           number: 100000,
           qualificationPeriod: 12,
           validity: 24,
+          milesName: {
+                        en: 'status miles',
+                        de: 'Statusmeilen',
+                    },
           calculate: calculateExecutivebonus,
           note: {
             en: '',
@@ -86,6 +94,10 @@ export default {
           number: 35000,
           qualificationPeriod: 12,
           validity: 24,
+          milesName: {
+                        en: 'status miles',
+                        de: 'Statusmeilen',
+                    },
           calculate: calc2021,
           note: {
             en: 'In 2021 you will get double status miles on Lufthansa-Group flights',
@@ -104,6 +116,10 @@ export default {
           number: 100000,
           qualificationPeriod: 12,
           validity: 24,
+          milesName: {
+                        en: 'status miles',
+                        de: 'Statusmeilen',
+                    },
           calculate: calc2021,
           note: {
             en: 'In 2021 you will get double status miles on Lufthansa-Group flights',

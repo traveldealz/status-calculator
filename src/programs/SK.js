@@ -16,6 +16,10 @@ export default {
           number: 20000,
           qualificationPeriod: 12,
           validity: 12,
+          milesName: {
+                        en: 'basic points',
+                        de: 'Basispunkten',
+                    },
         },
         {
           type: 'segments',
@@ -45,6 +49,10 @@ export default {
           number: 45000,
           qualificationPeriod: 12,
           validity: 12,
+           milesName: {
+                        en: 'basic points',
+                        de: 'Basispunkten',
+                    },
         },
         {
           type: 'segments',
@@ -73,6 +81,10 @@ export default {
           type: 'miles',
           number: 90000,
           qualificationPeriod: 12,
+           milesName: {
+                        en: 'basic points',
+                        de: 'Basispunkten',
+                    },
           validity: 12,
         },
         {

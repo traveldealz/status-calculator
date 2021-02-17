@@ -4,6 +4,7 @@ function calculateSegments( segments, data ) {
         if(!mileage) {
             return acc;
         }
+        if(mileage.id == 'UA'){return acc+1}; 
         return 0 < mileage.rdm[0] ? acc+1 : acc;
     }, 0);
 }
@@ -204,6 +205,10 @@ export default {
                     type: 'miles',
                     number: 3500,
                     calculate: calculateMiles,
+                    milesName: {
+                        en: 'points (PQPs)',
+                        de: 'Punkten (PQP)',
+                    },
                     qualificationPeriod: 12,
                     validity: 12,
                 },
@@ -211,10 +216,18 @@ export default {
                     type: 'miles',
                     number: 3000,
                     calculate: calculateMiles,
+                    milesName: {
+                        en: 'points (PQPs)',
+                        de: 'Punkten (PQP)',
+                    },
                     secType: 'segments',
                     secNumber: 8,
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
+                    secmilesName: {
+                        en: 'Segments (PQFs)',
+                        de: 'Segmenten (PQF)',
+                    },
                     validity: 12,
                     secNote: {
                         en: 'Segments in Basic Economy do not count',
@@ -234,6 +247,10 @@ export default {
                     calculate: calculateMiles,
                     qualificationPeriod: 12,
                     validity: 12,
+                    milesName: {
+                        en: 'points (PQPs)',
+                        de: 'Punkten (PQP)',
+                    },
                     note: {
                         en: '',
                         de: '',
@@ -247,8 +264,16 @@ export default {
                     secType: 'segments',
                     secNumber: 16,
                     secCalculate: calculateSegments,
+                    milesName: {
+                        en: 'points (PQPs)',
+                        de: 'Punkten (PQP)',
+                    },
                     qualificationPeriod: 12,
                     validity: 12,
+                    secmilesName: {
+                        en: 'Segments (PQFs)',
+                        de: 'Segmenten (PQF)',
+                    },
                     secNote: {
                         en: 'Segments in Basic Economy do not count',
                         de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
@@ -270,6 +295,10 @@ export default {
                     type: 'miles',
                     number: 10000,
                     calculate: calculateMiles,
+                    milesName: {
+                        en: 'points (PQPs)',
+                        de: 'Punkten (PQP)',
+                    },
                     qualificationPeriod: 12,
                     validity: 12,
                     note: {
@@ -282,9 +311,17 @@ export default {
                     type: 'miles',
                     number: 9000,
                     calculate: calculateMiles,
+                    milesName: {
+                        en: 'points (PQPs)',
+                        de: 'Punkten (PQP)',
+                    },
                     secType: 'segments',
                     secNumber: 24,
                     secCalculate: calculateSegments,
+                    secmilesName: {
+                        en: 'Segments (PQFs)',
+                        de: 'Segmenten (PQF)',
+                    },
                     qualificationPeriod: 12,
                     validity: 12,
                     secNote: {
@@ -308,6 +345,10 @@ export default {
                     type: 'miles',
                     number: 15000,
                     calculate: calculateMiles,
+                    milesName: {
+                        en: 'points (PQPs)',
+                        de: 'Punkten (PQP)',
+                    },
                     qualificationPeriod: 12,
                     validity: 12,
                     note: {
@@ -320,10 +361,18 @@ export default {
                     type: 'miles',
                     number: 13500,
                     calculate: calculateMiles,
+                    milesName: {
+                        en: 'points (PQPs)',
+                        de: 'Punkten (PQP)',
+                    },
                     secType: 'segments',
                     secNumber: 36,
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
+                    secmilesName: {
+                        en: 'Segments (PQFs)',
+                        de: 'Segmenten (PQF)',
+                    },
                     validity: 12,
                     secNote: {
                         en: 'Segments in Basic Economy do not count',
