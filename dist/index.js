@@ -18,13 +18,17 @@ var A3 = {
       type: 'miles',
       number: 12000,
       secType: 'segments',
+      secmilesName: {
+        en: 'Segments with Aegean or Olympic Air',
+        de: 'Segmenten mit Aegean oder Olympic Air'
+      },
       secNumber: 2,
       secCalculate: calculateSegments,
       qualificationPeriod: 12,
       validity: 12,
       secNote: {
-        en: '2 segments on Aegean or Olympic Air needed.',
-        de: '2 Segmente mit Aegean oder Olympic Air benötigt.',
+        en: '',
+        de: '',
         es: ''
       }
     }],
@@ -52,24 +56,18 @@ var A3 = {
       secType: 'segments',
       secNumber: 6,
       secCalculate: calculateSegments,
-      qualificationPeriod: 12,
-      validity: 12,
       note: {
-        en: 'Qualification period of 12 months starts after reaching Silver status to collect further 24.000 miles (total 36.000)',
-        de: 'Qualifikationszeitraum von 12 Monaten beginnt nach Erreichen des Silver Status, um weitere 24.000 Meilen (insgesamt 36.000)',
+        en: 'Qualification period of 12 months starts after reaching Silver status to collect further 24.000 miles (total 36.000) and 4 (total 6) segments with Aegean or Olympic Air.',
+        de: 'Qualifikationszeitraum von 12 Monaten beginnt nach Erreichen des Silver Status, um weitere 24.000 Meilen (insgesamt 36.000) und 4 (insgesamt 6) Segmente mit Aegean oder Olympic Air zu sammeln.',
         es: ''
       },
-      secNote: {
-        en: 'and 4 (total 6) segments with Aegean or Olympic Air.',
-        de: 'und 4 (insgesamt 6) Segmente mit Aegean oder Olympic Air zu sammeln.',
-        es: ''
-      }
-    }],
-    note: {
-      en: '',
-      de: '',
-      es: ''
-    }
+      secmilesName: {
+        en: 'Segments with Aegean or Olympic Air',
+        de: 'Segmenten mit Aegean oder Olympic Air'
+      },
+      qualificationPeriod: 12,
+      validity: 12
+    }]
   }],
   note: {
     en: '',
@@ -222,7 +220,11 @@ var LHM = {
       type: 'miles',
       number: 35000,
       qualificationPeriod: 12,
-      validity: 24
+      validity: 24,
+      milesName: {
+        en: 'status miles',
+        de: 'Statusmeilen'
+      }
     }, {
       type: 'segments',
       number: 30,
@@ -243,6 +245,10 @@ var LHM = {
       number: 100000,
       qualificationPeriod: 12,
       validity: 24,
+      milesName: {
+        en: 'status miles',
+        de: 'Statusmeilen'
+      },
       calculate: calculateExecutivebonus,
       note: {
         en: '',
@@ -258,6 +264,10 @@ var LHM = {
       number: 35000,
       qualificationPeriod: 12,
       validity: 24,
+      milesName: {
+        en: 'status miles',
+        de: 'Statusmeilen'
+      },
       calculate: calc2021,
       note: {
         en: 'In 2021 you will get double status miles on Lufthansa-Group flights',
@@ -273,6 +283,10 @@ var LHM = {
       number: 100000,
       qualificationPeriod: 12,
       validity: 24,
+      milesName: {
+        en: 'status miles',
+        de: 'Statusmeilen'
+      },
       calculate: calc2021,
       note: {
         en: 'In 2021 you will get double status miles on Lufthansa-Group flights',
@@ -500,7 +514,11 @@ var SK = {
       type: 'miles',
       number: 20000,
       qualificationPeriod: 12,
-      validity: 12
+      validity: 12,
+      milesName: {
+        en: 'basic points',
+        de: 'Basispunkten'
+      }
     }, {
       type: 'segments',
       number: 10,
@@ -525,7 +543,11 @@ var SK = {
       type: 'miles',
       number: 45000,
       qualificationPeriod: 12,
-      validity: 12
+      validity: 12,
+      milesName: {
+        en: 'basic points',
+        de: 'Basispunkten'
+      }
     }, {
       type: 'segments',
       number: 45,
@@ -550,6 +572,10 @@ var SK = {
       type: 'miles',
       number: 90000,
       qualificationPeriod: 12,
+      milesName: {
+        en: 'basic points',
+        de: 'Basispunkten'
+      },
       validity: 12
     }, {
       type: 'segments',
@@ -1110,6 +1136,9 @@ function calculateSegments$4(segments, data) {
       return acc;
     }
 
+    if (mileage.id == 'UA') {
+      return acc + 1;
+    }
     return 0 < mileage.rdm[0] ? acc + 1 : acc;
   }, 0);
 }
@@ -1326,16 +1355,28 @@ var UA = {
       type: 'miles',
       number: 3500,
       calculate: calculateMiles,
+      milesName: {
+        en: 'points (PQPs)',
+        de: 'Punkten (PQP)'
+      },
       qualificationPeriod: 12,
       validity: 12
     }, {
       type: 'miles',
       number: 3000,
       calculate: calculateMiles,
+      milesName: {
+        en: 'points (PQPs)',
+        de: 'Punkten (PQP)'
+      },
       secType: 'segments',
       secNumber: 8,
       secCalculate: calculateSegments$4,
       qualificationPeriod: 12,
+      secmilesName: {
+        en: 'Segments (PQFs)',
+        de: 'Segmenten (PQF)'
+      },
       validity: 12,
       secNote: {
         en: 'Segments in Basic Economy do not count',
@@ -1352,6 +1393,10 @@ var UA = {
       calculate: calculateMiles,
       qualificationPeriod: 12,
       validity: 12,
+      milesName: {
+        en: 'points (PQPs)',
+        de: 'Punkten (PQP)'
+      },
       note: {
         en: '',
         de: '',
@@ -1364,8 +1409,16 @@ var UA = {
       secType: 'segments',
       secNumber: 16,
       secCalculate: calculateSegments$4,
+      milesName: {
+        en: 'points (PQPs)',
+        de: 'Punkten (PQP)'
+      },
       qualificationPeriod: 12,
       validity: 12,
+      secmilesName: {
+        en: 'Segments (PQFs)',
+        de: 'Segmenten (PQF)'
+      },
       secNote: {
         en: 'Segments in Basic Economy do not count',
         de: 'Für Transatlantikflüge im Light-Tarif (ohne Gepäck) und die United Basic Economy werden keine Segmente gutgeschrieben',
@@ -1384,6 +1437,10 @@ var UA = {
       type: 'miles',
       number: 10000,
       calculate: calculateMiles,
+      milesName: {
+        en: 'points (PQPs)',
+        de: 'Punkten (PQP)'
+      },
       qualificationPeriod: 12,
       validity: 12,
       note: {
@@ -1395,9 +1452,17 @@ var UA = {
       type: 'miles',
       number: 9000,
       calculate: calculateMiles,
+      milesName: {
+        en: 'points (PQPs)',
+        de: 'Punkten (PQP)'
+      },
       secType: 'segments',
       secNumber: 24,
       secCalculate: calculateSegments$4,
+      secmilesName: {
+        en: 'Segments (PQFs)',
+        de: 'Segmenten (PQF)'
+      },
       qualificationPeriod: 12,
       validity: 12,
       secNote: {
@@ -1418,6 +1483,10 @@ var UA = {
       type: 'miles',
       number: 15000,
       calculate: calculateMiles,
+      milesName: {
+        en: 'points (PQPs)',
+        de: 'Punkten (PQP)'
+      },
       qualificationPeriod: 12,
       validity: 12,
       note: {
@@ -1429,10 +1498,18 @@ var UA = {
       type: 'miles',
       number: 13500,
       calculate: calculateMiles,
+      milesName: {
+        en: 'points (PQPs)',
+        de: 'Punkten (PQP)'
+      },
       secType: 'segments',
       secNumber: 36,
       secCalculate: calculateSegments$4,
       qualificationPeriod: 12,
+      secmilesName: {
+        en: 'Segments (PQFs)',
+        de: 'Segmenten (PQF)'
+      },
       validity: 12,
       secNote: {
         en: 'Segments in Basic Economy do not count',
@@ -1766,6 +1843,7 @@ class StatusCalculator extends HTMLElement {
               build.needed = qualification.number;
               build.collected = totals[id];
               build.progress = build.collected / build.needed;
+              qualification.milesName ? build.milesname = qualification.milesName[this.$locale] : build.milesname = qualification.type;
               break;
 
             case 'segments':
@@ -1793,6 +1871,7 @@ class StatusCalculator extends HTMLElement {
                 build.secCollected = this.$segments.length;
                 build.secProgress = build.secCollected / build.secNeeded;
                 build.secNote = qualification.secNote;
+                qualification.secmilesName ? build.secmilesname = qualification.secmilesName[this.$locale] : build.secmilesname = qualification.type;
             }
 
             if (qualification.secCalculate) {
@@ -1818,7 +1897,7 @@ class StatusCalculator extends HTMLElement {
             <div class="text-sm">${item.progress.toLocaleString(undefined, {
         style: 'percent',
         minimumFractionDigits: 0
-      })} = ${item.collected.toLocaleString()} __(of) ${item.needed.toLocaleString()} __(${item.qualification.type})</div>
+      })} = ${item.collected.toLocaleString()} __(of) ${item.needed.toLocaleString()} __(${item.milesname})</div>
             <progress class="w-full" value="${item.progress}">${item.progress.toLocaleString(undefined, {
         style: 'percent',
         minimumFractionDigits: 0
@@ -1829,7 +1908,7 @@ class StatusCalculator extends HTMLElement {
             <div class="text-sm">${item.secProgress.toLocaleString(undefined, {
         style: 'percent',
         minimumFractionDigits: 0
-      })} = ${item.secCollected.toLocaleString()} __(of) ${item.secNeeded.toLocaleString()} __(${item.qualification.secType})</div>
+      })} = ${item.secCollected.toLocaleString()} __(of) ${item.secNeeded.toLocaleString()} __(${item.secmilesname})</div>
             <progress class="w-full" value="${item.secProgress}">${item.secProgress.toLocaleString(undefined, {
         style: 'percent',
         minimumFractionDigits: 0
