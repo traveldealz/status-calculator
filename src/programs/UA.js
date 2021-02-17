@@ -173,6 +173,11 @@ function calculateMiles(segments, data) {
           return [acc[0], acc[1]+1];
         }
         let limit = getLimit(segments[acc[1]].carrier, segments[acc[1]].bookingClass);
+        if(segments[acc[1]].carrier  && segments[acc[1]].ticketer){
+        if(['UA'].includes(segments[acc[1]].carrier) || ['UA'].includes(segments[acc[1]].ticketer)) {
+            return [acc[0] + segments[acc[1]].price, acc[1]+1];
+        }
+        }
         if(['AC','CA','EN','NZ','NH','OZ', 'AV','AD', 'SN','CM', 'WK','EW','LH','LX'].includes(segments[acc[1]].carrier)) {
                 return (mileage.rdm[0] / 5) > limit ? [acc[0] + limit, acc[1]+1] : [acc[0] + parseInt((mileage.rdm[0] / 5)), acc[1]+1];
         }
@@ -335,8 +340,8 @@ export default {
         },
     ],
     note: {
-        en: 'This calculation only works for flights that are not issued & operated by UA. At least 4 United Segments required to obtain a status',
-        de: 'Diese Berechnung stimmt nur wenn die Flüge weder von UA ausgestellt noch ausgeführt werden. 4 United-Segmente benötigt um einen Status zu bekommen.',
+        en: 'If you do not enter the ticketing carrier and the flight price, this calculation only works for flights that are not issued & operated by UA. At least 4 United Segments required to obtain a status',
+        de: 'Sofern Sie nicht den Ticketing-Carrier und den Flugpreis angeben, stimmt diese Berechnung nur wenn die Flüge weder von UA ausgestellt noch ausgeführt werden. 4 United-Segmente benötigt um einen Status zu bekommen.',
         es: '',
     },
 };

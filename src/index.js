@@ -79,6 +79,8 @@ class StatusCalculator extends HTMLElement {
         let carrier = parts[0];
         let bookingClass = parts[1];
         let route = parts[2].split('-').map(v => v.trim());
+        let ticketer = parts[3];
+        let price = parseInt(parts[4]/(parts[2].split('-').length - 1));
 
         return route.reduce((accumulator, airport, index, route) => {
           if(0 === index || ! accumulator) {
@@ -89,6 +91,8 @@ class StatusCalculator extends HTMLElement {
             bookingClass,
             origin: route[index-1],
             destination: airport,
+            ticketer,
+            price,
           });
           return accumulator;
         }, []);
