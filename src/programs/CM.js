@@ -19,12 +19,12 @@ export default {
                     secNumber: 4,
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
-                    validity: 12,
-                    secNote: {
-                        en: '4 segments on Copa Airlines needed.',
-                        de: '4 Segmente mit Copa Airlines benötigt.',
-                        es: '',
+                    secmilesName: {
+                        en: 'Segments with Copa Airlines',
+                        de: 'Segmenten mit Copa Airlines',
                     },
+                    validity: 12,
+                
                 },
             ],
             note: {
@@ -45,11 +45,11 @@ export default {
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
                     validity: 12,
-                    secNote: {
-                        en: '4 segments on Copa Airlines needed.',
-                        de: '4 Segmente mit Copa Airlines benötigt.',
-                        es: '',
+                    secmilesName: {
+                        en: 'Segments with Copa Airlines',
+                        de: 'Segmenten mit Copa Airlines',
                     },
+                    
                 },
             ],
             note: {
@@ -69,12 +69,12 @@ export default {
                     secNumber: 4,
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
-                    validity: 12,
-                    secNote: {
-                        en: '4 segments on Copa Airlines needed.',
-                        de: '4 Segmente mit Copa Airlines benötigt.',
-                        es: '',
+                    secmilesName: {
+                        en: 'Segments with Copa Airlines',
+                        de: 'Segmenten mit Copa Airlines',
                     },
+                    validity: 12,
+                 
                 },
             ],
             note: {
@@ -94,12 +94,11 @@ export default {
                     secNumber: 4,
                     secCalculate: calculateSegments,
                     qualificationPeriod: 12,
-                    validity: 12,
-                    secNote: {
-                        en: '4 segments on Copa Airlines needed.',
-                        de: '4 Segmente mit Copa Airlines benötigt.',
-                        es: '',
+                    secmilesName: {
+                        en: 'Segments with Copa Airlines',
+                        de: 'Segmenten mit Copa Airlines',
                     },
+                    validity: 12,
                 },
             ],
             note: {

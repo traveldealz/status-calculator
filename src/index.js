@@ -163,6 +163,8 @@ class StatusCalculator extends HTMLElement {
                   build.needed = qualification.number;
                   build.collected = this.$segments.length;
                   build.progress = build.collected / build.needed;
+                  qualification.milesName? build.milesname = qualification.milesName[this.$locale] : build.milesname = qualification.type;
+
               }
 
               if(qualification.calculate) {
