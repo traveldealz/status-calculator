@@ -888,12 +888,11 @@ var CM = {
       secNumber: 4,
       secCalculate: calculateSegments$3,
       qualificationPeriod: 12,
-      validity: 12,
-      secNote: {
-        en: '4 segments on Copa Airlines needed.',
-        de: '4 Segmente mit Copa Airlines benötigt.',
-        es: ''
-      }
+      secmilesName: {
+        en: 'Segments with Copa Airlines',
+        de: 'Segmenten mit Copa Airlines'
+      },
+      validity: 12
     }],
     note: {
       en: '',
@@ -911,10 +910,9 @@ var CM = {
       secCalculate: calculateSegments$3,
       qualificationPeriod: 12,
       validity: 12,
-      secNote: {
-        en: '4 segments on Copa Airlines needed.',
-        de: '4 Segmente mit Copa Airlines benötigt.',
-        es: ''
+      secmilesName: {
+        en: 'Segments with Copa Airlines',
+        de: 'Segmenten mit Copa Airlines'
       }
     }],
     note: {
@@ -932,12 +930,11 @@ var CM = {
       secNumber: 4,
       secCalculate: calculateSegments$3,
       qualificationPeriod: 12,
-      validity: 12,
-      secNote: {
-        en: '4 segments on Copa Airlines needed.',
-        de: '4 Segmente mit Copa Airlines benötigt.',
-        es: ''
-      }
+      secmilesName: {
+        en: 'Segments with Copa Airlines',
+        de: 'Segmenten mit Copa Airlines'
+      },
+      validity: 12
     }],
     note: {
       en: '',
@@ -954,12 +951,11 @@ var CM = {
       secNumber: 4,
       secCalculate: calculateSegments$3,
       qualificationPeriod: 12,
-      validity: 12,
-      secNote: {
-        en: '4 segments on Copa Airlines needed.',
-        de: '4 Segmente mit Copa Airlines benötigt.',
-        es: ''
-      }
+      secmilesName: {
+        en: 'Segments with Copa Airlines',
+        de: 'Segmenten mit Copa Airlines'
+      },
+      validity: 12
     }],
     note: {
       en: '',
@@ -1850,6 +1846,7 @@ class StatusCalculator extends HTMLElement {
               build.needed = qualification.number;
               build.collected = this.$segments.length;
               build.progress = build.collected / build.needed;
+              qualification.milesName ? build.milesname = qualification.milesName[this.$locale] : build.milesname = qualification.type;
           }
 
           if (qualification.calculate) {
