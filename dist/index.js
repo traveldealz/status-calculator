@@ -202,9 +202,9 @@ function calc2021(segments, data) {
     }
 
     if (['EN', 'OS', 'SN', 'OU', 'EW', 'LO', 'LH', 'LG', 'LX', 'WK'].includes(segments[acc[1]].carrier)) {
-      return acc[0] > 35000 ? [acc[0] + mileage.rdm[0] * 1.25 * 2, acc[1] + 1] : [acc[0] + mileage.rdm[0] * 2, acc[1] + 1];
+      return acc[0] > 35000 ? [acc[0] + mileage.rdm[1] * 2, acc[1] + 1] : [acc[0] + mileage.rdm[0] * 2, acc[1] + 1];
     } else {
-      return acc[0] > 35000 ? [acc[0] + mileage.rdm[0] * 1.25, acc[1] + 1] : [acc[0] + mileage.rdm[0], acc[1] + 1];
+      return acc[0] > 35000 ? [acc[0] + mileage.rdm[1], acc[1] + 1] : [acc[0] + mileage.rdm[0], acc[1] + 1];
     }
   }, [0, 0])[0];
 }
