@@ -39,8 +39,15 @@ export default class extends BaseComponent {
     super.display( data );
     this.el_list.innerHTML = '';
 
+    let totals = data.reduce((totals, itinerary) => {
+        itinerary.value.totals.forEach(item => {
+          totals[item.id] = totals[item.id] ? totals[item.id] + item.qm[0] : item.qm[0];
+        })
+        return totals;
+      }, {} );
+
+    console.log(totals);
     this.$segments.forEach( (segment, index) => {
-      console.log({ segment, index });
 
       let el = document.createElement('li');
         el.innerHTML = `
@@ -48,7 +55,9 @@ export default class extends BaseComponent {
         `;
         this.el_list.appendChild(el);
     } );
-
+    let el = document.createElement('li');
+    el.innerHTML = `Total: ${totals.BA} Tier Points`;
+    this.el_list.appendChild(el);
     console.log(data);
     console.log(this.$segments);
 

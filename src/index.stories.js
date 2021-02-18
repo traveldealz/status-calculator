@@ -6,5 +6,5 @@ export default {
   },
 };
 
-export const story1 = () => `<status-calculator></status-calculator>`;
-export const story2 = () => `<tierpoints-calculator></tierpoints-calculator>`;
+export const StatusCalculator = () => `<status-calculator></status-calculator>`;
+export const TierPointsCalcualtor = () => `<tierpoints-calculator></tierpoints-calculator>`;
