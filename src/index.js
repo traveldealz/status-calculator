@@ -1,4 +1,5 @@
 import programs from './programs';
+import template from './templates/status-calculator';
 import translate from './helper/translate';
 import trans_de from './languages/de.json';
 import trans_es from './languages/es.json';
@@ -8,31 +9,6 @@ const translations = {
 	de: trans_de,
 	es: trans_es,
 };
-
-const template = /*html*/`
-  <style>
-  button[disabled] {
-    background-color: gray;
-  }
-  </style>
-  <form>
-    <label for="route">__(Routings)</label>
-    <textarea name="route" class="w-full my-1" rows="8">LH:A:FRA-HKG-MUC</textarea>
-    <small></small>
-    <div class="my-3">
-      <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
-      <label for="status">__(Status)</label>
-      <select name="status">
-        <option>Star Alliance Silver</option>
-        <option selected>Star Alliance Gold</option>
-      </select>
-    </div>
-  </form>
-  <div class="loading hidden">__(Loading & calculating...)</div>
-  <div class="error hidden"></div>
-  <ol id="list"></ol>
-  <p><small>__(Data provided by) <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a></small></p>
-`;
 
 class StatusCalculator extends HTMLElement {
   constructor() {
