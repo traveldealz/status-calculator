@@ -15,5 +15,5 @@ UA:K:LHR-HKG:UA:265</textarea>
   </form>
   <div class="loading hidden">__(Loading & calculating...)</div>
   <div class="error hidden"></div>
-  <ol id="list"></ol>
+     <table id="list"></table>
 `;
