@@ -1,3 +1,174 @@
+var template = /*html*/
+`
+  <form>
+    <label for="route">__(Routings)</label>
+    <textarea name="route" class="w-full my-1" rows="8">LH:A:FRA-HKG-MUC</textarea>
+    <small></small>
+    <div class="my-3">
+      <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
+    </div>
+  </form>
+  <div class="loading hidden">__(Loading & calculating...)</div>
+  <div class="error hidden"></div>
+  <ol id="list"></ol>
+  <p><small>__(Data provided by) <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a></small></p>
+`;
+
+function translate (text, trans = []) {
+  return text.replace(/__\((.+?)\)/g, (match, group) => {
+    return trans[group] ? trans[group] : group;
+  });
+}
+
+var trans_de = {
+  "Routings": "Strecken",
+  "Calculate": "Berechnen",
+  "Data provided by": "Daten bereitgestellt von",
+  "miles": "Meilen",
+  "segment": "Segment",
+  "segments": "Segmente",
+  "month": "Monat",
+  "months": "Monate",
+  "Validity": "Gültigkeit",
+  "Qualification period": "Qualifikationszeitraum",
+  "Calendar year": "Kalenderjahr",
+  "Membership months": "Mitgliedsmonate",
+  "Membership year": "Mitgliedsjahr",
+  "Consecutive months": "aufeinanderfolgende Monate",
+  "at least": "mind.",
+  "of": "von",
+  "Loading & calculating...": "Laden & berechnen...",
+  "Route": "Strecke",
+  "Airline": "Fluggesellschaft",
+  "Booking Class": "Buchungsklasse",
+  "Points": "Punkte",
+  "Total": "Gesamt"
+};
+
+var trans_es = {};
+
+var translations = {
+  en: [],
+  de: trans_de,
+  es: trans_es
+};
+
+class BaseComponent extends HTMLElement {
+  constructor() {
+    super();
+    this.$template = template;
+    this.$segments = [];
+  }
+
+  connectedCallback() {
+    this.$locale = this.hasAttribute('locale') ? this.getAttribute('locale') : navigator.language ? navigator.language : 'en';
+    this.$locale = this.$locale.split('-')[0];
+    this.innerHTML = translate(this.$template, translations[this.$locale] ? translations[this.$locale] : []);
+    this.el_route = this.querySelector('[name="route"]');
+    this.el_list = this.querySelector('#list');
+    this.el_button = this.querySelector('button[type="submit"]');
+    this.el_loading = this.querySelector('.loading');
+    this.el_error = this.querySelector('.error');
+    this.querySelector('form').addEventListener('submit', event => {
+      event.preventDefault();
+      this.loading_start();
+      this.calculate();
+    });
+
+    if (this.hasAttribute('route')) {
+      this.querySelector('[name="route"]').innerHTML = this.getAttribute('route').replaceAll(',', '\n');
+    }
+
+    if (location.hash) {
+      this.loadParameters();
+    }
+  }
+
+  calculate() {
+    let itineraries = this.el_route.value.trim().split('\n').map(value => {
+      let parts = value.split(':').map(v => v.trim());
+      let carrier = parts[0];
+      let bookingClass = parts[1];
+      let route = parts[2].split('-').map(v => v.trim());
+      let ticketer = parts[3];
+      let price = parseInt(parts[4] / (parts[2].split('-').length - 1));
+      return route.reduce((accumulator, airport, index, route) => {
+        if (0 === index || !accumulator) {
+          return accumulator;
+        }
+
+        accumulator.push({
+          carrier,
+          bookingClass,
+          origin: route[index - 1],
+          destination: airport,
+          ticketer,
+          price
+        });
+        return accumulator;
+      }, []);
+    }).flat();
+    this.$segments = itineraries.flat();
+    this.update_hash();
+    this.query(itineraries);
+  }
+
+  query(itineraries) {
+    fetch('https://www.wheretocredit.com/api/2.0/calculate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(itineraries.map(itinerary => {
+        return {
+          segments: [itinerary]
+        };
+      }))
+    }).then(response => response.json()).then(data => this.display(data.value)).catch(error => {
+      this.loading_end();
+      this.el_error.innerHTML = `Where to Credit ${error.toString()}`;
+      this.el_error.classList.remove('hidden');
+    });
+  }
+
+  display(data) {
+    this.loading_end();
+  }
+
+  loading_start() {
+    this.el_button.disabled = true;
+    this.el_list.innerHTML = '';
+    this.el_loading.classList.remove('hidden');
+    this.el_error.classList.add('hidden');
+    this.el_error.innerHTML = '';
+  }
+
+  loading_end() {
+    this.el_button.disabled = false;
+    this.el_loading.classList.add('hidden');
+  }
+
+  loadParameters() {
+    let searchParams = new URLSearchParams(location.hash.replace('#', ''));
+    let el = {};
+
+    for (let key of searchParams.keys()) {
+      el = this.querySelector(`[name="${key}"]`);
+
+      if (el) {
+        'checkbox' === el.type ? el.checked = 'true' === searchParams.get(key) : el.value = searchParams.get(key);
+      }
+    }
+  }
+
+  update_hash() {
+    let parameters = {};
+    [...this.querySelectorAll('[name]')].forEach(el => parameters[el.name] = 'checkbox' === el.type ? el.checked : el.value);
+    location.hash = new URLSearchParams(parameters).toString();
+  }
+
+}
+
 function calculateSegments(segments) {
   return segments.filter(segment => ['A3', 'OA'].includes(segment.carrier)).length;
 }
@@ -1674,41 +1845,7 @@ var programs = {
   AC
 };
 
-function translate (text, trans = []) {
-  return text.replace(/__\((.+?)\)/g, (match, group) => {
-    return trans[group] ? trans[group] : group;
-  });
-}
-
-var trans_de = {
-  "Routings": "Strecken",
-  "Calculate": "Berechnen",
-  "Data provided by": "Daten bereitgestellt von",
-  "miles": "Meilen",
-  "segment": "Segment",
-  "segments": "Segmente",
-  "month": "Monat",
-  "months": "Monate",
-  "Validity": "Gültigkeit",
-  "Qualification period": "Qualifikationszeitraum",
-  "Calendar year": "Kalenderjahr",
-  "Membership months": "Mitgliedsmonate",
-  "Membership year": "Mitgliedsjahr",
-  "Consecutive months": "aufeinanderfolgende Monate",
-  "at least": "mind.",
-  "of": "von",
-  "Loading & calculating...": "Laden & berechnen..."
-};
-
-var trans_es = {};
-
-const translations = {
-  en: [],
-  de: trans_de,
-  es: trans_es
-};
-const template =
-/*html*/
+var template$1 = /*html*/
 `
   <style>
   button[disabled] {
@@ -1734,84 +1871,24 @@ const template =
   <p><small>__(Data provided by) <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a></small></p>
 `;
 
-class StatusCalculator extends HTMLElement {
+class StatusCalculator extends BaseComponent {
   constructor() {
     super();
-    this.count = 0;
+    this.$template = template$1;
     this.$status = 'Star Alliance Gold';
-    this.$segments = [];
   }
 
   connectedCallback() {
-    this.$locale = this.hasAttribute('locale') ? this.getAttribute('locale') : navigator.language ? navigator.language : 'en';
-    this.$locale = this.$locale.split('-')[0];
-    this.innerHTML = translate(template, translations[this.$locale] ? translations[this.$locale] : []);
-    this.el_route = this.querySelector('[name="route"]');
-    this.el_list = this.querySelector('#list');
-    this.el_button = this.querySelector('button[type="submit"]');
-    this.el_loading = this.querySelector('.loading');
-    this.el_error = this.querySelector('.error');
-    this.querySelector('form').addEventListener('submit', event => {
-      event.preventDefault();
-      this.loading_start();
-      this.calculate();
-    });
-
-    if (location.hash) {
-      this.loadParameters();
-    }
+    super.connectedCallback();
   }
 
   calculate() {
     this.$status = this.querySelector('[name="status"]').value;
-    let itineraries = this.el_route.value.trim().split('\n').map(value => {
-      let parts = value.split(':').map(v => v.trim());
-      let carrier = parts[0];
-      let bookingClass = parts[1];
-      let route = parts[2].split('-').map(v => v.trim());
-      let ticketer = parts[3];
-      let price = parseInt(parts[4] / (parts[2].split('-').length - 1));
-      return route.reduce((accumulator, airport, index, route) => {
-        if (0 === index || !accumulator) {
-          return accumulator;
-        }
-
-        accumulator.push({
-          carrier,
-          bookingClass,
-          origin: route[index - 1],
-          destination: airport,
-          ticketer,
-          price
-        });
-        return accumulator;
-      }, []);
-    }).flat();
-    this.$segments = itineraries.flat();
-    this.update_hash();
-    this.query(itineraries);
-  }
-
-  query(itineraries) {
-    fetch('https://www.wheretocredit.com/api/2.0/calculate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(itineraries.map(itinerary => {
-        return {
-          segments: [itinerary]
-        };
-      }))
-    }).then(response => response.json()).then(data => this.display(data.value)).catch(error => {
-      this.loading_end();
-      this.el_error.innerHTML = `Where to Credit ${error.toString()}`;
-      this.el_error.classList.remove('hidden');
-    });
+    super.calculate();
   }
 
   display(data) {
-    this.loading_end();
+    super.display(data);
     let totals = data.reduce((totals, itinerary) => {
       itinerary.value.totals.forEach(item => {
         totals[item.id] = totals[item.id] ? totals[item.id] + item.rdm[0] : item.rdm[0];
@@ -1943,39 +2020,104 @@ class StatusCalculator extends HTMLElement {
     });
   }
 
-  loading_start() {
-    this.el_button.disabled = true;
+}
+
+var template$2 = /*html*/
+`
+  <style>
+  button[disabled] {
+    background-color: gray;
+  }
+  </style>
+  <form>
+    <label for="route">__(Routings)</label>
+    <textarea name="route" class="w-full my-1" rows="8">BA:K:FRA-LHR
+BA:W:LHR-HKG</textarea>
+    <small></small>
+    <div class="my-3">
+      <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
+    </div>
+  </form>
+  <div class="loading hidden">__(Loading & calculating...)</div>
+  <div class="error hidden"></div>
+  <table id="list"></table>
+`;
+
+class TierpointsCalculator extends BaseComponent {
+  constructor() {
+    super();
+    this.$template = template$2;
+    this.$program = 'BA';
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.$program = this.hasAttribute('program') ? this.getAttribute('program') : 'BA';
+  }
+
+  calculate() {
+    super.calculate();
+  }
+
+  query(itineraries) {
+    fetch('https://farecollection.travel-dealz.de/api/calculate/tierpoints', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(itineraries.map(itinerary => {
+        return {
+          segments: [itinerary]
+        };
+      }))
+    }).then(response => response.json()).then(data => this.display(data.value)).catch(error => {
+      this.loading_end();
+      this.el_error.innerHTML = `Travel Dealz Tier Points Calculator ${error.toString()}`;
+      this.el_error.classList.remove('hidden');
+    });
+  }
+
+  display(data) {
+    super.display(data);
     this.el_list.innerHTML = '';
-    this.el_loading.classList.remove('hidden');
-    this.el_error.classList.add('hidden');
-    this.el_error.innerHTML = '';
-  }
-
-  loading_end() {
-    this.el_button.disabled = false;
-    this.el_loading.classList.add('hidden');
-  }
-
-  loadParameters() {
-    let searchParams = new URLSearchParams(location.hash.replace('#', ''));
-    let el = {};
-
-    for (let key of searchParams.keys()) {
-      el = this.querySelector(`[name="${key}"]`);
-
-      if (el) {
-        'checkbox' === el.type ? el.checked = 'true' === searchParams.get(key) : el.value = searchParams.get(key);
-      }
-    }
-  }
-
-  update_hash() {
-    let parameters = {}; //parameters.routes = this.querySelector('[name="routes"]').value;
-
-    [...this.querySelectorAll('[name]')].forEach(el => parameters[el.name] = 'checkbox' === el.type ? el.checked : el.value);
-    location.hash = new URLSearchParams(parameters).toString();
+    let el_thead = document.createElement('thead');
+    el_thead.innerHTML = translate(`
+      <tr>
+        <th class="text-center">__(Route)</th>
+        <th class="text-center">__(Airline)</th>
+        <th class="text-center">__(Booking Class)</th>
+        <th class="text-right">__(Points)</th>
+      </tr>
+    `, translations[this.$locale] ? translations[this.$locale] : []);
+    this.el_list.appendChild(el_thead);
+    let totals = data.reduce((totals, itinerary) => {
+      itinerary.value.totals.forEach(item => {
+        totals[item.id] = totals[item.id] ? totals[item.id] + item.qm[0] : item.qm[0];
+      });
+      return totals;
+    }, {});
+    this.$segments.forEach((segment, index) => {
+      let el = document.createElement('tr');
+      el.innerHTML = `
+        <td class="text-center"><code>${segment.origin}</code> - <code>${segment.destination}</code></td>
+        <td class="text-center"><code>${segment.carrier}</code></td>
+        <td class="text-center"><code>${segment.bookingClass}</code></td>
+        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${data[index].value.totals.find(item => item.id === this.$program) ? data[index].value.totals.find(item => item.id === this.$program).qm[0] : 0}`}</td>
+        `;
+      this.el_list.appendChild(el);
+    });
+    let el_foot = document.createElement('tfoot');
+    console.log(this.$program);
+    el_foot.innerHTML = translate(`
+      <tr>
+        <th class="text-right" colspan="3">__(Total)</th>
+        <th class="text-right">${totals[this.$program].toLocaleString()}</th>
+      </tr>
+    `, translations[this.$locale] ? translations[this.$locale] : []);
+    this.el_list.appendChild(el_foot);
   }
 
 }
 
 customElements.define("status-calculator", StatusCalculator);
+customElements.define("tierpoints-calculator", TierpointsCalculator);
