@@ -15,5 +15,6 @@ UA:K:LHR-HKG:UA:265</textarea>
   </form>
   <div class="loading hidden">__(Loading & calculating...)</div>
   <div class="error hidden"></div>
-     <table id="list"></table>
+  <table id="list"></table>
+  <p><small>__(Data provided by) <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a></small></p>
 `;
