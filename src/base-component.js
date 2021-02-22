@@ -28,6 +28,10 @@ export default class extends HTMLElement {
       this.calculate();
     });
 
+    if ( this.hasAttribute('route') ) {
+      this.querySelector('[name="route"]').innerHTML = this.getAttribute('route').replaceAll(',', '\n');
+    }
+
     if ( location.hash ) {
 			this.loadParameters();
 		}
