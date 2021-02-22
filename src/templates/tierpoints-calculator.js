@@ -15,5 +15,5 @@ BA:W:LHR-HKG</textarea>
   </form>
   <div class="loading hidden">__(Loading & calculating...)</div>
   <div class="error hidden"></div>
-  <ol id="list"></ol>
+  <table id="list"></table>
 `;

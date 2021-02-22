@@ -7,10 +7,12 @@ export default class extends BaseComponent {
   constructor() {
     super();
     this.$template = template;
+    this.$program = 'BA';
   }
 
   connectedCallback() {
     super.connectedCallback();
+    this.$program = this.hasAttribute('program') ? this.getAttribute('program') : 'BA';
   }
 
   calculate() {
@@ -39,6 +41,17 @@ export default class extends BaseComponent {
     super.display( data );
     this.el_list.innerHTML = '';
 
+    let el_thead = document.createElement('thead');
+    el_thead.innerHTML = translate(`
+      <tr>
+        <th class="text-center">__(Route)</th>
+        <th class="text-center">__(Airline)</th>
+        <th class="text-center">__(Booking Class)</th>
+        <th class="text-right">__(Points)</th>
+      </tr>
+    `, translations[this.$locale] ? translations[this.$locale] : []);
+    this.el_list.appendChild(el_thead);
+
     let totals = data.reduce((totals, itinerary) => {
         itinerary.value.totals.forEach(item => {
           totals[item.id] = totals[item.id] ? totals[item.id] + item.qm[0] : item.qm[0];
@@ -46,21 +59,26 @@ export default class extends BaseComponent {
         return totals;
       }, {} );
 
-    console.log(totals);
     this.$segments.forEach( (segment, index) => {
 
-      let el = document.createElement('li');
+      let el = document.createElement('tr');
         el.innerHTML = `
-        ${segment.carrier} ${segment.bookingClass} ${segment.origin}-${segment.destination}: ${data[index].value.totals[0].qm[0]} Tier Points
+        <td class="text-center"><code>${segment.origin}</code> - <code>${segment.destination}</code></td>
+        <td class="text-center"><code>${segment.carrier}</code></td>
+        <td class="text-center"><code>${segment.bookingClass}</code></td>
+        <td class="text-right">${ false === data[index].success ? data[index].errorMessage : `${data[index].value.totals.find( item => item.id === this.$program ) ? data[index].value.totals.find( item => item.id === this.$program ).qm[0] : 0}` }</td>
         `;
         this.el_list.appendChild(el);
     } );
-    let el = document.createElement('li');
-    el.innerHTML = `Total: ${totals.BA} Tier Points`;
-    this.el_list.appendChild(el);
-    console.log(data);
-    console.log(this.$segments);
-
+    let el_foot = document.createElement('tfoot');
+    console.log(this.$program);
+    el_foot.innerHTML = translate(`
+      <tr>
+        <th class="text-right" colspan="3">__(Total)</th>
+        <th class="text-right">${totals[this.$program].toLocaleString()}</th>
+      </tr>
+    `, translations[this.$locale] ? translations[this.$locale] : []);
+    this.el_list.appendChild(el_foot);
 
   }
 
