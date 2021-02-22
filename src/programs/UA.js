@@ -161,7 +161,9 @@ function getLimit(carrier, bookingClass){
 
 
 
-function calculateMiles(segments, data) {
+export function calculateMiles(segments, data) {
+    console.log('data');
+    console.log(data);
     // Berechnet Statuspunkte. Bei UA -> 0, da Umsatzbasiert.
     // Bei Partnerairlines -> Meilen / 5 -  mit 1500/750 Limit je nach Klasse
     // Bei anderen Airlines -> Meilen / 6 - mit 750/500 Limit je nach Klasse
