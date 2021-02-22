@@ -1481,9 +1481,11 @@ function getLimit(carrier, bookingClass) {
 }
 
 function calculateMiles(segments, data) {
-  // Berechnet Statuspunkte. Bei UA -> 0, da Umsatzbasiert.
+  console.log('data');
+  console.log(data); // Berechnet Statuspunkte. Bei UA -> 0, da Umsatzbasiert.
   // Bei Partnerairlines -> Meilen / 5 -  mit 1500/750 Limit je nach Klasse
   // Bei anderen Airlines -> Meilen / 6 - mit 750/500 Limit je nach Klasse
+
   return data.reduce((acc, itinerary) => {
     let mileage = itinerary.value?.totals?.find(item => 'UA' === item.id);
     console.log("segment: " + acc[1]);
@@ -1510,7 +1512,6 @@ function calculateMiles(segments, data) {
     }
   }, [0, 0])[0];
 }
-
 var UA = {
   name: 'United MileagePlus',
   alliance: 'Star Alliance',
@@ -2119,5 +2120,81 @@ class TierpointsCalculator extends BaseComponent {
 
 }
 
+var template$3 = /*html*/
+`
+  <style>
+  button[disabled] {
+    background-color: gray;
+  }
+  </style>
+  <form>
+    <label for="route">__(Routings)</label>
+    <textarea name="route" class="w-full my-1" rows="8">LH:P:FRA-LHR-PEK
+UA:K:LHR-HKG:UA:265</textarea>
+    <small></small>
+    <div class="my-3">
+      <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
+    </div>
+  </form>
+  <div class="loading hidden">__(Loading & calculating...)</div>
+  <div class="error hidden"></div>
+  <table id="list"></table>
+  <p><small>__(Data provided by) <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a></small></p>
+`;
+
+class UaPqpCalculator extends BaseComponent {
+  constructor() {
+    super();
+    this.$template = template$3;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+  }
+
+  calculate() {
+    super.calculate();
+  }
+
+  display(data) {
+    let totalpqps = 0;
+    super.display(data);
+    this.el_list.innerHTML = '';
+    let el_thead = document.createElement('thead');
+    el_thead.innerHTML = `
+      <tr>
+        <th class="text-center">Route</th>
+        <th class="text-center">Airline</th>
+        <th class="text-center">Booking Class</th>
+        <th class="text-right">Tier Points</th>
+      </tr>
+    `;
+    this.el_list.appendChild(el_thead);
+    this.$segments.forEach((segment, index) => {
+      console.log('DATA');
+      console.log([data[index]]);
+      let el = document.createElement('tr');
+      totalpqps += calculateMiles([segment], [data[index]]);
+      el.innerHTML = `
+        <td class="text-center"><code>${segment.origin}</code> - <code>${segment.destination}</code></td>
+        <td class="text-center"><code>${segment.carrier}</code></td>
+        <td class="text-center"><code>${segment.bookingClass}</code></td>
+        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${data[index].value.totals[0] ? calculateMiles([segment], [data[index]]) : 0}`}</td>
+                `;
+      this.el_list.appendChild(el);
+    });
+    let el_foot = document.createElement('tfoot');
+    el_foot.innerHTML = `
+      <tr>
+        <th class="text-right" colspan="3">Total</th>
+        <th class="text-right">${totalpqps}</th>
+      </tr>
+    `;
+    this.el_list.appendChild(el_foot);
+  }
+
+}
+
 customElements.define("status-calculator", StatusCalculator);
 customElements.define("tierpoints-calculator", TierpointsCalculator);
+customElements.define("ua-pqp-calculator", UaPqpCalculator);
