@@ -7,10 +7,12 @@ export default class extends BaseComponent {
   constructor() {
     super();
     this.$template = template;
+    this.$program = 'BA';
   }
 
   connectedCallback() {
     super.connectedCallback();
+    this.$program = this.hasAttribute('program') ? this.getAttribute('program') : 'BA';
   }
 
   calculate() {
@@ -40,14 +42,14 @@ export default class extends BaseComponent {
     this.el_list.innerHTML = '';
 
     let el_thead = document.createElement('thead');
-    el_thead.innerHTML = `
+    el_thead.innerHTML = translate(`
       <tr>
-        <th class="text-center">Route</th>
-        <th class="text-center">Airline</th>
-        <th class="text-center">Booking Class</th>
-        <th class="text-right">Tier Points</th>
+        <th class="text-center">__(Route)</th>
+        <th class="text-center">__(Airline)</th>
+        <th class="text-center">__(Booking Class)</th>
+        <th class="text-right">__(Points)</th>
       </tr>
-    `;
+    `, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_list.appendChild(el_thead);
 
     let totals = data.reduce((totals, itinerary) => {
@@ -64,17 +66,18 @@ export default class extends BaseComponent {
         <td class="text-center"><code>${segment.origin}</code> - <code>${segment.destination}</code></td>
         <td class="text-center"><code>${segment.carrier}</code></td>
         <td class="text-center"><code>${segment.bookingClass}</code></td>
-        <td class="text-right">${ false === data[index].success ? data[index].errorMessage : `${data[index].value.totals[0] ? data[index].value.totals[0].qm[0] : 0}` }</td>
+        <td class="text-right">${ false === data[index].success ? data[index].errorMessage : `${data[index].value.totals.find( item => item.id === this.$program ) ? data[index].value.totals.find( item => item.id === this.$program ).qm[0] : 0}` }</td>
         `;
         this.el_list.appendChild(el);
     } );
     let el_foot = document.createElement('tfoot');
-    el_foot.innerHTML = `
+    console.log(this.$program);
+    el_foot.innerHTML = translate(`
       <tr>
-        <th class="text-right" colspan="3">Total</th>
-        <th class="text-right">${totals.BA.toLocaleString()}</th>
+        <th class="text-right" colspan="3">__(Total)</th>
+        <th class="text-right">${totals[this.$program].toLocaleString()}</th>
       </tr>
-    `;
+    `, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_list.appendChild(el_foot);
 
   }

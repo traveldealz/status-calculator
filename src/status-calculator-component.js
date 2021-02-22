@@ -153,7 +153,7 @@ export default class extends BaseComponent {
         </div>
         `;
 
-        el.innerHTML = translate(text, translations[this.$locale] ? translations[this.$locale] : []);;
+        el.innerHTML = translate(text, translations[this.$locale] ? translations[this.$locale] : []);
         this.el_list.appendChild(el);
       });
 
