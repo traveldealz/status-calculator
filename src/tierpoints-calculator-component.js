@@ -75,7 +75,7 @@ export default class extends BaseComponent {
     el_foot.innerHTML = translate(`
       <tr>
         <th class="text-right" colspan="3">__(Total)</th>
-        <th class="text-right">${totals[this.$program].toLocaleString()}</th>
+        <th class="text-right">${totals[this.$program]?.toLocaleString()}</th>
       </tr>
     `, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_list.appendChild(el_foot);
