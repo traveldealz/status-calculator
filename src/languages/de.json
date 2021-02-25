@@ -2,6 +2,8 @@
   "Routings": "Strecken",
   "Calculate": "Berechnen",
   "Data provided by": "Daten bereitgestellt von",
+  "Award Miles Data provided by": "Prämienmeilen-Daten bereitgestellt von",
+  "Points Data provided by Travel-Dealz.eu": "Punkte-Daten bereitgestellt von Travel-Dealz.de",
   "miles": "Meilen",
   "segment": "Segment",
   "segments": "Segmente",
@@ -20,5 +22,10 @@
   "Airline": "Fluggesellschaft",
   "Booking Class": "Buchungsklasse",
   "Points": "Punkte",
-  "Total": "Gesamt"
+  "Total": "Gesamt",
+  "Distance": "Entfernung",
+  "miles": "Meilen",
+  "From": "Von",
+  "To": "Nach",
+  "Award Miles": "Prämienmeilen"
 }
