@@ -6,6 +6,13 @@ export default /*html*/`
   .align-top {
     vertical-align: top;
   }
+  .text-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: sideways
+  }
+  .font-light {
+    font-weight: 300;
+  }
   </style>
   <form>
     <label for="route">__(Routings)</label>

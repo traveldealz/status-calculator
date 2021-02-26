@@ -64,9 +64,9 @@ export default class extends BaseComponent {
     let el_thead = document.createElement('thead');
     el_thead.innerHTML = translate(/*html*/`
       <tr>
-        <th class="text-center">__(From) - __(To)</th>
-        <th class="text-center">__(Airline)</th>
-        <th class="text-center">__(Booking Class)</th>
+        <th></th>
+        <th class="text-center">__(Route)</th>
+        <th class="text-center">__(Bookingclass)</th>
         <th class="text-right">${ this.$awardmiles_label ? this.$awardmiles_label : '__(Award Miles)'}</th>
         <th class="text-right">${ this.$points_label ? this.$points_label : '__(Points)'}</th>
       </tr>
@@ -95,28 +95,30 @@ export default class extends BaseComponent {
 
       let el = document.createElement('tr');
         el.innerHTML = translate(/*html*/`
-        <td class="text-center grid grid-cols-2">
-          <div>
-            <div><code>${segment.origin}</code></div>
-            <div><small>${airports[segment.origin]?.location}</small></div>
-          </div>
-          <div>
-            <div><code>${segment.destination}</code></div>
-            <div><small>${airports[segment.destination]?.location}</small></div>
-          </div>
-          <div class="col-span-2">
-            <small>${data[index].value.distance?.toLocaleString()} __(miles)</small>
+        <td class="align-top text-vertical text-center text-xs text-grey-dark font-light">${data[index].value.distance?.toLocaleString()} __(miles)</td>
+        <td class="text-center">
+          <div class="grid grid-cols-1 md:grid-cols-2">
+            <div>
+              <div><code>${segment.origin}</code></div>
+              <div class="text-xs text-grey-dark font-light">${airports[segment.origin]?.location}</div>
+            </div>
+            <div>
+              <div><code>${segment.destination}</code></div>
+              <div class="text-xs text-grey-dark font-light">${airports[segment.destination]?.location}</div>
+            </div>
           </div>
         </td>
-        <td class="align-top text-center">
-          <div><code>${segment.carrier}</code></div>
-          <div><small>${airlines[segment.carrier]?.name}</small></div>
-          <div></div>
-        </td>
-        <td class="align-top text-center">
-          <div><code>${segment.bookingClass}</code></div>
-          <div><small>${earning.cabinclass} ${earning.fare}</small></div>
-          <div></div>
+        <td class="text-center">
+          <div class="grid grid-cols-1 md:grid-cols-2">
+            <div>
+              <div><code>${segment.carrier}</code></div>
+              <div class="text-xs text-grey-dark font-light">${airlines[segment.carrier]?.name}</div>
+            </div>
+            <div>
+              <div><code>${segment.bookingClass}</code></div>
+              <div class="text-xs text-grey-dark font-light">${earning.cabinclass} ${earning.fare}</div>
+            </div>
+          </div>
         </td>
         <td class="text-right">${ false === wtc_data[index].success ? wtc_data[index].errorMessage : `${earning_rdm ? earning_rdm.rdm[status_key]?.toLocaleString() : 0}` }</td>
         <td class="text-right">${ false === data[index].success ? data[index].errorMessage : `${earning ? earning.qm[0]?.toLocaleString() : 0}` }</td>

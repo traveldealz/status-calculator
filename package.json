@@ -11,7 +11,5 @@
   "devDependencies": {
     "wcd-cli": "latest"
   },
-  "dependencies": {
-    "deepmerge": "4.2.2"
-  }
+  "dependencies": {}
 }
