@@ -20,7 +20,7 @@ export default class extends BaseComponent {
 
  
 
-  display( data ) {
+  display( { value: data } ) {
     let totalpqps = 0;
     super.display( data );
     this.el_list.innerHTML = '';
