@@ -92,7 +92,7 @@ export default class extends HTMLElement {
     ])
     .then(responses => Promise.all(responses.map(response => response.json())))
     .then(responses => this.merge_responses(responses[0], responses[1]))
-    .then(response => this.display(response))
+    .then(response => this.calculate_totals(response))
     .catch(error => {
       this.loading_end();
       this.el_error.innerHTML = `Travel Dealz Tier Points Calculator ${error.toString()}`;
@@ -107,7 +107,7 @@ export default class extends HTMLElement {
       ...td_data,
     };
 
-    return response.value.map( (segment, segmentIndex) => {
+    response.value = response.value.map( (segment, segmentIndex) => {
       segment = {
         ...wtc_data.value[segmentIndex],
         ...segment,
@@ -117,14 +117,19 @@ export default class extends HTMLElement {
         }
       }
 
-      let ids = [
+      let ids = [...new Set([
         ...segment.value.totals.map( program => program.id ),
         ...wtc_data.value[segmentIndex].value.totals.map( program => program.id ),
-      ]
+      ])];
 
       let totals = ids.map( program => {
+
+        let wtc_total = wtc_data.value[segmentIndex].value.totals.find( item => program === item.id );
+
         return {
-          ...wtc_data.value[segmentIndex].value.totals.find( item => program === item.id ),
+          ...wtc_total,
+          qm: wtc_total.rdm ? wtc_total.rdm : [0,0,0,0],
+          qd: 0,
           ...segment.value.totals.find( item => program === item.id ),
         };
       } )
@@ -133,9 +138,34 @@ export default class extends HTMLElement {
 
       return segment;
     } );
+
+    return response;
+
   }
 
-  display( data ) {
+  calculate_totals( response ) {
+
+    let totals = response.value.reduce((totals, itinerary) => {
+        itinerary.value.totals.forEach(item => {
+          totals[item.id] = totals[item.id] ? {
+            rdm: totals[item.id].rdm.map( (m, i) => m + item.rdm[i]),
+            qm: totals[item.id].qm.map( (m, i) => m + item.qm[i]),
+            qd: totals[item.id].qd + item.qd,
+          } : {
+            rdm: item.rdm,
+            qm: item.qm,
+            qd: item.qd,
+          };
+        })
+
+        return totals;
+      }, {} );
+
+    this.display( response, totals );
+
+  }
+
+  display( data, totals ) {
 
     this.loading_end();
     
