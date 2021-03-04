@@ -13,6 +13,8 @@ export default /*html*/`
       <label for="status">__(Status)</label>
       <select name="status">
         <option>Star Alliance Silver</option>
+        <option>SkyTeam Elite</option>
+        <option>SkyTeam Elite Plus</option>
         <option selected>Star Alliance Gold</option>
       </select>
     </div>
