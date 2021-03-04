@@ -26,39 +26,9 @@ export default class extends BaseComponent {
     });
   }
 
-  calculate() {
-    super.calculate();
-  }
+  display( {value: data, airlines, airports}, totals ) {
 
-  async query(itineraries) {
-    Promise.all([
-      fetch('https://farecollection.travel-dealz.de/api/calculate/tierpoints', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(itineraries.map( itinerary => { return { segments: [itinerary] } } )),
-      }),
-      fetch('https://www.wheretocredit.com/api/2.0/calculate', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(itineraries.map( itinerary => { return { segments: [itinerary] } } )),
-      }),
-    ])
-    .then(responses => Promise.all(responses.map(response => response.json())))
-    .then(responses => this.display(responses[0], responses[1]))
-    .catch(error => {
-      this.loading_end();
-      this.el_error.innerHTML = `Travel Dealz Tier Points Calculator ${error.toString()}`;
-      this.el_error.classList.remove('hidden');
-    });
-  }
-
-  display( {value: data, airlines, airports}, { value: wtc_data } ) {
-
-    super.display( data );
+    super.display();
     this.el_list.innerHTML = '';
 
     let el_thead = document.createElement('thead');
@@ -73,25 +43,11 @@ export default class extends BaseComponent {
     `, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_list.appendChild(el_thead);
 
-    let totals = data.reduce((totals, itinerary) => {
-        itinerary.value.totals.forEach(item => {
-          totals[item.id] = totals[item.id] ? totals[item.id] + item.qm[0] : item.qm[0];
-        })
-        return totals;
-      }, {} );
-
     const status_key = this.el_status.value;
-    let totals_rdm = wtc_data.reduce((totals, itinerary) => {
-        itinerary.value.totals.forEach(item => {
-          totals[item.id] = totals[item.id] ? totals[item.id] + item.rdm[status_key] : item.rdm[status_key];
-        })
-        return totals;
-      }, {} );
 
     this.$segments.forEach( (segment, index) => {
 
     const earning = data[index].value.totals.find( item => item.id === this.$program );
-    const earning_rdm = wtc_data[index].value.totals.find( item => item.id === this.$program );
 
       let el = document.createElement('tr');
         el.innerHTML = translate(/*html*/`
@@ -120,7 +76,7 @@ export default class extends BaseComponent {
             </div>
           </div>
         </td>
-        <td class="text-right">${ false === wtc_data[index].success ? wtc_data[index].errorMessage : `${earning_rdm ? earning_rdm.rdm[status_key]?.toLocaleString() : 0}` }</td>
+        <td class="text-right">${ false === data[index].success ? data[index].errorMessage : `${earning ? earning.rdm[status_key]?.toLocaleString() : 0}` }</td>
         <td class="text-right">${ false === data[index].success ? data[index].errorMessage : `${earning ? earning.qm[0]?.toLocaleString() : 0}` }</td>
         `, translations[this.$locale] ? translations[this.$locale] : []);
         this.el_list.appendChild(el);
@@ -130,8 +86,8 @@ export default class extends BaseComponent {
     el_foot.innerHTML = translate(/*html*/`
       <tr>
         <th class="text-right" colspan="3">__(Total)</th>
-        <th class="text-right">${totals_rdm[this.$program]?.toLocaleString()}</th>
-        <th class="text-right">${totals[this.$program]?.toLocaleString()}</th>
+        <th class="text-right">${totals[this.$program].rdm[status_key]?.toLocaleString()}</th>
+        <th class="text-right">${totals[this.$program].qm[status_key]?.toLocaleString()}</th>
       </tr>
     `, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_list.appendChild(el_foot);

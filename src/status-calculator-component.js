@@ -22,16 +22,9 @@ export default class extends BaseComponent {
     super.calculate();
   }
 
-  display( data ) {
+  display( {value: data}, totals ) {
 
-    super.display( data );
-
-    let totals = data.reduce((totals, itinerary) => {
-        itinerary.value.totals.forEach(item => {
-          totals[item.id] = totals[item.id] ? totals[item.id] + item.rdm[0] : item.rdm[0];
-        })
-        return totals;
-      }, {} );
+    super.display();
 
     this.el_list.innerHTML = '';
 
@@ -56,7 +49,7 @@ export default class extends BaseComponent {
               switch(qualification.type) {
                 case 'miles': 
                   build.needed = qualification.number;
-                  build.collected = totals[id];
+                  build.collected = totals[id].qm[0];
                   build.progress = build.collected / build.needed;
                   qualification.milesName? build.milesname = qualification.milesName[this.$locale] : build.milesname = qualification.type;
                   break;
@@ -78,7 +71,7 @@ export default class extends BaseComponent {
                 switch(qualification.secType) {
                   case 'miles': 
                     build.secNeeded = qualification.secNumber;
-                    build.secCollected = totals[id];
+                    build.secCollected = totals[id].qm[0];
                     build.secProgress = build.secCollected / build.secNeeded;
                     build.secNote = qualification.secNote;
                     qualification.secmilesName? build.secmilesname = qualification.secmilesName[this.$locale] : build.secmilesname = qualification.type;
