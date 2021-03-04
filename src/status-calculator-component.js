@@ -24,11 +24,19 @@ export default class extends BaseComponent {
 
   display( data ) {
 
-    super.display( data );
+    super.display();
 
     let totals = data.reduce((totals, itinerary) => {
         itinerary.value.totals.forEach(item => {
-          totals[item.id] = totals[item.id] ? totals[item.id] + item.rdm[0] : item.rdm[0];
+          totals[item.id] = totals[item.id] ? {
+            rdm: totals[item.id].rdm + (item.rdm ? item.rdm[0] : 0),
+            qm: totals[item.id].qm + (item.qm ? item.qm[0] : 0),
+            qd: totals[item.id].qd + (item.qd ? item.qd[0] : 0),
+          } : {
+            rdm: item.rdm ? item.rdm[0] : 0,
+            qm: item.qm ? item.qm[0] : 0,
+            qd: item.qd ? item.qd[0] : 0,
+          };
         })
         return totals;
       }, {} );
@@ -56,7 +64,7 @@ export default class extends BaseComponent {
               switch(qualification.type) {
                 case 'miles': 
                   build.needed = qualification.number;
-                  build.collected = totals[id];
+                  build.collected = totals[id].rdm;
                   build.progress = build.collected / build.needed;
                   qualification.milesName? build.milesname = qualification.milesName[this.$locale] : build.milesname = qualification.type;
                   break;
@@ -78,7 +86,7 @@ export default class extends BaseComponent {
                 switch(qualification.secType) {
                   case 'miles': 
                     build.secNeeded = qualification.secNumber;
-                    build.secCollected = totals[id];
+                    build.secCollected = totals[id].rdm;
                     build.secProgress = build.secCollected / build.secNeeded;
                     build.secNote = qualification.secNote;
                     break;

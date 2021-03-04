@@ -73,27 +73,71 @@ export default class extends HTMLElement {
     this.query(itineraries);
   }
 
-  query(itineraries) {
-    fetch('https://www.wheretocredit.com/api/2.0/calculate', {
-      method: 'POST',
-      headers: {
-      'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(itineraries.map( itinerary => { return { segments: [itinerary] } } )),
-    })
-      .then(response => response.json())
-      .then(data => this.display(data.value))
-      .catch(error => {
-        this.loading_end();
-        this.el_error.innerHTML = `Where to Credit ${error.toString()}`;
-        this.el_error.classList.remove('hidden');
-      });
+  async query(itineraries) {
+    Promise.all([
+      fetch('https://farecollection.travel-dealz.de/api/calculate/tierpoints', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(itineraries.map( itinerary => { return { segments: [itinerary] } } )),
+      }),
+      fetch('https://www.wheretocredit.com/api/2.0/calculate', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(itineraries.map( itinerary => { return { segments: [itinerary] } } )),
+      }),
+    ])
+    .then(responses => Promise.all(responses.map(response => response.json())))
+    .then(responses => this.merge_responses(responses[0], responses[1]))
+    .then(response => this.display(response))
+    .catch(error => {
+      this.loading_end();
+      this.el_error.innerHTML = `Travel Dealz Tier Points Calculator ${error.toString()}`;
+      this.el_error.classList.remove('hidden');
+    });
+  }
+
+  merge_responses( td_data, wtc_data ) {
+
+    let response = {
+      ...wtc_data,
+      ...td_data,
+    };
+
+    return response.value.map( (segment, segmentIndex) => {
+      segment = {
+        ...wtc_data.value[segmentIndex],
+        ...segment,
+        value: {
+          ...wtc_data.value[segmentIndex].value,
+          ...segment.value,
+        }
+      }
+
+      let ids = [
+        ...segment.value.totals.map( program => program.id ),
+        ...wtc_data.value[segmentIndex].value.totals.map( program => program.id ),
+      ]
+
+      let totals = ids.map( program => {
+        return {
+          ...wtc_data.value[segmentIndex].value.totals.find( item => program === item.id ),
+          ...segment.value.totals.find( item => program === item.id ),
+        };
+      } )
+
+      segment.value.totals = totals;
+
+      return segment;
+    } );
   }
 
   display( data ) {
 
     this.loading_end();
-
     
   }
 
