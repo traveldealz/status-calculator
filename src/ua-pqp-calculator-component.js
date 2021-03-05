@@ -8,10 +8,23 @@ export default class extends BaseComponent {
   constructor() {
     super();
     this.$template = template;
+    this.$program = 'UA';
+    this.$points_label =  'PQP';
+    this.$awardmiles_label = 'Award Miles';
+    this.$status_labels = ['None','Silver','Gold','Platinum', '1K'];
+
   }
 
   connectedCallback() {
     super.connectedCallback();
+    
+    this.el_status = this.querySelector('[name="status"]');
+    this.$status_labels.forEach((status, index) => {
+      let el_option = document.createElement('option');
+      el_option.value = index;
+      el_option.innerHTML = status;
+      this.el_status.appendChild(el_option);
+    });
   }
 
   calculate() {
@@ -36,14 +49,13 @@ export default class extends BaseComponent {
     `, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_list.appendChild(el_thead);
 
+    const status_key = this.el_status.value;
 
 
     this.$segments.forEach( (segment, index) => {
       const earning = data[index].value.totals.find( item => item.id === this.$program );
 
-      console.log('DATA');
-      console.log([data[index]]);
-
+     
 
 let el = document.createElement('tr');
         let segmentmiles = calculateMiles([segment], [data[index]]);
