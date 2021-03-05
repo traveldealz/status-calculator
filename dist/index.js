@@ -120,25 +120,81 @@ class BaseComponent extends HTMLElement {
     this.query(itineraries);
   }
 
-  query(itineraries) {
-    fetch('https://www.wheretocredit.com/api/2.0/calculate', {
+  async query(itineraries) {
+    let body = JSON.stringify(itineraries.map(itinerary => {
+      return { ...(itinerary.price ? {
+          ticketingCarrier: itinerary.ticketer
+        } : {}),
+        ...(itinerary.price ? {
+          baseFare: itinerary.price
+        } : {}),
+        segments: [itinerary]
+      };
+    }));
+    Promise.all([fetch('https://farecollection.travel-dealz.de/api/calculate/tierpoints', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(itineraries.map(itinerary => {
-        return {
-          segments: [itinerary]
-        };
-      }))
-    }).then(response => response.json()).then(data => this.display(data.value)).catch(error => {
+      body
+    }), fetch('https://www.wheretocredit.com/api/2.0/calculate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body
+    })]).then(responses => Promise.all(responses.map(response => response.json()))).then(responses => this.merge_responses(responses[0], responses[1])).then(response => this.calculate_totals(response)).catch(error => {
       this.loading_end();
-      this.el_error.innerHTML = `Where to Credit ${error.toString()}`;
+      this.el_error.innerHTML = `Travel Dealz Tier Points Calculator ${error.toString()}`;
       this.el_error.classList.remove('hidden');
     });
   }
 
-  display(data) {
+  merge_responses(td_data, wtc_data) {
+    let response = { ...wtc_data,
+      ...td_data
+    };
+    response.value = response.value.map((segment, segmentIndex) => {
+      segment = { ...wtc_data.value[segmentIndex],
+        ...segment,
+        value: { ...wtc_data.value[segmentIndex].value,
+          ...segment.value
+        }
+      };
+      let ids = [...new Set([...segment.value.totals.map(program => program.id), ...wtc_data.value[segmentIndex].value.totals.map(program => program.id)])];
+      let totals = ids.map(program => {
+        let wtc_total = wtc_data.value[segmentIndex].value.totals.find(item => program === item.id);
+        return { ...wtc_total,
+          qm: wtc_total.rdm ? wtc_total.rdm : [0, 0, 0, 0],
+          qd: 0,
+          ...segment.value.totals.find(item => program === item.id)
+        };
+      });
+      segment.value.totals = totals;
+      return segment;
+    });
+    return response;
+  }
+
+  calculate_totals(response) {
+    let totals = response.value.reduce((totals, itinerary) => {
+      itinerary.value.totals.forEach(item => {
+        totals[item.id] = totals[item.id] ? {
+          rdm: totals[item.id].rdm.map((m, i) => m + item.rdm[i]),
+          qm: totals[item.id].qm.map((m, i) => m + item.qm[i]),
+          qd: totals[item.id].qd + item.qd
+        } : {
+          rdm: item.rdm,
+          qm: item.qm,
+          qd: item.qd
+        };
+      });
+      return totals;
+    }, {});
+    this.display(response, totals);
+  }
+
+  display(data, totals) {
     this.loading_end();
   }
 
@@ -1895,14 +1951,11 @@ class StatusCalculator extends BaseComponent {
     super.calculate();
   }
 
-  display(data) {
-    super.display(data);
-    let totals = data.reduce((totals, itinerary) => {
-      itinerary.value.totals.forEach(item => {
-        totals[item.id] = totals[item.id] ? totals[item.id] + item.rdm[0] : item.rdm[0];
-      });
-      return totals;
-    }, {});
+  display({
+    value: data,
+    airports
+  }, totals) {
+    super.display();
     this.el_list.innerHTML = '';
     Object.keys(totals).map(id => {
       const program = programs[id];
@@ -1922,7 +1975,7 @@ class StatusCalculator extends BaseComponent {
           switch (qualification.type) {
             case 'miles':
               build.needed = qualification.number;
-              build.collected = totals[id];
+              build.collected = totals[id].qm[0];
               build.progress = build.collected / build.needed;
               qualification.milesName ? build.milesname = qualification.milesName[this.$locale] : build.milesname = qualification.type;
               break;
@@ -1935,7 +1988,7 @@ class StatusCalculator extends BaseComponent {
           }
 
           if (qualification.calculate) {
-            build.collected = qualification.calculate(this.$segments, data);
+            build.collected = qualification.calculate(this.$segments, data, airports);
             build.progress = build.collected / build.needed;
           }
 
@@ -1943,7 +1996,7 @@ class StatusCalculator extends BaseComponent {
             switch (qualification.secType) {
               case 'miles':
                 build.secNeeded = qualification.secNumber;
-                build.secCollected = totals[id];
+                build.secCollected = totals[id].qm[0];
                 build.secProgress = build.secCollected / build.secNeeded;
                 build.secNote = qualification.secNote;
                 break;
@@ -1957,7 +2010,7 @@ class StatusCalculator extends BaseComponent {
             }
 
             if (qualification.secCalculate) {
-              build.secCollected = qualification.secCalculate(this.$segments, data);
+              build.secCollected = qualification.secCalculate(this.$segments, data, airports);
               build.secProgress = build.secCollected / build.secNeeded;
             }
           }
@@ -2087,46 +2140,12 @@ class TierpointsCalculator extends BaseComponent {
     });
   }
 
-  calculate() {
-    super.calculate();
-  }
-
-  async query(itineraries) {
-    Promise.all([fetch('https://farecollection.travel-dealz.de/api/calculate/tierpoints', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(itineraries.map(itinerary => {
-        return {
-          segments: [itinerary]
-        };
-      }))
-    }), fetch('https://www.wheretocredit.com/api/2.0/calculate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(itineraries.map(itinerary => {
-        return {
-          segments: [itinerary]
-        };
-      }))
-    })]).then(responses => Promise.all(responses.map(response => response.json()))).then(responses => this.display(responses[0], responses[1])).catch(error => {
-      this.loading_end();
-      this.el_error.innerHTML = `Travel Dealz Tier Points Calculator ${error.toString()}`;
-      this.el_error.classList.remove('hidden');
-    });
-  }
-
   display({
     value: data,
     airlines,
     airports
-  }, {
-    value: wtc_data
-  }) {
-    super.display(data);
+  }, totals) {
+    super.display();
     this.el_list.innerHTML = '';
     let el_thead = document.createElement('thead');
     el_thead.innerHTML = translate(
@@ -2141,22 +2160,9 @@ class TierpointsCalculator extends BaseComponent {
       </tr>
     `, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_list.appendChild(el_thead);
-    let totals = data.reduce((totals, itinerary) => {
-      itinerary.value.totals.forEach(item => {
-        totals[item.id] = totals[item.id] ? totals[item.id] + item.qm[0] : item.qm[0];
-      });
-      return totals;
-    }, {});
     const status_key = this.el_status.value;
-    let totals_rdm = wtc_data.reduce((totals, itinerary) => {
-      itinerary.value.totals.forEach(item => {
-        totals[item.id] = totals[item.id] ? totals[item.id] + item.rdm[status_key] : item.rdm[status_key];
-      });
-      return totals;
-    }, {});
     this.$segments.forEach((segment, index) => {
       const earning = data[index].value.totals.find(item => item.id === this.$program);
-      const earning_rdm = wtc_data[index].value.totals.find(item => item.id === this.$program);
       let el = document.createElement('tr');
       el.innerHTML = translate(
       /*html*/
@@ -2186,7 +2192,7 @@ class TierpointsCalculator extends BaseComponent {
             </div>
           </div>
         </td>
-        <td class="text-right">${false === wtc_data[index].success ? wtc_data[index].errorMessage : `${earning_rdm ? earning_rdm.rdm[status_key]?.toLocaleString() : 0}`}</td>
+        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning ? earning.rdm[status_key]?.toLocaleString() : 0}`}</td>
         <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning ? earning.qm[0]?.toLocaleString() : 0}`}</td>
         `, translations[this.$locale] ? translations[this.$locale] : []);
       this.el_list.appendChild(el);
@@ -2197,8 +2203,8 @@ class TierpointsCalculator extends BaseComponent {
     `
       <tr>
         <th class="text-right" colspan="3">__(Total)</th>
-        <th class="text-right">${totals_rdm[this.$program]?.toLocaleString()}</th>
-        <th class="text-right">${totals[this.$program]?.toLocaleString()}</th>
+        <th class="text-right">${totals[this.$program].rdm[status_key]?.toLocaleString()}</th>
+        <th class="text-right">${totals[this.$program].qm[status_key]?.toLocaleString()}</th>
       </tr>
     `, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_list.appendChild(el_foot);
@@ -2220,6 +2226,9 @@ UA:K:LHR-HKG:UA:265</textarea>
     <small></small>
     <div class="my-3">
       <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
+      <label for="status">__(Status)</label>
+      <select name="status">
+      </select>
     </div>
   </form>
   <div class="loading hidden">__(Loading & calculating...)</div>
@@ -2232,41 +2241,84 @@ class UaPqpCalculator extends BaseComponent {
   constructor() {
     super();
     this.$template = template$3;
+    this.$program = 'UA';
+    this.$points_label = 'PQP';
+    this.$awardmiles_label = 'Award Miles';
+    this.$status_labels = ['None', 'Silver', 'Gold', 'Platinum', '1K'];
   }
 
   connectedCallback() {
     super.connectedCallback();
+    this.el_status = this.querySelector('[name="status"]');
+    this.$status_labels.forEach((status, index) => {
+      let el_option = document.createElement('option');
+      el_option.value = index;
+      el_option.innerHTML = status;
+      this.el_status.appendChild(el_option);
+    });
   }
 
   calculate() {
     super.calculate();
   }
 
-  display(data) {
+  display({
+    value: data,
+    airlines,
+    airports
+  }, totals) {
     let totalpqps = 0;
     super.display(data);
     this.el_list.innerHTML = '';
     let el_thead = document.createElement('thead');
-    el_thead.innerHTML = `
+    el_thead.innerHTML = translate(
+    /*html*/
+    `
       <tr>
-        <th class="text-center">Route</th>
-        <th class="text-center">Airline</th>
-        <th class="text-center">Booking Class</th>
-        <th class="text-right">Tier Points</th>
+        <th></th>
+        <th class="text-center">__(Route)</th>
+        <th class="text-center">__(Bookingclass)</th>
+        <th class="text-right">${this.$awardmiles_label ? this.$awardmiles_label : '__(Award Miles)'}</th>
+        <th class="text-right">${this.$points_label ? this.$points_label : '__(PQP)'}</th>
       </tr>
-    `;
+    `, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_list.appendChild(el_thead);
+    const status_key = this.el_status.value;
     this.$segments.forEach((segment, index) => {
-      console.log('DATA');
-      console.log([data[index]]);
+      const earning = data[index].value.totals.find(item => item.id === this.$program);
       let el = document.createElement('tr');
-      totalpqps += calculateMiles([segment], [data[index]]);
-      el.innerHTML = `
-        <td class="text-center"><code>${segment.origin}</code> - <code>${segment.destination}</code></td>
-        <td class="text-center"><code>${segment.carrier}</code></td>
-        <td class="text-center"><code>${segment.bookingClass}</code></td>
-        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${data[index].value.totals[0] ? calculateMiles([segment], [data[index]]) : 0}`}</td>
-                `;
+      let segmentmiles = calculateMiles([segment], [data[index]]);
+      totalpqps += segmentmiles;
+      el.innerHTML = translate(
+      /*html*/
+      `
+        <td class="align-top text-vertical text-center text-xs text-grey-dark font-light">${data[index].value.distance?.toLocaleString()} __(miles)</td>
+        <td class="text-center">
+          <div class="grid grid-cols-1 md:grid-cols-2">
+            <div>
+              <div><code>${segment.origin}</code></div>
+              <div class="text-xs text-grey-dark font-light">${airports[segment.origin]?.location}</div>
+            </div>
+            <div>
+              <div><code>${segment.destination}</code></div>
+              <div class="text-xs text-grey-dark font-light">${airports[segment.destination]?.location}</div>
+            </div>
+          </div>
+        </td>
+        <td class="text-center">
+          <div class="grid grid-cols-1 md:grid-cols-2">
+            <div>
+              <div><code>${segment.carrier}</code></div>
+              <div class="text-xs text-grey-dark font-light">${airlines[segment.carrier]?.name}</div>
+            </div>
+            <div>
+              <div><code>${segment.bookingClass}</code></div>
+            </div>
+          </div>
+        </td>
+        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning ? earning.rdm[status_key]?.toLocaleString() : 0}`}</td>
+        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${data[index].value.totals[0] ? segmentmiles.toLocaleString() : 0}`}</td>
+        `, translations[this.$locale] ? translations[this.$locale] : []);
       this.el_list.appendChild(el);
     });
     let el_foot = document.createElement('tfoot');
