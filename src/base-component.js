@@ -74,20 +74,27 @@ export default class extends HTMLElement {
   }
 
   async query(itineraries) {
+
+    let body = JSON.stringify(itineraries.map( itinerary => { return {
+      ...itinerary.price ? { ticketingCarrier: itinerary.ticketer } : {},
+      ...itinerary.price ? { baseFare: itinerary.price } : {},
+      segments: [itinerary]
+    } } ));
+
     Promise.all([
       fetch('https://farecollection.travel-dealz.de/api/calculate/tierpoints', {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
         },
-        body: JSON.stringify(itineraries.map( itinerary => { return { segments: [itinerary] } } )),
+        body,
       }),
       fetch('https://www.wheretocredit.com/api/2.0/calculate', {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
         },
-        body: JSON.stringify(itineraries.map( itinerary => { return { segments: [itinerary] } } )),
+        body,
       }),
     ])
     .then(responses => Promise.all(responses.map(response => response.json())))
