@@ -22,7 +22,7 @@ export default class extends BaseComponent {
     super.calculate();
   }
 
-  display( {value: data}, totals ) {
+  display( {value: data, airports}, totals ) {
 
     super.display();
 
@@ -62,7 +62,7 @@ export default class extends BaseComponent {
               }
 
               if(qualification.calculate) {
-                build.collected = qualification.calculate(this.$segments, data);
+                build.collected = qualification.calculate(this.$segments, data, airports);
                 build.progress = build.collected / build.needed;
               }
 
@@ -85,7 +85,7 @@ export default class extends BaseComponent {
                 }
 
                 if(qualification.secCalculate) {
-                  build.secCollected = qualification.secCalculate(this.$segments, data);
+                  build.secCollected = qualification.secCalculate(this.$segments, data, airports);
                   build.secProgress = build.secCollected / build.secNeeded;
                 }
 
