@@ -1,4 +1,4 @@
-export function calculateMiles(segments, data) {
+export function calculateMiles(segments, data, airports) {
     return data.reduce((acc,itinerary) => {
 
         let mileage = itinerary.value?.totals?.find(item => 'UX' === item.id);
@@ -10,7 +10,11 @@ export function calculateMiles(segments, data) {
           let multiplier = 5;
           if(['C','J','D','I'].includes(segments[acc[1]].bookingClass)) {
               multiplier += 3;}
-          //TODO: Checken ob Flughafen in USA, dann multiplier +1
+          console.log(airports);
+          console.log(airports[segments[acc[0]].origin].country_code);
+          if(airports[segments[acc[0]].origin].country_code == "US" || airports[segments[acc[0]].destination].country_code == "US"){
+            multiplier += 1;
+          }
           if(18000 > acc[0]) return [acc[0] + (segments[acc[1]].price * multiplier), acc[1]+1];
           if(32000 > acc[0]) return [acc[0] + (segments[acc[1]].price * multiplier)*1.5, acc[1]+1];
           if(60000 > acc[0]) return [acc[0] + (segments[acc[1]].price * multiplier)*1.75, acc[1]+1];
