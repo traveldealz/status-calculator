@@ -1,14 +1,16 @@
 
 
-function countSegments( segments, data ) {
-  //TODO: Prüfen ob Segment international ist.
+function countSegments( segments, data, airports ) {
   return data.reduce((acc,itinerary) => {
     let mileage = itinerary.value?.totals?.find(item => 'OK' === item.id);
     if(!mileage) {
-      return acc;
+      return [acc[0], acc[1]+1];
     }
-    return 0 < mileage.rdm[0] ? acc+1 : acc;
-  }, 0);
+    if(airports[segments[acc[1]].origin].country_code != airports[segments[acc[1]].destination].country_code){
+        return 0 < mileage.rdm[0] ? [acc[0]+1, acc[1]+1] : [acc[0], acc[1]+1];
+    }
+          return [acc[0], acc[1]+1];
+  }, [0, 0])[0];
 }
 
 

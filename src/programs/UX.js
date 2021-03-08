@@ -10,9 +10,7 @@ export function calculateMiles(segments, data, airports) {
           let multiplier = 5;
           if(['C','J','D','I'].includes(segments[acc[1]].bookingClass)) {
               multiplier += 3;}
-          console.log(airports);
-          console.log(airports[segments[acc[0]].origin].country_code);
-          if(airports[segments[acc[0]].origin].country_code == "US" || airports[segments[acc[0]].destination].country_code == "US"){
+          if(airports[segments[acc[1]].origin].country_code == "US" || airports[segments[acc[1]].destination].country_code == "US"){
             multiplier += 1;
           }
           if(18000 > acc[0]) return [acc[0] + (segments[acc[1]].price * multiplier), acc[1]+1];
