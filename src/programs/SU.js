@@ -14,8 +14,11 @@ function countBusinessSegments( segments, data ) {
     if(!mileage) {
       return acc;
     }
-    //TODO: in Farecollection nachsehen, ob Buchungsklasse Business ist
+    let cabquery = itinerary.value?.totals?.find(item => 'DL' === item.id);
+    if(cabquery["cabinclass"] == "Business Class"){
     return 0 < mileage.rdm[0] ? acc+1 : acc;
+    }
+    return acc;
   }, 0);
 }
 
