@@ -76,8 +76,8 @@ export default class extends HTMLElement {
   async query(itineraries) {
 
     let body = JSON.stringify(itineraries.map( itinerary => { return {
-      ...itinerary.price ? { ticketingCarrier: itinerary.ticketer } : {},
-      ...itinerary.price ? { baseFare: itinerary.price } : {},
+      ...itinerary.price ? { ticketingCarrier: itinerary.ticketer } : {ticketingCarrier: "null"},
+      ...itinerary.price ? { baseFare: itinerary.price } : {baseFare: 0},
       segments: [itinerary]
     } } ));
 
