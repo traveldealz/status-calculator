@@ -74,6 +74,7 @@ export default class extends BaseComponent {
                     build.secCollected = totals[id].qm[0];
                     build.secProgress = build.secCollected / build.secNeeded;
                     build.secNote = qualification.secNote;
+                    qualification.secmilesName? build.secmilesname = qualification.secmilesName[this.$locale] : build.secmilesname = qualification.type;
                     break;
                   case 'segments':
                     build.secNeeded = qualification.secNumber;

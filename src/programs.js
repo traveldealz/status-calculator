@@ -22,10 +22,14 @@ import OK from './programs/OK';
 import ME from './programs/ME';
 import SV from './programs/SV';
 import VN from './programs/VN';
+import AFB from './programs/AFB';
+import DL from './programs/DL';
 
 
 export default {
   A3,
+  DL,
+  AFB,
   VN,
   OK,
   ET,

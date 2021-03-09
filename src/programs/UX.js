@@ -1,6 +1,5 @@
 export function calculateMiles(segments, data, airports) {
     return data.reduce((acc,itinerary) => {
-
         let mileage = itinerary.value?.totals?.find(item => 'UX' === item.id);
         if(!mileage) {
           return [acc[0], acc[1]+1];
@@ -19,6 +18,7 @@ export function calculateMiles(segments, data, airports) {
           if(60000 < acc[0]) return [acc[0] + (segments[acc[1]].price * multiplier)*2, acc[1]+1];
             ;
         }
+        return  [acc[0] + mileage.rdm[0], acc[1]+1];
         }
         else {
                 return  [acc[0] + mileage.rdm[0], acc[1]+1];   
