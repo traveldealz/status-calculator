@@ -74,20 +74,27 @@ export default class extends HTMLElement {
   }
 
   async query(itineraries) {
+
+    let body = JSON.stringify(itineraries.map( itinerary => { return {
+      ...itinerary.price ? { ticketingCarrier: itinerary.ticketer } : {},
+      ...itinerary.price ? { baseFare: itinerary.price } : {},
+      segments: [itinerary]
+    } } ));
+
     Promise.all([
       fetch('https://farecollection.travel-dealz.de/api/calculate/tierpoints', {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
         },
-        body: JSON.stringify(itineraries.map( itinerary => { return { segments: [itinerary] } } )),
+        body,
       }),
       fetch('https://www.wheretocredit.com/api/2.0/calculate', {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
         },
-        body: JSON.stringify(itineraries.map( itinerary => { return { segments: [itinerary] } } )),
+        body,
       }),
     ])
     .then(responses => Promise.all(responses.map(response => response.json())))
@@ -95,7 +102,7 @@ export default class extends HTMLElement {
     .then(response => this.calculate_totals(response))
     .catch(error => {
       this.loading_end();
-      this.el_error.innerHTML = `Travel Dealz Tier Points Calculator ${error.toString()}`;
+      this.el_error.innerHTML = `Error: ${error.toString()}`;
       this.el_error.classList.remove('hidden');
     });
   }
@@ -107,24 +114,35 @@ export default class extends HTMLElement {
       ...td_data,
     };
 
+    if( false === wtc_data.success && true === response.success ) {
+      response.success = wtc_data.success;
+      response.errorMessage = wtc_data.errorMessage;
+    }
+
     response.value = response.value.map( (segment, segmentIndex) => {
+
       segment = {
-        ...wtc_data.value[segmentIndex],
         ...segment,
+
         value: {
-          ...wtc_data.value[segmentIndex].value,
+          ...wtc_data.value[segmentIndex].value ? wtc_data.value[segmentIndex].value : {},
           ...segment.value,
         }
       }
 
+      if( false === wtc_data.value[segmentIndex].success && true === segment.success ) {
+        segment.success = wtc_data.value[segmentIndex].success;
+        segment.errorMessage = wtc_data.value[segmentIndex].errorMessage;
+      }
+
       let ids = [...new Set([
         ...segment.value.totals.map( program => program.id ),
-        ...wtc_data.value[segmentIndex].value.totals.map( program => program.id ),
+        ...wtc_data.value[segmentIndex].value ? wtc_data.value[segmentIndex].value.totals.map( program => program.id ) : [],
       ])];
 
       let totals = ids.map( program => {
 
-        let wtc_total = wtc_data.value[segmentIndex].value.totals.find( item => program === item.id );
+        let wtc_total = wtc_data.value[segmentIndex].value ? wtc_data.value[segmentIndex].value.totals.find( item => program === item.id ) : {};
 
         return {
           ...wtc_total,
@@ -138,6 +156,18 @@ export default class extends HTMLElement {
 
       return segment;
     } );
+
+    if( false === response.success ) {
+      throw response.errorMessage;
+    }
+
+    response.value.forEach( item => {
+      if( false === item.success ) {
+      throw item.errorMessage;
+    }
+    } )
+
+    console.log(response)
 
     return response;
 
