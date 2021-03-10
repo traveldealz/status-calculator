@@ -13,22 +13,44 @@ import AC from './programs/AC';
 import UA from './programs/UA';
 import BR from './programs/BR';
 import TP from './programs/TP';
+import SU from './programs/SU';
+import AR from './programs/AR';
+import AM from './programs/AM';
+import UX from './programs/UX';
+import AZ from './programs/AZ';
+import OK from './programs/OK';
+import ME from './programs/ME';
+import SV from './programs/SV';
+import VN from './programs/VN';
+import AFB from './programs/AFB';
+import DL from './programs/DL';
 
 
 export default {
   A3,
+  DL,
+  AFB,
+  VN,
+  OK,
   ET,
+  ME,
+  AZ,
+  AM,
+  AR,
+  UX,
   LHM,
   MS,
   TP,
   CM,
   OZ,
   SQ,
+  SV,
   CA,
   SK,
   TG,
   TK,
   UA,
   BR,
+  SU,
   AC,
 };

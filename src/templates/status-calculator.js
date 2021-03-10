@@ -12,8 +12,14 @@ export default /*html*/`
       <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
       <label for="status">__(Status)</label>
       <select name="status">
-        <option>Star Alliance Silver</option>
-        <option selected>Star Alliance Gold</option>
+        <optgroup label="Star Alliance">
+          <option>Star Alliance Silver</option>
+          <option selected>Star Alliance Gold</option>
+        </optgroup>
+        <optgroup label="SkyTeam">
+          <option>SkyTeam Elite</option>
+          <option>SkyTeam Elite Plus</option>
+        </optgroup>
       </select>
     </div>
   </form>
