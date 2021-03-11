@@ -124,10 +124,14 @@ class BaseComponent extends HTMLElement {
     let body = JSON.stringify(itineraries.map(itinerary => {
       return { ...(itinerary.price ? {
           ticketingCarrier: itinerary.ticketer
-        } : {}),
+        } : {
+          ticketingCarrier: "null"
+        }),
         ...(itinerary.price ? {
           baseFare: itinerary.price
-        } : {}),
+        } : {
+          baseFare: 0
+        }),
         segments: [itinerary]
       };
     }));
@@ -145,7 +149,7 @@ class BaseComponent extends HTMLElement {
       body
     })]).then(responses => Promise.all(responses.map(response => response.json()))).then(responses => this.merge_responses(responses[0], responses[1])).then(response => this.calculate_totals(response)).catch(error => {
       this.loading_end();
-      this.el_error.innerHTML = `Travel Dealz Tier Points Calculator ${error.toString()}`;
+      this.el_error.innerHTML = `Error: ${error.toString()}`;
       this.el_error.classList.remove('hidden');
     });
   }
@@ -154,16 +158,27 @@ class BaseComponent extends HTMLElement {
     let response = { ...wtc_data,
       ...td_data
     };
+
+    if (false === wtc_data.success && true === response.success) {
+      response.success = wtc_data.success;
+      response.errorMessage = wtc_data.errorMessage;
+    }
+
     response.value = response.value.map((segment, segmentIndex) => {
-      segment = { ...wtc_data.value[segmentIndex],
-        ...segment,
-        value: { ...wtc_data.value[segmentIndex].value,
+      segment = { ...segment,
+        value: { ...(wtc_data.value[segmentIndex].value ? wtc_data.value[segmentIndex].value : {}),
           ...segment.value
         }
       };
-      let ids = [...new Set([...segment.value.totals.map(program => program.id), ...wtc_data.value[segmentIndex].value.totals.map(program => program.id)])];
+
+      if (false === wtc_data.value[segmentIndex].success && true === segment.success) {
+        segment.success = wtc_data.value[segmentIndex].success;
+        segment.errorMessage = wtc_data.value[segmentIndex].errorMessage;
+      }
+
+      let ids = [...new Set([...segment.value.totals.map(program => program.id), ...(wtc_data.value[segmentIndex].value ? wtc_data.value[segmentIndex].value.totals.map(program => program.id) : [])])];
       let totals = ids.map(program => {
-        let wtc_total = wtc_data.value[segmentIndex].value.totals.find(item => program === item.id);
+        let wtc_total = wtc_data.value[segmentIndex].value ? wtc_data.value[segmentIndex].value.totals.find(item => program === item.id) : {};
         return { ...wtc_total,
           qm: wtc_total.rdm ? wtc_total.rdm : [0, 0, 0, 0],
           qd: 0,
@@ -173,6 +188,17 @@ class BaseComponent extends HTMLElement {
       segment.value.totals = totals;
       return segment;
     });
+
+    if (false === response.success) {
+      throw response.errorMessage;
+    }
+
+    response.value.forEach(item => {
+      if (false === item.success) {
+        throw item.errorMessage;
+      }
+    });
+    console.log(response);
     return response;
   }
 
@@ -1891,21 +1917,1169 @@ var TP = {
   }
 };
 
+function countSegments$4(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'SU' === item.id);
+
+    if (!mileage) {
+      return acc;
+    }
+
+    return 0 < mileage.rdm[0] ? acc + 1 : acc;
+  }, 0);
+}
+
+function countBusinessSegments(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'SU' === item.id);
+
+    if (!mileage) {
+      return acc;
+    }
+
+    let cabquery = itinerary.value?.totals?.find(item => 'DL' === item.id);
+
+    if (cabquery["cabinclass"] == "Business Class") {
+      return 0 < mileage.rdm[0] ? acc + 1 : acc;
+    }
+
+    return acc;
+  }, 0);
+}
+
+var SU = {
+  name: 'Aeroflot Bonus',
+  alliance: 'SkyTeam',
+  qualificationPeriodType: 'Calendar year',
+  status: [{
+    name: 'Silver',
+    allianceStatus: 'SkyTeam Elite',
+    qualification: [{
+      type: 'miles',
+      number: 20000,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 20,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$4,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }],
+    note: {
+      en: '',
+      de: '',
+      es: ''
+    }
+  }, {
+    name: 'Gold',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 40000,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 40,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$4,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }],
+    note: {
+      en: '',
+      de: '',
+      es: ''
+    }
+  }, {
+    name: 'Platinum',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 100000,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 40,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countBusinessSegments,
+      milesName: {
+        en: 'business class segments',
+        de: 'Business Class Segmenten'
+      },
+      note: {
+        en: 'Only business class segments with mileage credit count.',
+        de: 'Nur Business Class Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }],
+    note: {
+      en: '',
+      de: '',
+      es: ''
+    }
+  }],
+  note: {
+    en: '',
+    de: '',
+    es: ''
+  }
+};
+
+function countSegments$5(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'AR' === item.id);
+
+    if (!mileage) {
+      return acc;
+    }
+
+    return 0 < mileage.rdm[0] ? acc + 1 : acc;
+  }, 0);
+}
+
+var AR = {
+  name: 'Aerolíneas Argentinas AerolíneasPlus',
+  alliance: 'SkyTeam',
+  qualificationPeriodType: 'Consecutive months',
+  status: [{
+    name: 'Oro',
+    allianceStatus: 'SkyTeam Elite',
+    qualification: [{
+      type: 'miles',
+      number: 25000,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'miles',
+      number: 15000,
+      secType: 'segments',
+      secNumber: 15,
+      secCalculate: countSegments$5,
+      secmilesName: {
+        en: 'Segments',
+        de: 'Segmenten'
+      },
+      qualificationPeriod: 12,
+      validity: 12,
+      secNote: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.'
+      }
+    }, {
+      type: 'segments',
+      number: 30,
+      calculate: countSegments$5,
+      qualificationPeriod: 12,
+      validity: 12
+    }]
+  }, {
+    name: 'Platino',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 50000,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'miles',
+      number: 30000,
+      secType: 'segments',
+      secNumber: 30,
+      secmilesName: {
+        en: 'Segments',
+        de: 'Segmenten'
+      },
+      secCalculate: countSegments$5,
+      qualificationPeriod: 12,
+      validity: 12,
+      secNote: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.'
+      }
+    }, {
+      type: 'segments',
+      number: 60,
+      calculate: countSegments$5,
+      qualificationPeriod: 12,
+      validity: 12
+    }]
+  }, {
+    name: 'Diamante',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 70000,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'miles',
+      number: 40000,
+      secType: 'segments',
+      secNumber: 40,
+      secCalculate: countSegments$5,
+      qualificationPeriod: 12,
+      secmilesName: {
+        en: 'Segments',
+        de: 'Segmenten'
+      },
+      validity: 12,
+      secNote: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.'
+      }
+    }, {
+      type: 'segments',
+      number: 80,
+      calculate: countSegments$5,
+      qualificationPeriod: 12,
+      validity: 12
+    }]
+  }]
+};
+
+function calculateExecutivebonus$2(segments, data) {
+  console.log(data);
+  return data.reduce((miles, itinerary) => {
+    let item = itinerary.value.totals.find(item => 'AM' === item.id);
+
+    if (!item) {
+      return miles;
+    }
+
+    if (50000 < miles) return miles + item.rdm[1];else if (80000 < miles) return miles + item.rdm[2];else if (100000 < miles) return miles + item.rdm[3];else return miles + item.rdm[0];
+  }, 0);
+}
+
+function countAMDLMiles(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'AM' === item.id);
+
+    if (!mileage) {
+      return [acc[0], acc[1] + 1];
+    }
+
+    if (['AM', 'DL'].includes(segments[acc[1]].carrier)) {
+      if (50000 > acc[0]) return [acc[0] + mileage.rdm[0], acc[1] + 1];
+      if (80000 > acc[0]) return [acc[0] + mileage.rdm[1], acc[1] + 1];
+      if (100000 > acc[0]) return [acc[0] + mileage.rdm[2], acc[1] + 1];
+      if (100000 < acc[0]) return [acc[0] + mileage.rdm[3], acc[1] + 1];
+    } else {
+      return [acc[0], acc[1] + 1];
+    }
+  }, [0, 0])[0];
+}
+
+var AM = {
+  name: 'Aeromexico Club Premier',
+  alliance: 'SkyTeam',
+  qualificationPeriodType: 'Calendar year',
+  status: [{
+    name: 'Gold',
+    allianceStatus: 'SkyTeam Elite',
+    qualification: [{
+      type: 'miles',
+      number: 50000,
+      qualificationPeriod: 12,
+      validity: 12
+    }]
+  }, {
+    name: 'Platinum',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 80000,
+      calculate: calculateExecutivebonus$2,
+      qualificationPeriod: 12,
+      validity: 12
+    }]
+  }, {
+    name: 'Titanium',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 100000,
+      secType: 'miles',
+      secNumber: 80000,
+      secmilesName: {
+        en: 'Miles with Delta or Aeromexico',
+        de: 'Meilen mit Delta oder Aeromexico'
+      },
+      calculate: calculateExecutivebonus$2,
+      secCalculate: countAMDLMiles,
+      qualificationPeriod: 12,
+      validity: 12
+    }]
+  }]
+};
+
+function calculateMiles$1(segments, data, airports) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'UX' === item.id);
+
+    if (!mileage) {
+      return [acc[0], acc[1] + 1];
+    }
+
+    if (segments[acc[1]].carrier && segments[acc[1]].ticketer) {
+      if (['UX'].includes(segments[acc[1]].carrier) || ['UX'].includes(segments[acc[1]].ticketer)) {
+        let multiplier = 5;
+
+        if (['C', 'J', 'D', 'I'].includes(segments[acc[1]].bookingClass)) {
+          multiplier += 3;
+        }
+
+        if (airports[segments[acc[1]].origin].country_code == "US" || airports[segments[acc[1]].destination].country_code == "US") {
+          multiplier += 1;
+        }
+
+        if (18000 > acc[0]) return [acc[0] + segments[acc[1]].price * multiplier, acc[1] + 1];
+        if (32000 > acc[0]) return [acc[0] + segments[acc[1]].price * multiplier * 1.5, acc[1] + 1];
+        if (60000 > acc[0]) return [acc[0] + segments[acc[1]].price * multiplier * 1.75, acc[1] + 1];
+        if (60000 < acc[0]) return [acc[0] + segments[acc[1]].price * multiplier * 2, acc[1] + 1];
+      }
+
+      return [acc[0] + mileage.rdm[0], acc[1] + 1];
+    } else {
+      return [acc[0] + mileage.rdm[0], acc[1] + 1];
+    }
+  }, [0, 0])[0];
+}
+var UX = {
+  name: 'Air Europa Suma',
+  alliance: 'SkyTeam',
+  qualificationPeriodType: 'Consecutive months',
+  status: [{
+    name: 'Silver',
+    allianceStatus: 'SkyTeam Elite',
+    qualification: [{
+      type: 'miles',
+      number: 18000,
+      qualificationPeriod: 12,
+      calculate: calculateMiles$1,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 14,
+      qualificationPeriod: 12,
+      validity: 12
+    }]
+  }, {
+    name: 'Gold',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 32000,
+      qualificationPeriod: 12,
+      calculate: calculateMiles$1,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 26,
+      qualificationPeriod: 12,
+      validity: 12
+    }]
+  }, {
+    name: 'Platinum',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 60000,
+      qualificationPeriod: 12,
+      calculate: calculateMiles$1,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 50,
+      qualificationPeriod: 12,
+      validity: 12
+    }]
+  }]
+};
+
+function countSegments$6(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'AZ' === item.id);
+
+    if (!mileage) {
+      return acc;
+    }
+
+    return 0 < mileage.rdm[0] ? acc + 1 : acc;
+  }, 0);
+}
+
+function calculateExecutivebonus$3(segments, data) {
+  console.log(data);
+  return data.reduce((miles, itinerary) => {
+    let item = itinerary.value.totals.find(item => 'AZ' === item.id);
+
+    if (!item) {
+      return miles;
+    }
+
+    if (20000 < miles) {
+      return miles + item.rdm[1];
+    } else if (50000 < miles) {
+      return miles + item.rdm[2];
+    } else if (80000 < miles) {
+      return miles + item.rdm[3];
+    } else {
+      return miles + item.rdm[0];
+    }
+  }, 0);
+}
+
+var AZ = {
+  name: 'Alitalia Millemiglia',
+  alliance: 'SkyTeam',
+  qualificationPeriodType: 'Calendar year',
+  status: [{
+    name: 'Ulisse',
+    allianceStatus: 'SkyTeam Elite',
+    qualification: [{
+      type: 'miles',
+      number: 20000,
+      calculate: calculateExecutivebonus$3,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 30,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$6,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Freccia Alata Club',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 50000,
+      calculate: calculateExecutivebonus$3,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 60,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$6,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Freccia Alata Plus Club',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 80000,
+      calculate: calculateExecutivebonus$3,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 90,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$6,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }]
+  }],
+  note: {
+    en: '',
+    de: '',
+    es: ''
+  }
+};
+
+function calculateSegments$5(segments) {
+  return segments.filter(segment => ['OK'].includes(segment.carrier)).length;
+}
+
+function countSegments$7(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'OK' === item.id);
+
+    if (!mileage) {
+      return acc;
+    }
+
+    return 0 < mileage.rdm[0] ? acc + 1 : acc;
+  }, 0);
+}
+
+var OK = {
+  name: 'CSA OK Plus',
+  alliance: 'SkyTeam',
+  qualificationPeriodType: 'Calendar year',
+  status: [{
+    name: 'Silver',
+    allianceStatus: 'SkyTeam Elite',
+    qualification: [{
+      type: 'miles',
+      number: 25000,
+      secType: 'segments',
+      secNumber: 2,
+      secCalculate: calculateSegments$5,
+      qualificationPeriod: 12,
+      secmilesName: {
+        en: 'Segments with Czech Airlines',
+        de: 'Segmenten mit Czech Airlines'
+      },
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 15,
+      calculate: countSegments$7,
+      secType: 'segments',
+      secNumber: 2,
+      secCalculate: calculateSegments$5,
+      qualificationPeriod: 12,
+      secmilesName: {
+        en: 'Segments with Czech Airlines',
+        de: 'Segmenten mit Czech Airlines'
+      },
+      validity: 12
+    }]
+  }, {
+    name: 'Gold',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 50000,
+      secType: 'segments',
+      secNumber: 6,
+      secCalculate: calculateSegments$5,
+      qualificationPeriod: 12,
+      validity: 12,
+      secmilesName: {
+        en: 'Segments with Czech Airlines',
+        de: 'Segmenten mit Czech Airlines'
+      }
+    }, {
+      type: 'segments',
+      number: 30,
+      calculate: countSegments$7,
+      secType: 'segments',
+      secNumber: 6,
+      secCalculate: calculateSegments$5,
+      qualificationPeriod: 12,
+      validity: 12,
+      secmilesName: {
+        en: 'Segments with Czech Airlines',
+        de: 'Segmenten mit Czech Airlines'
+      }
+    }]
+  }, {
+    name: 'Platinum',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 100000,
+      secType: 'segments',
+      secNumber: 10,
+      secCalculate: calculateSegments$5,
+      qualificationPeriod: 12,
+      secmilesName: {
+        en: 'Segments with Czech Airlines',
+        de: 'Segmenten mit Czech Airlines'
+      },
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 70,
+      calculate: countSegments$7,
+      secType: 'segments',
+      secNumber: 10,
+      secCalculate: calculateSegments$5,
+      qualificationPeriod: 12,
+      secmilesName: {
+        en: 'Segments with Czech Airlines',
+        de: 'Segmenten mit Czech Airlines'
+      },
+      validity: 12
+    }]
+  }]
+};
+
+function countSegments$8(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'ME' === item.id);
+
+    if (!mileage) {
+      return acc;
+    }
+
+    return 0 < mileage.rdm[0] ? acc + 1 : acc;
+  }, 0);
+}
+
+var ME = {
+  name: 'MEA Cedar Miles',
+  alliance: 'SkyTeam',
+  qualificationPeriodType: 'Calendar year',
+  status: [{
+    name: 'Silver',
+    allianceStatus: 'SkyTeam Elite',
+    qualification: [{
+      type: 'miles',
+      number: 20000,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 15,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$8,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Gold',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 40000,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 30,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$8,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Platinum',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 70000,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 60,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$8,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }]
+  }],
+  note: {
+    en: '',
+    de: '',
+    es: ''
+  }
+};
+
+function countSegments$9(segments, data, airports) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'OK' === item.id);
+
+    if (!mileage) {
+      return [acc[0], acc[1] + 1];
+    }
+
+    if (airports[segments[acc[1]].origin].country_code != airports[segments[acc[1]].destination].country_code) {
+      return 0 < mileage.rdm[0] ? [acc[0] + 1, acc[1] + 1] : [acc[0], acc[1] + 1];
+    }
+
+    return [acc[0], acc[1] + 1];
+  }, [0, 0])[0];
+}
+
+var SV = {
+  name: 'Saudia ALFURSAN',
+  alliance: 'SkyTeam',
+  qualificationPeriodType: 'Calendar year',
+  status: [{
+    name: 'Silver',
+    allianceStatus: 'SkyTeam Elite',
+    qualification: [{
+      type: 'miles',
+      number: 25000,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 20,
+      calculate: countSegments$9,
+      qualificationPeriod: 12,
+      milesName: {
+        en: 'international segments',
+        de: 'internationalen Segmenten'
+      },
+      validity: 12
+    }]
+  }, {
+    name: 'Gold',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 50000,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 40,
+      calculate: countSegments$9,
+      qualificationPeriod: 12,
+      milesName: {
+        en: 'international segments',
+        de: 'internationalen Segmenten'
+      },
+      validity: 12
+    }]
+  }]
+};
+
+function countSegments$a(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'VN' === item.id);
+
+    if (!mileage) {
+      return acc;
+    }
+
+    return 0 < mileage.rdm[0] ? acc + 1 : acc;
+  }, 0);
+}
+
+function calculateExecutivebonus$4(segments, data) {
+  console.log(data);
+  return data.reduce((miles, itinerary) => {
+    let item = itinerary.value.totals.find(item => 'VN' === item.id);
+
+    if (!item) {
+      return miles;
+    }
+
+    if (15000 < miles) {
+      return miles + item.rdm[1];
+    } else if (30000 < miles) {
+      return miles + item.rdm[2];
+    } else if (50000 < miles) {
+      return miles + item.rdm[3];
+    } else {
+      return miles + item.rdm[0];
+    }
+  }, 0);
+}
+
+var VN = {
+  name: 'Vietnam Airlines Lotusmiles',
+  alliance: 'SkyTeam',
+  qualificationPeriodType: 'consecutive months',
+  status: [{
+    name: 'Titanium',
+    allianceStatus: 'SkyTeam Elite',
+    qualification: [{
+      type: 'miles',
+      number: 15000,
+      calculate: calculateExecutivebonus$4,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 20,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$a,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Gold',
+    allianceStatus: 'SkyTeam Elite',
+    qualification: [{
+      type: 'miles',
+      number: 30000,
+      calculate: calculateExecutivebonus$4,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 30,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$a,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Platinum',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 50000,
+      calculate: calculateExecutivebonus$4,
+      qualificationPeriod: 12,
+      validity: 12
+    }, {
+      type: 'segments',
+      number: 50,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$a,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }]
+  }],
+  note: {
+    en: '',
+    de: '',
+    es: ''
+  }
+};
+
+var AFB = {
+  name: 'Flying Blue',
+  alliance: 'SkyTeam',
+  qualificationPeriodType: 'Membership year',
+  status: [{
+    name: 'Silver',
+    allianceStatus: 'SkyTeam Elite',
+    qualification: [{
+      type: 'miles',
+      number: 100,
+      qualificationPeriod: 12,
+      validity: 15,
+      milesName: {
+        en: 'XP',
+        de: 'XP'
+      }
+    }]
+  }, {
+    name: 'Gold',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 180,
+      qualificationPeriod: 12,
+      validity: 15,
+      milesName: {
+        en: 'XP',
+        de: 'XP'
+      }
+    }]
+  }, {
+    name: 'Platinum',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 300,
+      qualificationPeriod: 12,
+      validity: 15,
+      milesName: {
+        en: 'XP',
+        de: 'XP'
+      }
+    }]
+  }],
+  note: {
+    en: '',
+    de: '',
+    es: ''
+  }
+};
+
+function countSegments$b(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'DL' === item.id);
+
+    if (!mileage) {
+      return acc;
+    }
+
+    return 0 < mileage.rdm[0] ? acc + 1 : acc;
+  }, 0);
+}
+
+function getmqd(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'DL' === item.id);
+
+    if (!mileage) {
+      return [acc[0], acc[1] + 1];
+    }
+
+    return 0 < mileage.qd ? [acc[0] + mileage.qd, acc[1] + 1] : [acc[0], acc[1] + 1];
+  }, [0, 0])[0];
+}
+
+var DL = {
+  name: 'Delta SkyMiles',
+  alliance: 'SkyTeam',
+  qualificationPeriodType: 'Calendar year',
+  status: [{
+    name: 'Silver',
+    allianceStatus: 'SkyTeam Elite',
+    qualification: [{
+      type: 'miles',
+      number: 25000,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'MQM',
+        de: 'MQM'
+      },
+      secType: 'miles',
+      secNumber: 3000,
+      secCalculate: getmqd,
+      secmilesName: {
+        en: 'MQD',
+        de: 'MQD'
+      },
+      secNote: {
+        en: 'Only required for US-Residents',
+        de: 'Nur für US-Einwohner erforderlich',
+        es: ''
+      }
+    }, {
+      type: 'segments',
+      number: 30,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$b,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      },
+      secType: 'miles',
+      secNumber: 3000,
+      secCalculate: getmqd,
+      secmilesName: {
+        en: 'MQD',
+        de: 'MQD'
+      },
+      secNote: {
+        en: 'Only required for US-Residents',
+        de: 'Nur für US-Einwohner erforderlich',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Gold',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 50000,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'MQM',
+        de: 'MQM'
+      },
+      secType: 'miles',
+      secNumber: 6000,
+      secCalculate: getmqd,
+      secmilesName: {
+        en: 'MQD',
+        de: 'MQD'
+      },
+      secNote: {
+        en: 'Only required for US-Residents',
+        de: 'Nur für US-Einwohner erforderlich',
+        es: ''
+      }
+    }, {
+      type: 'segments',
+      number: 60,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$b,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      },
+      secType: 'miles',
+      secNumber: 6000,
+      secCalculate: getmqd,
+      secmilesName: {
+        en: 'MQD',
+        de: 'MQD'
+      },
+      secNote: {
+        en: 'Only required for US-Residents',
+        de: 'Nur für US-Einwohner erforderlich',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Platinum',
+    allianceStatus: 'SkyTeam Elite Plus',
+    qualification: [{
+      type: 'miles',
+      number: 75000,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'MQM',
+        de: 'MQM'
+      },
+      secType: 'miles',
+      secNumber: 9000,
+      secCalculate: getmqd,
+      secmilesName: {
+        en: 'MQD',
+        de: 'MQD'
+      },
+      secNote: {
+        en: 'Only required for US-Residents',
+        de: 'Nur für US-Einwohner erforderlich',
+        es: ''
+      }
+    }, {
+      type: 'segments',
+      number: 100,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$b,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      },
+      secType: 'miles',
+      secNumber: 9000,
+      secCalculate: getmqd,
+      secmilesName: {
+        en: 'MQD',
+        de: 'MQD'
+      },
+      secNote: {
+        en: 'Only required for US-Residents',
+        de: 'Nur für US-Einwohner erforderlich',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Diamond',
+    allianceStatus: 'SkyTeam Elite',
+    qualification: [{
+      type: 'miles',
+      number: 125000,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'MQM',
+        de: 'MQM'
+      },
+      secType: 'miles',
+      secNumber: 15000,
+      secCalculate: getmqd,
+      secmilesName: {
+        en: 'MQD',
+        de: 'MQD'
+      },
+      secNote: {
+        en: 'Only required for US-Residents',
+        de: 'Nur für US-Einwohner erforderlich',
+        es: ''
+      }
+    }, {
+      type: 'segments',
+      number: 140,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$b,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      },
+      secType: 'miles',
+      secNumber: 15000,
+      secCalculate: getmqd,
+      secmilesName: {
+        en: 'MQD',
+        de: 'MQD'
+      },
+      secNote: {
+        en: 'Only required for US-Residents',
+        de: 'Nur für US-Einwohner erforderlich',
+        es: ''
+      }
+    }]
+  }]
+};
+
 var programs = {
   A3,
+  DL,
+  AFB,
+  VN,
+  OK,
   ET,
+  ME,
+  AZ,
+  AM,
+  AR,
+  UX,
   LHM,
   MS,
   TP,
   CM,
   OZ,
   SQ,
+  SV,
   CA,
   SK,
   TG,
   TK,
   UA,
   BR,
+  SU,
   AC
 };
 
@@ -1924,8 +3098,14 @@ var template$1 = /*html*/
       <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
       <label for="status">__(Status)</label>
       <select name="status">
-        <option>Star Alliance Silver</option>
-        <option selected>Star Alliance Gold</option>
+        <optgroup label="Star Alliance">
+          <option>Star Alliance Silver</option>
+          <option selected>Star Alliance Gold</option>
+        </optgroup>
+        <optgroup label="SkyTeam">
+          <option>SkyTeam Elite</option>
+          <option>SkyTeam Elite Plus</option>
+        </optgroup>
       </select>
     </div>
   </form>
@@ -1999,6 +3179,7 @@ class StatusCalculator extends BaseComponent {
                 build.secCollected = totals[id].qm[0];
                 build.secProgress = build.secCollected / build.secNeeded;
                 build.secNote = qualification.secNote;
+                qualification.secmilesName ? build.secmilesname = qualification.secmilesName[this.$locale] : build.secmilesname = qualification.type;
                 break;
 
               case 'segments':
