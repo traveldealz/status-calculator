@@ -9,7 +9,7 @@ function calculateExecutivebonus(segments, data) {
         if(!item) {
           return miles;
         }
-        return 35000 < miles ? miles + item.rdm[1] : miles + item.rdm[0];
+        return 35000 < miles ? miles + item.qm[1] : miles + item.qm[0];
       }, 0 );
 
 }
@@ -22,10 +22,10 @@ function calc2021(segments, data) {
           return [acc[0], acc[1]+1];
         }
         if(['EN','OS','SN','OU','EW','LO','LH','LG','LX', 'WK'].includes(segments[acc[1]].carrier)) {
-                return acc[0] > 35000 ? [acc[0] + mileage.rdm[1]*2, acc[1]+1] : [acc[0] + mileage.rdm[0]*2, acc[1]+1];
+                return acc[0] > 35000 ? [acc[0] + mileage.qm[1]*2, acc[1]+1] : [acc[0] + mileage.qm[0]*2, acc[1]+1];
         }
         else {
-                return acc[0] > 35000 ? [acc[0] + mileage.rdm[1], acc[1]+1] : [acc[0] + mileage.rdm[0], acc[1]+1];   
+                return acc[0] > 35000 ? [acc[0] + mileage.qm[1], acc[1]+1] : [acc[0] + mileage.qm[0], acc[1]+1];   
         }
         }, [0, 0])[0];
 }
@@ -43,6 +43,7 @@ export default {
           type: 'miles',
           number: 35000,
           qualificationPeriod: 12,
+          calculate: calculateExecutivebonus,
           validity: 24,
           milesName: {
                         en: 'status miles',
