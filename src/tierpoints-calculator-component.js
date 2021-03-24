@@ -76,7 +76,7 @@ export default class extends BaseComponent {
             </div>
           </div>
         </td>
-        <td class="text-right">${ false === data[index].success ? data[index].errorMessage : `${earning.rdm ? earning.rdm[status_key]?.toLocaleString() : 0}` }</td>
+        <td class="text-right">${ false === data[index].success ? data[index].errorMessage : `${earning.rdm ? earning.rdm[status_key]?.toLocaleString() : '-'}` }</td>
         <td class="text-right">${ false === data[index].success ? data[index].errorMessage : `${earning.qm ? earning.qm[0]?.toLocaleString() : 0}` }</td>
         `, translations[this.$locale] ? translations[this.$locale] : []);
         this.el_list.appendChild(el);
