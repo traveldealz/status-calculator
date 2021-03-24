@@ -24,10 +24,22 @@ import SV from './programs/SV';
 import VN from './programs/VN';
 import AFB from './programs/AFB';
 import DL from './programs/DL';
+import BA from './programs/BA';
+import QR from './programs/QR';
+import AY from './programs/AY';
+import AT from './programs/AT';
+import RJ from './programs/RJ';
+import S7 from './programs/S7';
+import UL from './programs/UL';
 
 
 export default {
   A3,
+  AT,
+  AY,
+  BA,
+  RJ,
+  QR,
   DL,
   AFB,
   VN,
@@ -45,10 +57,12 @@ export default {
   OZ,
   SQ,
   SV,
+  S7,
   CA,
   SK,
   TG,
   TK,
+  UL,
   UA,
   BR,
   SU,

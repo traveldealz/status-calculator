@@ -86,7 +86,7 @@ export default class extends BaseComponent {
     el_foot.innerHTML = translate(/*html*/`
       <tr>
         <th class="text-right" colspan="3">__(Total)</th>
-        <th class="text-right">${totals[this.$program].rdm ? totals[this.$program].rdm[status_key]?.toLocaleString(): 0}</th>
+        <th class="text-right">${totals[this.$program].rdm ? totals[this.$program].rdm[status_key]?.toLocaleString() : 0}</th>
         <th class="text-right">${totals[this.$program].qm[status_key]?.toLocaleString()}</th>
       </tr>
     `, translations[this.$locale] ? translations[this.$locale] : []);

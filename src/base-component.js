@@ -141,10 +141,8 @@ export default class extends HTMLElement {
       ])];
 
       let totals = ids.map( program => {
-
-        let wtc_total = wtc_data.value[segmentIndex].value?.totals?.find( item => program === item.id ) ? wtc_data.value[segmentIndex].value.totals.find( item => program === item.id ) : {};
-
-        return {
+         let wtc_total = wtc_data.value[segmentIndex].value?.totals?.find( item => program === item.id ) ? wtc_data.value[segmentIndex].value.totals.find( item => program === item.id ) : {};        
+         return {
           ...wtc_total,
           qm: wtc_total.rdm ? wtc_total.rdm : [0,0,0,0],
           qd: 0,

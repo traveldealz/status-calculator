@@ -13,12 +13,12 @@ export default {
             allianceStatus: 'Star Alliance Silver',
             qualification: [
                 {
+                    qualificationPeriod: 12,
                     type: 'miles',
                     number: 25000,
                     secType: 'segments',
                     secNumber: 4,
                     secCalculate: calculateSegments,
-                    qualificationPeriod: 12,
                     secmilesName: {
                         en: 'Segments with Copa Airlines',
                         de: 'Segmenten mit Copa Airlines',

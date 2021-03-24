@@ -20,6 +20,11 @@ export default /*html*/`
           <option>SkyTeam Elite</option>
           <option>SkyTeam Elite Plus</option>
         </optgroup>
+        <optgroup label="Oneworld">
+          <option>Oneworld Ruby</option>
+          <option>Oneworld Sapphire</option>
+          <option>Oneworld Emerald</option>
+        </optgroup>
       </select>
     </div>
   </form>
