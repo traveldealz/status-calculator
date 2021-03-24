@@ -76,8 +76,8 @@ export default class extends BaseComponent {
             </div>
           </div>
         </td>
-        <td class="text-right">${ false === data[index].success ? data[index].errorMessage : `${earning ? earning.rdm[status_key]?.toLocaleString() : 0}` }</td>
-        <td class="text-right">${ false === data[index].success ? data[index].errorMessage : `${earning ? earning.qm[0]?.toLocaleString() : 0}` }</td>
+        <td class="text-right">${ false === data[index].success ? data[index].errorMessage : `${earning.rdm ? earning.rdm[status_key]?.toLocaleString() : 0}` }</td>
+        <td class="text-right">${ false === data[index].success ? data[index].errorMessage : `${earning.qm ? earning.qm[0]?.toLocaleString() : 0}` }</td>
         `, translations[this.$locale] ? translations[this.$locale] : []);
         this.el_list.appendChild(el);
     } );
@@ -86,7 +86,7 @@ export default class extends BaseComponent {
     el_foot.innerHTML = translate(/*html*/`
       <tr>
         <th class="text-right" colspan="3">__(Total)</th>
-        <th class="text-right">${totals[this.$program].rdm[status_key]?.toLocaleString()}</th>
+        <th class="text-right">${totals[this.$program].rdm ? totals[this.$program].rdm[status_key]?.toLocaleString(): 0}</th>
         <th class="text-right">${totals[this.$program].qm[status_key]?.toLocaleString()}</th>
       </tr>
     `, translations[this.$locale] ? translations[this.$locale] : []);

@@ -142,7 +142,7 @@ export default class extends HTMLElement {
 
       let totals = ids.map( program => {
 
-        let wtc_total = wtc_data.value[segmentIndex].value ? wtc_data.value[segmentIndex].value.totals.find( item => program === item.id ) : {};
+        let wtc_total = wtc_data.value[segmentIndex].value?.totals?.find( item => program === item.id ) ? wtc_data.value[segmentIndex].value.totals.find( item => program === item.id ) : {};
 
         return {
           ...wtc_total,
