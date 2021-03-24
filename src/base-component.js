@@ -178,7 +178,7 @@ export default class extends HTMLElement {
     let totals = response.value.reduce((totals, itinerary) => {
         itinerary.value.totals.forEach(item => {
           totals[item.id] = totals[item.id] ? {
-            rdm: totals[item.id].rdm.map( (m, i) => m + item.rdm[i]),
+            rdm: totals[item.id].rdm ? totals[item.id].rdm.map( (m, i) => m + item.rdm[i]) : item.rdm,
             qm: totals[item.id].qm.map( (m, i) => m + item.qm[i]),
             qd: totals[item.id].qd + item.qd,
           } : {
