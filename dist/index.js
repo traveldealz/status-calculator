@@ -118,6 +118,20 @@ class BaseComponent extends HTMLElement {
     this.$segments = itineraries.flat();
     this.update_hash();
     this.query(itineraries);
+    console.log("SEGEMTNE");
+    console.log(this.$segments);
+
+    for (elem in this.$segments.carrier) {
+      console.log("Elem");
+      console.log(elem);
+
+      if (elem.carrier == "AY") {
+        var warningSpan = document.createElement("span");
+        warningSpan.className = "redTextClass";
+        warningSpan.innerHTML = "Leider können wir die Finnair-Plus-Punkte für Finnair-Flüge nicht berechnen";
+        this.parentNode.insertBefore(warningSpan, this); //alert('Leider können wir die Finnair-Plus-Punkte für Finnair-Flüge nicht berechnen' );
+      }
+    }
   }
 
   async query(itineraries) {
@@ -2307,7 +2321,12 @@ var UX = {
       qualificationPeriod: 12,
       validity: 12
     }]
-  }]
+  }],
+  note: {
+    en: 'If you do not enter the ticketing carrier and the flight price, this calculation only works for flights that are not issued & operated by Air Europa.',
+    de: 'Sofern Sie nicht den Ticketing-Carrier und den Flugpreis angeben, stimmt diese Berechnung nur wenn die Flüge weder von Air Europa ausgestellt noch ausgeführt werden. ',
+    es: ''
+  }
 };
 
 function countSegments$6(segments, data) {
@@ -3187,7 +3206,7 @@ function countSegments$c(segments, data) {
     let mileage = itinerary.value?.totals?.find(item => 'AY' === item.id);
 
     if (!mileage) {
-      return acc;
+      return segments.filter(segment => ['AY'].includes(segment.carrier)).length;
     }
 
     return 0 < mileage.rdm[0] ? acc + 1 : acc;
@@ -3287,8 +3306,8 @@ var AY = {
     }
   }],
   note: {
-    en: '',
-    de: '',
+    en: 'As Finnair Plus doesn\'t use the booking classes to calculate the points, we sadly cannot calculate the points for Finnair flights.',
+    de: 'Da Finnair Plus bei Finnair-Flügen nicht nach Buchungsklasse berechnet, können wir leider für Finnair-Flüge die Punkte nicht berechnen.',
     es: ''
   }
 };
