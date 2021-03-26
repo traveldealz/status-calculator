@@ -90,5 +90,10 @@ export default {
         },
       ]
     }
-  ]
+  ],
+    note: {
+        en: 'If you do not enter the ticketing carrier and the flight price, this calculation only works for flights that are not issued & operated by Air Europa.',
+        de: 'Sofern Sie nicht den Ticketing-Carrier und den Flugpreis angeben, stimmt diese Berechnung nur wenn die Flüge weder von Air Europa ausgestellt noch ausgeführt werden. ',
+        es: '',
+    },
 };

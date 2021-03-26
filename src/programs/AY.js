@@ -2,7 +2,7 @@ function countSegments( segments, data ) {
   return data.reduce((acc,itinerary) => {
     let mileage = itinerary.value?.totals?.find(item => 'AY' === item.id);
     if(!mileage) {
-      return acc;
+    return segments.filter(segment => ['AY'].includes(segment.carrier)).length;
     }
     return 0 < mileage.rdm[0] ? acc+1 : acc;
   }, 0);
@@ -114,8 +114,8 @@ export default {
     }
   ],
   note: {
-    en: '',
-    de: '',
+    en: 'As Finnair Plus doesn\'t use the booking classes to calculate the points, we sadly cannot calculate the points for Finnair flights.',
+    de: 'Da Finnair Plus bei Finnair-Flügen nicht nach Buchungsklasse berechnet, können wir leider für Finnair-Flüge die Punkte nicht berechnen.',
     es: '',
   },
 };
