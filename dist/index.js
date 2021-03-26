@@ -178,7 +178,7 @@ class BaseComponent extends HTMLElement {
 
       let ids = [...new Set([...segment.value.totals.map(program => program.id), ...(wtc_data.value[segmentIndex].value ? wtc_data.value[segmentIndex].value.totals.map(program => program.id) : [])])];
       let totals = ids.map(program => {
-        let wtc_total = wtc_data.value[segmentIndex].value ? wtc_data.value[segmentIndex].value.totals.find(item => program === item.id) : {};
+        let wtc_total = wtc_data.value[segmentIndex].value?.totals?.find(item => program === item.id) ? wtc_data.value[segmentIndex].value.totals.find(item => program === item.id) : {};
         return { ...wtc_total,
           qm: wtc_total.rdm ? wtc_total.rdm : [0, 0, 0, 0],
           qd: 0,
@@ -206,7 +206,7 @@ class BaseComponent extends HTMLElement {
     let totals = response.value.reduce((totals, itinerary) => {
       itinerary.value.totals.forEach(item => {
         totals[item.id] = totals[item.id] ? {
-          rdm: totals[item.id].rdm.map((m, i) => m + item.rdm[i]),
+          rdm: totals[item.id].rdm ? totals[item.id].rdm.map((m, i) => m + item.rdm[i]) : item.rdm,
           qm: totals[item.id].qm.map((m, i) => m + item.qm[i]),
           qd: totals[item.id].qd + item.qd
         } : {
@@ -449,7 +449,7 @@ function calculateExecutivebonus(segments, data) {
       return miles;
     }
 
-    return 35000 < miles ? miles + item.rdm[1] : miles + item.rdm[0];
+    return 35000 < miles ? miles + item.qm[1] : miles + item.qm[0];
   }, 0);
 }
 
@@ -462,9 +462,9 @@ function calc2021(segments, data) {
     }
 
     if (['EN', 'OS', 'SN', 'OU', 'EW', 'LO', 'LH', 'LG', 'LX', 'WK'].includes(segments[acc[1]].carrier)) {
-      return acc[0] > 35000 ? [acc[0] + mileage.rdm[1] * 2, acc[1] + 1] : [acc[0] + mileage.rdm[0] * 2, acc[1] + 1];
+      return acc[0] > 35000 ? [acc[0] + mileage.qm[1] * 2, acc[1] + 1] : [acc[0] + mileage.qm[0] * 2, acc[1] + 1];
     } else {
-      return acc[0] > 35000 ? [acc[0] + mileage.rdm[1], acc[1] + 1] : [acc[0] + mileage.rdm[0], acc[1] + 1];
+      return acc[0] > 35000 ? [acc[0] + mileage.qm[1], acc[1] + 1] : [acc[0] + mileage.qm[0], acc[1] + 1];
     }
   }, [0, 0])[0];
 }
@@ -480,6 +480,7 @@ var LHM = {
       type: 'miles',
       number: 35000,
       qualificationPeriod: 12,
+      calculate: calculateExecutivebonus,
       validity: 24,
       milesName: {
         en: 'status miles',
@@ -1142,12 +1143,12 @@ var CM = {
     name: 'Silver',
     allianceStatus: 'Star Alliance Silver',
     qualification: [{
+      qualificationPeriod: 12,
       type: 'miles',
       number: 25000,
       secType: 'segments',
       secNumber: 4,
       secCalculate: calculateSegments$3,
-      qualificationPeriod: 12,
       secmilesName: {
         en: 'Segments with Copa Airlines',
         de: 'Segmenten mit Copa Airlines'
@@ -3054,8 +3055,799 @@ var DL = {
   }]
 };
 
+function calculateSegments$6(segments) {
+  return segments.filter(segment => ['BA'].includes(segment.carrier)).length;
+}
+
+var BA = {
+  name: 'British Airways Executive Club',
+  alliance: 'Oneworld',
+  qualificationPeriodType: 'Membership year',
+  status: [{
+    name: 'Bronze',
+    allianceStatus: 'Oneworld Ruby',
+    qualification: [{
+      type: 'miles',
+      number: 300,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'Tier Points',
+        de: 'Tier Points'
+      },
+      secType: 'segments',
+      secNumber: 2,
+      secCalculate: calculateSegments$6,
+      secmilesName: {
+        en: 'Segments with British Airways',
+        de: 'Segmenten mit British Airways'
+      }
+    }]
+  }, {
+    name: 'Silver',
+    allianceStatus: 'Oneworld Sapphire',
+    qualification: [{
+      type: 'miles',
+      number: 600,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'Tier Points',
+        de: 'Tier Points'
+      },
+      secType: 'segments',
+      secNumber: 4,
+      secCalculate: calculateSegments$6,
+      secmilesName: {
+        en: 'Segments with British Airways',
+        de: 'Segmenten mit British Airways'
+      }
+    }]
+  }, {
+    name: 'Gold',
+    allianceStatus: 'Oneworld Emerald',
+    qualification: [{
+      type: 'miles',
+      number: 1500,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'Tier Points',
+        de: 'Tier Points'
+      },
+      secType: 'segments',
+      secNumber: 4,
+      secCalculate: calculateSegments$6,
+      secmilesName: {
+        en: 'Segments with British Airways',
+        de: 'Segmenten mit British Airways'
+      }
+    }]
+  }],
+  note: {
+    en: '',
+    de: '',
+    es: ''
+  }
+};
+
+var QR = {
+  name: 'Qatar Airways Privilege Club',
+  alliance: 'Oneworld',
+  qualificationPeriodType: 'Consecutive months',
+  status: [{
+    name: 'Silver',
+    allianceStatus: 'Oneworld Ruby',
+    qualification: [{
+      type: 'miles',
+      number: 150,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'Qpoints',
+        de: 'Qpoints'
+      }
+    }]
+  }, {
+    name: 'Gold',
+    allianceStatus: 'Oneworld Sapphire',
+    qualification: [{
+      type: 'miles',
+      number: 300,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'Qpoints',
+        de: 'Qpoints'
+      }
+    }]
+  }, {
+    name: 'Platinum',
+    allianceStatus: 'Oneworld Emerald',
+    qualification: [{
+      type: 'miles',
+      number: 600,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'Qpoints',
+        de: 'Qpoints'
+      }
+    }]
+  }],
+  note: {
+    en: '',
+    de: '',
+    es: ''
+  }
+};
+
+function countSegments$c(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'AY' === item.id);
+
+    if (!mileage) {
+      return acc;
+    }
+
+    return 0 < mileage.rdm[0] ? acc + 1 : acc;
+  }, 0);
+}
+
+var AY = {
+  name: 'Finnair Plus',
+  alliance: 'Oneworld',
+  qualificationPeriodType: 'Membership year',
+  status: [{
+    name: 'Silver',
+    allianceStatus: 'Oneworld Ruby',
+    qualification: [{
+      type: 'miles',
+      number: 30000,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'points',
+        de: 'Punkten'
+      }
+    }, {
+      type: 'segments',
+      number: 20,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$c,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }],
+    note: {
+      en: '',
+      de: '',
+      es: ''
+    }
+  }, {
+    name: 'Gold',
+    allianceStatus: 'Oneworld Sapphire',
+    qualification: [{
+      type: 'miles',
+      number: 80000,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'points',
+        de: 'Punkten'
+      }
+    }, {
+      type: 'segments',
+      number: 46,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$c,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }],
+    note: {
+      en: '',
+      de: '',
+      es: ''
+    }
+  }, {
+    name: 'Platinum',
+    allianceStatus: 'Oneworld Emerald',
+    qualification: [{
+      type: 'miles',
+      number: 150000,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'points',
+        de: 'Punkten'
+      }
+    }, {
+      type: 'segments',
+      number: 76,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$c,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }],
+    note: {
+      en: '',
+      de: '',
+      es: ''
+    }
+  }],
+  note: {
+    en: '',
+    de: '',
+    es: ''
+  }
+};
+
+function countSegments$d(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'AT' === item.id);
+
+    if (!mileage) {
+      return acc;
+    }
+
+    return 0 < mileage.rdm[0] ? acc + 1 : acc;
+  }, 0);
+}
+
+function calculateSegments$7(segments) {
+  return segments.filter(segment => ['AT'].includes(segment.carrier)).length;
+}
+
+function countMarocMiles(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'AT' === item.id);
+
+    if (!mileage) {
+      return [acc[0], acc[1] + 1];
+    }
+
+    if (['AT'].includes(segments[acc[1]].carrier)) {
+      return [acc[0] + mileage.qm[0], acc[1] + 1];
+    } else {
+      return [acc[0], acc[1] + 1];
+    }
+  }, [0, 0])[0];
+}
+
+var AT = {
+  name: 'Royal Air Maroc Safar Flyer',
+  alliance: 'Oneworld',
+  qualificationPeriodType: 'Calendar year',
+  status: [{
+    name: 'Silver',
+    allianceStatus: 'Oneworld Ruby',
+    qualification: [{
+      type: 'miles',
+      number: 20000,
+      qualificationPeriod: 12,
+      validity: 12,
+      secType: 'miles',
+      secNumber: 10000,
+      secCalculate: countMarocMiles,
+      secmilesName: {
+        en: 'Miles on Royal Air Maroc flights',
+        de: 'Meilen mit Royal Air Maroc Flügen'
+      }
+    }, {
+      type: 'segments',
+      number: 15,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$d,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      },
+      secType: 'segments',
+      secNumber: 2,
+      secCalculate: calculateSegments$7,
+      secmilesName: {
+        en: 'segments with Royal Air Maroc',
+        de: 'Segmenten mit Royal Air Maroc'
+      }
+    }],
+    note: {
+      en: '',
+      de: '',
+      es: ''
+    }
+  }, {
+    name: 'Gold',
+    allianceStatus: 'Oneworld Sapphire',
+    qualification: [{
+      type: 'miles',
+      number: 35000,
+      qualificationPeriod: 12,
+      validity: 12,
+      secType: 'miles',
+      secNumber: 17500,
+      secCalculate: countMarocMiles,
+      secmilesName: {
+        en: 'Miles on Royal Air Maroc flights',
+        de: 'Meilen mit Royal Air Maroc Flügen'
+      }
+    }, {
+      type: 'segments',
+      number: 30,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$d,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      },
+      secType: 'segments',
+      secNumber: 10,
+      secCalculate: calculateSegments$7,
+      secmilesName: {
+        en: 'segments with Royal Air Maroc',
+        de: 'Segmenten mit Royal Air Maroc'
+      }
+    }],
+    note: {
+      en: '',
+      de: '',
+      es: ''
+    }
+  }, {
+    name: 'Platinum',
+    allianceStatus: 'Oneworld Emerald',
+    qualification: [{
+      type: 'miles',
+      number: 75000,
+      qualificationPeriod: 12,
+      validity: 12,
+      secType: 'miles',
+      secNumber: 37500,
+      secCalculate: countMarocMiles,
+      secmilesName: {
+        en: 'Miles on Royal Air Maroc flights',
+        de: 'Meilen mit Royal Air Maroc Flügen'
+      }
+    }, {
+      type: 'segments',
+      number: 75,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$d,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      },
+      secType: 'segments',
+      secNumber: 20,
+      secCalculate: calculateSegments$7,
+      secmilesName: {
+        en: 'segments with Royal Air Maroc',
+        de: 'Segmenten mit Royal Air Maroc'
+      }
+    }],
+    note: {
+      en: '',
+      de: '',
+      es: ''
+    }
+  }],
+  note: {
+    en: '',
+    de: '',
+    es: ''
+  }
+};
+
+function countSegments$e(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'RJ' === item.id);
+
+    if (!mileage) {
+      return acc;
+    }
+
+    return 0 < mileage.rdm[0] ? acc + 1 : acc;
+  }, 0);
+}
+
+function calculateSegments$8(segments) {
+  return segments.filter(segment => ['RJ'].includes(segment.carrier)).length;
+}
+
+var RJ = {
+  name: 'Royal Jordanian Royal Club',
+  alliance: 'Oneworld',
+  qualificationPeriodType: 'Consecutive months',
+  status: [{
+    name: 'Silver JAY',
+    allianceStatus: 'Oneworld Ruby',
+    qualification: [{
+      type: 'miles',
+      number: 15000,
+      qualificationPeriod: 12,
+      validity: 12,
+      secType: 'segments',
+      secNumber: 4,
+      secCalculate: calculateSegments$8,
+      secmilesName: {
+        en: 'Segments with Royal Jordanian',
+        de: 'Segmenten mit Royal Jordanian'
+      }
+    }, {
+      type: 'segments',
+      number: 14,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$e,
+      secType: 'segments',
+      secNumber: 4,
+      secCalculate: calculateSegments$8,
+      secmilesName: {
+        en: 'Segments with Royal Jordanian',
+        de: 'Segmenten mit Royal Jordanian'
+      },
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Gold SPARROW',
+    allianceStatus: 'Oneworld Sapphire',
+    qualification: [{
+      type: 'miles',
+      number: 40000,
+      qualificationPeriod: 12,
+      validity: 12,
+      secType: 'segments',
+      secNumber: 10,
+      secCalculate: calculateSegments$8,
+      secmilesName: {
+        en: 'Segments with Royal Jordanian',
+        de: 'Segmenten mit Royal Jordanian'
+      }
+    }, {
+      type: 'segments',
+      number: 30,
+      qualificationPeriod: 12,
+      validity: 12,
+      calculate: countSegments$e,
+      secType: 'segments',
+      secNumber: 10,
+      secCalculate: calculateSegments$8,
+      secmilesName: {
+        en: 'Segments with Royal Jordanian',
+        de: 'Segmenten mit Royal Jordanian'
+      },
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Platinum HAWK',
+    allianceStatus: 'Oneworld Emerald',
+    qualification: [{
+      type: 'miles',
+      number: 65000,
+      qualificationPeriod: 12,
+      validity: 12,
+      secType: 'segments',
+      secNumber: 20,
+      secCalculate: calculateSegments$8,
+      secmilesName: {
+        en: 'Segments with Royal Jordanian',
+        de: 'Segmenten mit Royal Jordanian'
+      }
+    }, {
+      type: 'segments',
+      number: 46,
+      qualificationPeriod: 12,
+      validity: 12,
+      secType: 'segments',
+      secNumber: 20,
+      secCalculate: calculateSegments$8,
+      secmilesName: {
+        en: 'Segments with Royal Jordanian',
+        de: 'Segmenten mit Royal Jordanian'
+      },
+      calculate: countSegments$e,
+      note: {
+        en: 'Only segments with mileage credit count.',
+        de: 'Nur Segmente mit Meilengutschrift zählen.',
+        es: ''
+      }
+    }]
+  }]
+};
+
+function calculateSegments$9(segments) {
+  return segments.filter(segment => ['S7'].includes(segment.carrier)).length;
+}
+
+function calculateSegmentsWeight(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'S7' === item.id);
+
+    if (!mileage) {
+      return [acc[0], acc[1] + 1];
+    }
+
+    if (['S7'].includes(segments[acc[1]].carrier)) {
+      if (['J', 'C', 'D'].includes(segments[acc[1]].bookingClass)) {
+        return [acc[0] + 2, acc[1] + 1];
+      } else {
+        return [acc[0] + 1, acc[1] + 1];
+      }
+    } else {
+      return [acc[0], acc[1] + 1];
+    }
+  }, [0, 0])[0];
+}
+
+var S7 = {
+  name: 'S7 Priority',
+  alliance: 'Oneworld',
+  qualificationPeriodType: 'Calendar year',
+  status: [{
+    name: 'Silver',
+    allianceStatus: 'Oneworld Ruby',
+    qualification: [{
+      type: 'miles',
+      number: 20000,
+      qualificationPeriod: 12,
+      validity: 12,
+      secType: 'segments',
+      secNumber: 1,
+      secCalculate: calculateSegments$9,
+      secmilesName: {
+        en: 'Segments with S7',
+        de: 'Segmenten mit S7'
+      }
+    }, {
+      type: 'segments',
+      number: 20,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'Segments with S7',
+        de: 'Segmenten mit S7'
+      },
+      calculate: calculateSegmentsWeight,
+      note: {
+        en: 'Business class segments count double.',
+        de: 'Business Class Segmente zählen doppelt.',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Gold',
+    allianceStatus: 'Oneworld Sapphire',
+    qualification: [{
+      type: 'miles',
+      number: 50000,
+      qualificationPeriod: 12,
+      validity: 12,
+      secType: 'segments',
+      secNumber: 1,
+      secCalculate: calculateSegments$9,
+      secmilesName: {
+        en: 'Segments with S7',
+        de: 'Segmenten mit S7'
+      }
+    }, {
+      type: 'segments',
+      number: 50,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'Segments with S7',
+        de: 'Segmenten mit S7'
+      },
+      calculate: calculateSegmentsWeight,
+      note: {
+        en: 'Business class segments count double.',
+        de: 'Business Class Segmente zählen doppelt.',
+        es: ''
+      }
+    }]
+  }, {
+    name: 'Platinum',
+    allianceStatus: 'Oneworld Emerald',
+    qualification: [{
+      type: 'miles',
+      number: 75000,
+      qualificationPeriod: 12,
+      validity: 12,
+      secType: 'segments',
+      secNumber: 1,
+      secCalculate: calculateSegments$9,
+      secmilesName: {
+        en: 'Segments with S7',
+        de: 'Segmenten mit S7'
+      }
+    }, {
+      type: 'segments',
+      number: 75,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'Segments with S7',
+        de: 'Segmenten mit S7'
+      },
+      calculate: calculateSegmentsWeight,
+      note: {
+        en: 'Business class segments count double.',
+        de: 'Business Class Segmente zählen doppelt.',
+        es: ''
+      }
+    }]
+  }]
+};
+
+function countSegments$f(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'UL' === item.id);
+
+    if (!mileage) {
+      return acc;
+    }
+
+    return 0 < mileage.rdm[0] ? acc + 1 : acc;
+  }, 0);
+}
+
+function calculateSegments$a(segments) {
+  return segments.filter(segment => ['UL'].includes(segment.carrier)).length;
+}
+
+function countULMiles(segments, data) {
+  return data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'UL' === item.id);
+
+    if (!mileage) {
+      return [acc[0], acc[1] + 1];
+    }
+
+    if (['UL'].includes(segments[acc[1]].carrier)) {
+      return [acc[0] + mileage.qm[0], acc[1] + 1];
+    } else {
+      return [acc[0], acc[1] + 1];
+    }
+  }, [0, 0])[0];
+}
+
+var UL = {
+  name: 'SriLankan FlySmiLes',
+  alliance: 'Oneworld',
+  qualificationPeriodType: 'Calendar year',
+  status: [{
+    name: 'Classic',
+    allianceStatus: 'Oneworld Ruby',
+    qualification: [{
+      type: 'miles',
+      number: 20000,
+      qualificationPeriod: 12,
+      validity: 12,
+      secType: 'segments',
+      secNumber: 1,
+      secCalculate: calculateSegments$a,
+      secmilesName: {
+        en: 'segments with SriLankan',
+        de: 'Segmenten mit SriLankan'
+      }
+    }, {
+      type: 'segments',
+      number: 20,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'segments',
+        de: 'Segmenten'
+      },
+      calculate: countSegments$f,
+      secType: 'segments',
+      secNumber: 1,
+      secCalculate: calculateSegments$a,
+      secmilesName: {
+        en: 'segments with SriLankan',
+        de: 'Segmenten mit SriLankan'
+      }
+    }]
+  }, {
+    name: 'Gold',
+    allianceStatus: 'Oneworld Sapphire',
+    qualification: [{
+      type: 'miles',
+      number: 40000,
+      qualificationPeriod: 12,
+      validity: 12,
+      secType: 'miles',
+      secNumber: 20000,
+      secCalculate: countULMiles,
+      secmilesName: {
+        en: 'miles with SriLankan',
+        de: 'Meilen mit SriLankan'
+      }
+    }, {
+      type: 'segments',
+      number: 40,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'segments',
+        de: 'Segmenten'
+      },
+      calculate: countSegments$f,
+      secType: 'segments',
+      secNumber: 20,
+      secCalculate: calculateSegments$a,
+      secmilesName: {
+        en: 'Segments with SriLankan',
+        de: 'Segmenten mit SriLankan'
+      }
+    }]
+  }, {
+    name: 'Platinum',
+    allianceStatus: 'Oneworld Emerald',
+    qualification: [{
+      type: 'miles',
+      number: 60000,
+      qualificationPeriod: 12,
+      validity: 12,
+      secType: 'miles',
+      secNumber: 30000,
+      secCalculate: countULMiles,
+      secmilesName: {
+        en: 'miles with SriLankan',
+        de: 'Meilen mit SriLankan'
+      }
+    }, {
+      type: 'segments',
+      number: 60,
+      qualificationPeriod: 12,
+      validity: 12,
+      milesName: {
+        en: 'segments',
+        de: 'Segmenten'
+      },
+      calculate: countSegments$f,
+      secType: 'segments',
+      secNumber: 30,
+      secCalculate: calculateSegments$a,
+      secmilesName: {
+        en: 'Segments with SriLankan',
+        de: 'Segmenten mit SriLankan'
+      }
+    }]
+  }]
+};
+
 var programs = {
   A3,
+  AT,
+  AY,
+  BA,
+  RJ,
+  QR,
   DL,
   AFB,
   VN,
@@ -3073,10 +3865,12 @@ var programs = {
   OZ,
   SQ,
   SV,
+  S7,
   CA,
   SK,
   TG,
   TK,
+  UL,
   UA,
   BR,
   SU,
@@ -3105,6 +3899,11 @@ var template$1 = /*html*/
         <optgroup label="SkyTeam">
           <option>SkyTeam Elite</option>
           <option>SkyTeam Elite Plus</option>
+        </optgroup>
+        <optgroup label="Oneworld">
+          <option>Oneworld Ruby</option>
+          <option>Oneworld Sapphire</option>
+          <option>Oneworld Emerald</option>
         </optgroup>
       </select>
     </div>
@@ -3373,8 +4172,8 @@ class TierpointsCalculator extends BaseComponent {
             </div>
           </div>
         </td>
-        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning ? earning.rdm[status_key]?.toLocaleString() : 0}`}</td>
-        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning ? earning.qm[0]?.toLocaleString() : 0}`}</td>
+        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning.rdm ? earning.rdm[status_key]?.toLocaleString() : '-'}`}</td>
+        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning.qm ? earning.qm[0]?.toLocaleString() : 0}`}</td>
         `, translations[this.$locale] ? translations[this.$locale] : []);
       this.el_list.appendChild(el);
     });
@@ -3384,7 +4183,7 @@ class TierpointsCalculator extends BaseComponent {
     `
       <tr>
         <th class="text-right" colspan="3">__(Total)</th>
-        <th class="text-right">${totals[this.$program].rdm[status_key]?.toLocaleString()}</th>
+        <th class="text-right">${totals[this.$program].rdm ? totals[this.$program].rdm[status_key]?.toLocaleString() : 0}</th>
         <th class="text-right">${totals[this.$program].qm[status_key]?.toLocaleString()}</th>
       </tr>
     `, translations[this.$locale] ? translations[this.$locale] : []);
