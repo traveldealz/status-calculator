@@ -170,8 +170,7 @@ export function calculateMiles(segments, data) {
     return data.reduce((acc,itinerary) => {
 
         let mileage = itinerary.value?.totals?.find(item => 'UA' === item.id);
-        console.log("segment: " + acc[1]);
-        console.log(mileage.rdm[0]);
+    
         if(!mileage) {
           return [acc[0], acc[1]+1];
         }
