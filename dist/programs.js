@@ -32,6 +32,7 @@ import RJ from './programs/RJ.js';
 import S7 from './programs/S7.js';
 import UL from './programs/UL.js';
 import IB from './programs/IB.js';
+import CX from './programs/CX.js';
 export default {
   A3,
   AT,
@@ -61,6 +62,7 @@ export default {
   CA,
   SK,
   TG,
+  CX,
   TK,
   UL,
   UA,
