@@ -31,6 +31,7 @@ import AT from './programs/AT';
 import RJ from './programs/RJ';
 import S7 from './programs/S7';
 import UL from './programs/UL';
+import IB from './programs/IB';
 
 
 export default {
@@ -41,6 +42,7 @@ export default {
   RJ,
   QR,
   DL,
+  IB,
   AFB,
   VN,
   OK,
