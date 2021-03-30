@@ -88,12 +88,15 @@ export default class extends BaseComponent {
       this.el_list.appendChild(el);
     });
     let el_foot = document.createElement('tfoot');
-    el_foot.innerHTML = `
+    el_foot.innerHTML = translate(
+    /*html*/
+    `
       <tr>
-        <th class="text-right" colspan="3">Total</th>
-        <th class="text-right">${totalpqps}</th>
+        <th class="text-right" colspan="3">__(Total)</th>
+        <th class="text-right">${totals[this.$program].rdm ? totals[this.$program].rdm[status_key]?.toLocaleString() : 0}</th>
+        <th class="text-right">${totalpqps.toLocaleString()}</th>
       </tr>
-    `;
+    `, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_list.appendChild(el_foot);
   }
 
