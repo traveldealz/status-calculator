@@ -32,6 +32,7 @@ import RJ from './programs/RJ';
 import S7 from './programs/S7';
 import UL from './programs/UL';
 import IB from './programs/IB';
+import CX from './programs/CX';
 
 
 export default {
@@ -63,6 +64,7 @@ export default {
   CA,
   SK,
   TG,
+  CX,
   TK,
   UL,
   UA,
