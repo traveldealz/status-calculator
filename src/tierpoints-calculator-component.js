@@ -34,7 +34,7 @@ export default class extends BaseComponent {
       segments: [itinerary]
     } } ));
 
-    fetch('https://farecollection.travel-dealz.de/api/calculate/mileage?programs=BA', {
+    fetch('https://farecollection.travel-dealz.de/api/calculate/mileage?programs=' + this.$program, {
       method: 'POST',
       headers: {
       'Content-Type': 'application/json'
