@@ -59,6 +59,20 @@ export default class extends HTMLElement {
     this.$segments = itineraries.flat();
     this.update_hash();
     this.query(itineraries);
+    console.log("SEGEMTNE");
+    console.log(this.$segments);
+
+    for (elem in this.$segments.carrier) {
+      console.log("Elem");
+      console.log(elem);
+
+      if (elem.carrier == "AY") {
+        var warningSpan = document.createElement("span");
+        warningSpan.className = "redTextClass";
+        warningSpan.innerHTML = "Leider können wir die Finnair-Plus-Punkte für Finnair-Flüge nicht berechnen";
+        this.parentNode.insertBefore(warningSpan, this); //alert('Leider können wir die Finnair-Plus-Punkte für Finnair-Flüge nicht berechnen' );
+      }
+    }
   }
 
   async query(itineraries) {

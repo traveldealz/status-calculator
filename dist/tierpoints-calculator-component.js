@@ -24,6 +24,34 @@ export default class extends BaseComponent {
     });
   }
 
+  async query(itineraries) {
+    let body = JSON.stringify(itineraries.map(itinerary => {
+      return { ...(itinerary.price ? {
+          ticketingCarrier: itinerary.ticketer
+        } : {
+          ticketingCarrier: "null"
+        }),
+        ...(itinerary.price ? {
+          baseFare: itinerary.price
+        } : {
+          baseFare: 0
+        }),
+        segments: [itinerary]
+      };
+    }));
+    fetch('https://farecollection.travel-dealz.de/api/calculate/mileage?programs=BA', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body
+    }).then(response => response.json()).then(response => this.calculate_totals(response)); // .catch(error => {
+    //   this.loading_end();
+    //   this.el_error.innerHTML = `Error: ${error.toString()}`;
+    //   this.el_error.classList.remove('hidden');
+    // });
+  }
+
   display({
     value: data,
     airlines,
@@ -45,6 +73,12 @@ export default class extends BaseComponent {
     `, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_list.appendChild(el_thead);
     const status_key = this.el_status.value;
+    const cabinclass = {
+      Y: 'Economy',
+      W: 'Premium Eco',
+      C: 'Business',
+      F: 'First'
+    };
     this.$segments.forEach((segment, index) => {
       const earning = data[index].value.totals.find(item => item.id === this.$program);
       let el = document.createElement('tr');
@@ -72,7 +106,7 @@ export default class extends BaseComponent {
             </div>
             <div>
               <div><code>${segment.bookingClass}</code></div>
-              <div class="text-xs text-grey-dark font-light">${earning.cabinclass} ${earning.fare}</div>
+              <div class="text-xs text-grey-dark font-light">${airlines[segment.carrier]?.bookingclass ? cabinclass[airlines[segment.carrier]?.bookingclass[segment.bookingClass]?.cabinclass] : ''} ${airlines[segment.carrier]?.bookingclass ? airlines[segment.carrier]?.bookingclass[segment.bookingClass]?.fare : ''}</div>
             </div>
           </div>
         </td>
