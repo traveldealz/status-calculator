@@ -69,6 +69,13 @@ export default class extends BaseComponent {
 
     const status_key = this.el_status.value;
 
+    const cabinclass = {
+      Y: 'Economy',
+      W: 'Premium Eco',
+      C: 'Business',
+      F: 'First',
+    };
+
     this.$segments.forEach( (segment, index) => {
 
     const earning = data[index].value.totals.find( item => item.id === this.$program );
@@ -96,7 +103,7 @@ export default class extends BaseComponent {
             </div>
             <div>
               <div><code>${segment.bookingClass}</code></div>
-              <div class="text-xs text-grey-dark font-light">${airlines[segment.carrier]?.bookingclass ? airlines[segment.carrier]?.bookingclass[segment.bookingClass]?.cabinclass : ''} ${airlines[segment.carrier]?.bookingclass ? airlines[segment.carrier]?.bookingclass[segment.bookingClass]?.fare : ''}</div>
+              <div class="text-xs text-grey-dark font-light">${airlines[segment.carrier]?.bookingclass ? cabinclass[airlines[segment.carrier]?.bookingclass[segment.bookingClass]?.cabinclass] : ''} ${airlines[segment.carrier]?.bookingclass ? airlines[segment.carrier]?.bookingclass[segment.bookingClass]?.fare : ''}</div>
             </div>
           </div>
         </td>
