@@ -31,9 +31,12 @@ import AT from './programs/AT';
 import RJ from './programs/RJ';
 import S7 from './programs/S7';
 import UL from './programs/UL';
-
+import IB from './programs/IB';
+import CX from './programs/CX';
 
 export default {
+  IB,
+  CX,
   A3,
   AT,
   AY,
