@@ -89,13 +89,13 @@ export default class extends HTMLElement {
   async query(itineraries) {
 
     let body = JSON.stringify(itineraries.map( itinerary => { return {
-      ...itinerary.price ? { ticketingCarrier: itinerary.ticketer } : {ticketingCarrier: "null"},
-      ...itinerary.price ? { baseFare: itinerary.price } : {baseFare: 0},
+      ...itinerary.ticketer ? { ticketingCarrier: itinerary.ticketer } : {},
+      ...itinerary.price ? { baseFare: itinerary.price } : {},
       segments: [itinerary]
     } } ));
 
     Promise.all([
-      fetch('https://farecollection.travel-dealz.de/api/calculate/tierpoints', {
+      fetch('https://farecollection.travel-dealz.de/api/calculate/mileage', {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
@@ -126,6 +126,9 @@ export default class extends HTMLElement {
       ...wtc_data,
       ...td_data,
     };
+
+    console.log(td_data)
+
 
     if( false === wtc_data.success && true === response.success ) {
       response.success = wtc_data.success;
@@ -178,7 +181,6 @@ export default class extends HTMLElement {
     }
     } )
 
-    console.log(response)
 
     return response;
 
