@@ -161,7 +161,7 @@ export default class extends HTMLElement {
          return {
           ...wtc_total,
           qm: wtc_total.rdm ? wtc_total.rdm : [0,0,0,0],
-          qd: 0,
+          qd: wtc_total.qd ? wtc_total.qd : 0,
           ...segment.value.totals.find( item => program === item.id ),
         };
       } )

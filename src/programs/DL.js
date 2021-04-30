@@ -14,7 +14,7 @@ function getmqd( segments, data ) {
     if(!mileage) {
       return [acc[0], acc[1]+1];
     }
-            return 0 < mileage.qd ? [acc[0]+mileage.qd, acc[1]+1] : [acc[0], acc[1]+1];
+            return 0 < mileage.qd[0] ? [acc[0]+mileage.qd[0], acc[1]+1] : [acc[0], acc[1]+1];
   }, [0, 0])[0];
 }
 
