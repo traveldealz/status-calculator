@@ -8,7 +8,7 @@ function calculateSegments( segments, data ) {
         return 0 < mileage.rdm[0] ? acc+1 : acc;
     }, 0);
 }
-
+/*
 function getLimit(carrier, bookingClass){
     if(['AC','OS','SN'].includes(carrier)) {
         if(['C','D','J', 'Z', 'P'].includes(bookingClass)) {
@@ -159,8 +159,8 @@ function getLimit(carrier, bookingClass){
     }
     }
 
-
-
+*/
+/*
 export function calculateMiles(segments, data) {
     console.log('data');
     console.log(data);
@@ -174,24 +174,24 @@ export function calculateMiles(segments, data) {
         if(!mileage) {
           return [acc[0], acc[1]+1];
         }
-        let limit = getLimit(segments[acc[1]].carrier, segments[acc[1]].bookingClass);
+        //let limit = getLimit(segments[acc[1]].carrier, segments[acc[1]].bookingClass);
         if(segments[acc[1]].carrier  && segments[acc[1]].ticketer){
         if(['UA'].includes(segments[acc[1]].carrier) || ['UA'].includes(segments[acc[1]].ticketer)) {
             return [acc[0] + segments[acc[1]].price, acc[1]+1];
         }
         }
         if(['AC','CA','EN','NZ','NH','OZ', 'AV','AD', 'SN','CM', 'WK','EW','LH','LX'].includes(segments[acc[1]].carrier)) {
-                return (mileage.rdm[0] / 5) > limit ? [acc[0] + limit, acc[1]+1] : [acc[0] + parseInt((mileage.rdm[0] / 5)), acc[1]+1];
+                return acc[0] + parseInt((mileage.rdm[0] / 5)), acc[1]+1];
         }
         else if(['UA'].includes(segments[acc[1]].carrier)) {
             return [acc[0] + 0, acc[1]+1];
         }
         else {
-                return (mileage.rdm[0] / 5) > limit ? [acc[0] + limit, acc[1]+1] : [acc[0] + parseInt(mileage.rdm[0] / 5), acc[1]+1];   
+                return [acc[0] + parseInt(mileage.rdm[0] / 6), acc[1]+1];   
         }
         }, [0, 0])[0];
 }
-
+*/
 
 export default {
     name: 'United MileagePlus',
@@ -205,7 +205,7 @@ export default {
                 {
                     type: 'miles',
                     number: 3500,
-                    calculate: calculateMiles,
+                    //calculate: calculateMiles,
                     milesName: {
                         en: 'points (PQPs)',
                         de: 'Punkten (PQP)',
@@ -216,7 +216,7 @@ export default {
                 {
                     type: 'miles',
                     number: 3000,
-                    calculate: calculateMiles,
+                    //calculate: calculateMiles,
                     milesName: {
                         en: 'points (PQPs)',
                         de: 'Punkten (PQP)',
@@ -245,7 +245,7 @@ export default {
                 {
                     type: 'miles',
                     number: 7000,
-                    calculate: calculateMiles,
+                    //calculate: calculateMiles,
                     qualificationPeriod: 12,
                     validity: 12,
                     milesName: {
@@ -261,7 +261,7 @@ export default {
                 {
                     type: 'miles',
                     number: 6000,
-                    calculate: calculateMiles,
+                    //calculate: calculateMiles,
                     secType: 'segments',
                     secNumber: 16,
                     secCalculate: calculateSegments,
@@ -295,7 +295,7 @@ export default {
                 {
                     type: 'miles',
                     number: 10000,
-                    calculate: calculateMiles,
+                    //calculate: calculateMiles,
                     milesName: {
                         en: 'points (PQPs)',
                         de: 'Punkten (PQP)',
@@ -311,7 +311,7 @@ export default {
                 {
                     type: 'miles',
                     number: 9000,
-                    calculate: calculateMiles,
+                    //calculate: calculateMiles,
                     milesName: {
                         en: 'points (PQPs)',
                         de: 'Punkten (PQP)',
@@ -345,7 +345,7 @@ export default {
                 {
                     type: 'miles',
                     number: 15000,
-                    calculate: calculateMiles,
+                    //calculate: calculateMiles,
                     milesName: {
                         en: 'points (PQPs)',
                         de: 'Punkten (PQP)',
@@ -361,7 +361,7 @@ export default {
                 {
                     type: 'miles',
                     number: 13500,
-                    calculate: calculateMiles,
+                    //calculate: calculateMiles,
                     milesName: {
                         en: 'points (PQPs)',
                         de: 'Punkten (PQP)',
