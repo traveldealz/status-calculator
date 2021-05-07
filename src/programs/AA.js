@@ -1,6 +1,6 @@
 function countSegments( segments, data ) {
   return data.reduce((acc,itinerary) => {
-    let mileage = itinerary.value?.totals?.find(item => 'DL' === item.id);
+    let mileage = itinerary.value?.totals?.find(item => 'AA' === item.id);
     if(!mileage) {
       return acc;
     }
@@ -10,7 +10,7 @@ function countSegments( segments, data ) {
 
 function getmqd( segments, data ) {
   return data.reduce((acc,itinerary) => {
-    let mileage = itinerary.value?.totals?.find(item => 'DL' === item.id);
+    let mileage = itinerary.value?.totals?.find(item => 'AA' === item.id);
     if(!mileage) {
       return [acc[0], acc[1]+1];
     }
@@ -20,13 +20,13 @@ function getmqd( segments, data ) {
 
 
 export default {
-  name: 'Delta SkyMiles',
-  alliance: 'SkyTeam',
+  name: 'American AAdvantage',
+  alliance: 'Oneworld',
   qualificationPeriodType: 'Calendar year',
   status: [
     {
-      name: 'Silver',
-      allianceStatus: 'SkyTeam Elite',
+      name: 'Gold',
+      allianceStatus: 'Oneworld Ruby',
       qualification: [
         {
           type: 'miles',
@@ -34,21 +34,16 @@ export default {
           qualificationPeriod: 12,
           validity: 12,
           milesName: {
-                        en: 'MQM',
-                        de: 'MQM',
+                        en: 'EQM',
+                        de: 'EQM',
                     },
           secType: 'miles',
           secNumber: 3000,
           secCalculate: getmqd,
           secmilesName: {
-              en: 'MQD',
-              de: 'MQD',
-          },
-          secNote: {
-            en: 'Only required for US-Residents',
-            de: 'Nur für US-Einwohner erforderlich',
-            es: '',
-          },
+              en: 'EQD',
+              de: 'EQD',
+          }
         },
         {
           type: 'segments',
@@ -65,20 +60,15 @@ export default {
           secNumber: 3000,
           secCalculate: getmqd,
           secmilesName: {
-              en: 'MQD',
-              de: 'MQD',
-          },
-          secNote: {
-            en: 'Only required for US-Residents',
-            de: 'Nur für US-Einwohner erforderlich',
-            es: '',
+              en: 'EQD',
+              de: 'EQD',
           },
         },
       ]
     },
     {
-      name: 'Gold',
-      allianceStatus: 'SkyTeam Elite Plus',
+      name: 'Platinum',
+      allianceStatus: 'Oneworld Sapphire',
       qualification: [
         {
           type: 'miles',
@@ -86,21 +76,16 @@ export default {
           qualificationPeriod: 12,
           validity: 12,
           milesName: {
-                        en: 'MQM',
-                        de: 'MQM',
+                        en: 'EQM',
+                        de: 'EQM',
                     },
           secType: 'miles',
           secNumber: 6000,
           secCalculate: getmqd,
           secmilesName: {
-              en: 'MQD',
-              de: 'MQD',
-          },
-          secNote: {
-            en: 'Only required for US-Residents',
-            de: 'Nur für US-Einwohner erforderlich',
-            es: '',
-          },
+              en: 'EQD',
+              de: 'EQD',
+          }
         },
         {
           type: 'segments',
@@ -117,20 +102,15 @@ export default {
           secNumber: 6000,
           secCalculate: getmqd,
           secmilesName: {
-              en: 'MQD',
-              de: 'MQD',
-          },
-          secNote: {
-            en: 'Only required for US-Residents',
-            de: 'Nur für US-Einwohner erforderlich',
-            es: '',
-          },
+              en: 'EQD',
+              de: 'EQD',
+          }
         },
       ]
     },
     {
-      name: 'Platinum',
-      allianceStatus: 'SkyTeam Elite Plus',
+      name: 'Platinum Pro',
+      allianceStatus: 'Oneworld Sapphire',
       qualification: [
         {
           type: 'miles',
@@ -138,25 +118,20 @@ export default {
           qualificationPeriod: 12,
           validity: 12,
           milesName: {
-                        en: 'MQM',
-                        de: 'MQM',
+                        en: 'EQM',
+                        de: 'EQM',
                     },
           secType: 'miles',
           secNumber: 9000,
           secCalculate: getmqd,
           secmilesName: {
-              en: 'MQD',
-              de: 'MQD',
-          },
-          secNote: {
-            en: 'Only required for US-Residents',
-            de: 'Nur für US-Einwohner erforderlich',
-            es: '',
-          },
+              en: 'EQD',
+              de: 'EQD',
+          }
         },
         {
           type: 'segments',
-          number: 100,
+          number: 90,
           qualificationPeriod: 12,
           validity: 12,
           calculate: countSegments,
@@ -169,46 +144,36 @@ export default {
           secNumber: 9000,
           secCalculate: getmqd,
           secmilesName: {
-              en: 'MQD',
-              de: 'MQD',
-          },
-          secNote: {
-            en: 'Only required for US-Residents',
-            de: 'Nur für US-Einwohner erforderlich',
-            es: '',
-          },
+              en: 'EQD',
+              de: 'EQD',
+          }
         },
       ]
     },
     {
-      name: 'Diamond',
-      allianceStatus: 'SkyTeam Elite',
+      name: 'Executive Platinum',
+      allianceStatus: 'Oneworld Emerald',
       qualification: [
         {
           type: 'miles',
-          number: 125000,
+          number: 100000,
           qualificationPeriod: 12,
           validity: 12,
           milesName: {
-                        en: 'MQM',
-                        de: 'MQM',
+                        en: 'EQM',
+                        de: 'EQM',
                     },
           secType: 'miles',
           secNumber: 15000,
           secCalculate: getmqd,
           secmilesName: {
-              en: 'MQD',
-              de: 'MQD',
-          },
-          secNote: {
-            en: 'Only required for US-Residents',
-            de: 'Nur für US-Einwohner erforderlich',
-            es: '',
-          },
+              en: 'EQD',
+              de: 'EQD',
+          }
         },
         {
           type: 'segments',
-          number: 140,
+          number: 120,
           qualificationPeriod: 12,
           validity: 12,
           calculate: countSegments,
@@ -221,14 +186,9 @@ export default {
           secNumber: 15000,
           secCalculate: getmqd,
           secmilesName: {
-              en: 'MQD',
-              de: 'MQD',
-          },
-          secNote: {
-            en: 'Only required for US-Residents',
-            de: 'Nur für US-Einwohner erforderlich',
-            es: '',
-          },
+              en: 'EQD',
+              de: 'EQD',
+          }
         },
       ]
     },

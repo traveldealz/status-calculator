@@ -33,9 +33,11 @@ import S7 from './programs/S7';
 import UL from './programs/UL';
 import IB from './programs/IB';
 import CX from './programs/CX';
+import AA from './programs/AA';
 
 export default {
   IB,
+  AA,
   CX,
   A3,
   AT,

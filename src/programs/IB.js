@@ -2,6 +2,7 @@ function calculateSegments(segments) {
     return segments.filter(segment => ['IB'].includes(segment.carrier)).length;
 }
 
+
 export default {
     name: 'Iberia Plus',
     alliance: 'Oneworld',
