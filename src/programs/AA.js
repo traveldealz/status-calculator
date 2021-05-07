@@ -4,7 +4,8 @@ function countSegments( segments, data ) {
     if(!mileage) {
       return acc;
     }
-    return mileage.rdm ?? 0 < mileage.rdm[0] ? acc+1 : acc;
+   if(mileage.rdm){
+    return 0 < mileage.rdm[0] ? acc+1 : acc;}else{return acc;}
   }, 0);
 }
 

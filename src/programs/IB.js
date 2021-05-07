@@ -2,6 +2,16 @@ function calculateSegments(segments) {
     return segments.filter(segment => ['IB'].includes(segment.carrier)).length;
 }
 
+function countSegments( segments, data ) {
+  return data.reduce((acc,itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => 'IB' === item.id);
+    if(!mileage) {
+      return acc;
+    }
+   if(mileage.rdm){
+    return 0 < mileage.rdm[0] ? acc+1 : acc;}else{return acc;}
+  }, 0);
+}
 
 export default {
     name: 'Iberia Plus',
@@ -26,6 +36,7 @@ export default {
                     type: 'segments',
                     number: 25,
                     qualificationPeriod: 12,
+                    calculate: countSegments,
                     validity: 12,
                     secType: 'segments',
                     secNumber: 1,
@@ -55,6 +66,7 @@ export default {
                     type: 'segments',
                     number: 50,
                     qualificationPeriod: 12,
+                    calculate: countSegments,
                     validity: 12,
                     secType: 'segments',
                     secNumber: 1,
