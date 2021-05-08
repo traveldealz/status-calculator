@@ -8,6 +8,7 @@ function calculateSegments( segments, data ) {
         return 0 < mileage.rdm[0] ? acc+1 : acc;
     }, 0);
 }
+
 /*
 function getLimit(carrier, bookingClass){
     if(['AC','OS','SN'].includes(carrier)) {
