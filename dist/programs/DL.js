@@ -6,8 +6,8 @@ function countSegments(segments, data) {
       return acc;
     }
 
-    return 0 < mileage.rdm[0] ? acc + 1 : acc;
-  }, 0);
+    if(mileage.rdm){
+      return 0 < mileage.rdm[0] ? acc+1 : acc;}else{return acc;}  }, 0);
 }
 
 function getmqd(segments, data) {
@@ -18,7 +18,7 @@ function getmqd(segments, data) {
       return [acc[0], acc[1] + 1];
     }
 
-    return 0 < mileage.qd ? [acc[0] + mileage.qd, acc[1] + 1] : [acc[0], acc[1] + 1];
+    return 0 < mileage.qd[0] ? [acc[0] + mileage.qd[0], acc[1] + 1] : [acc[0], acc[1] + 1];
   }, [0, 0])[0];
 }
 

@@ -77,20 +77,20 @@ export default class extends HTMLElement {
 
   async query(itineraries) {
     let body = JSON.stringify(itineraries.map(itinerary => {
-      return { ...(itinerary.price ? {
+      return { ...(itinerary.ticketer ? {
           ticketingCarrier: itinerary.ticketer
         } : {
-          ticketingCarrier: "null"
+
         }),
         ...(itinerary.price ? {
           baseFare: itinerary.price
         } : {
-          baseFare: 0
+
         }),
         segments: [itinerary]
       };
     }));
-    Promise.all([fetch('https://farecollection.travel-dealz.de/api/calculate/tierpoints', {
+    Promise.all([fetch('https://farecollection.travel-dealz.de/api/calculate/mileage', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -136,7 +136,7 @@ export default class extends HTMLElement {
         let wtc_total = wtc_data.value[segmentIndex].value?.totals?.find(item => program === item.id) ? wtc_data.value[segmentIndex].value.totals.find(item => program === item.id) : {};
         return { ...wtc_total,
           qm: wtc_total.rdm ? wtc_total.rdm : [0, 0, 0, 0],
-          qd: 0,
+          qd: wtc_total.qd ? wtc_total.qd : 0,
           ...segment.value.totals.find(item => program === item.id)
         };
       });
@@ -160,7 +160,7 @@ export default class extends HTMLElement {
   calculate_totals(response) {
     let totals = response.value.reduce((totals, itinerary) => {
       itinerary.value.totals.forEach(item => {
-        totals[item.id] = totals[item.id] ? {
+        item.rdm ? totals[item.id] = totals[item.id] ? {
           rdm: totals[item.id].rdm ? totals[item.id].rdm.map((m, i) => m + item.rdm[i]) : item.rdm,
           qm: totals[item.id].qm.map((m, i) => m + item.qm[i]),
           qd: totals[item.id].qd + item.qd
@@ -168,7 +168,7 @@ export default class extends HTMLElement {
           rdm: item.rdm,
           qm: item.qm,
           qd: item.qd
-        };
+        }:{};
       });
       return totals;
     }, {});
