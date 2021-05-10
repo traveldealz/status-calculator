@@ -79,14 +79,10 @@ export default class extends HTMLElement {
     let body = JSON.stringify(itineraries.map(itinerary => {
       return { ...(itinerary.ticketer ? {
           ticketingCarrier: itinerary.ticketer
-        } : {
-
-        }),
+        } : {}),
         ...(itinerary.price ? {
           baseFare: itinerary.price
-        } : {
-
-        }),
+        } : {}),
         segments: [itinerary]
       };
     }));
@@ -113,6 +109,7 @@ export default class extends HTMLElement {
     let response = { ...wtc_data,
       ...td_data
     };
+    console.log(td_data);
 
     if (false === wtc_data.success && true === response.success) {
       response.success = wtc_data.success;
@@ -153,7 +150,6 @@ export default class extends HTMLElement {
         throw item.errorMessage;
       }
     });
-    console.log(response);
     return response;
   }
 
@@ -168,7 +164,7 @@ export default class extends HTMLElement {
           rdm: item.rdm,
           qm: item.qm,
           qd: item.qd
-        }:{};
+        } : {};
       });
       return totals;
     }, {});

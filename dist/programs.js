@@ -31,10 +31,13 @@ import AT from './programs/AT.js';
 import RJ from './programs/RJ.js';
 import S7 from './programs/S7.js';
 import UL from './programs/UL.js';
-import IB from './programs/IB';
-import CX from './programs/CX';
-import AA from './programs/AA';
+import IB from './programs/IB.js';
+import CX from './programs/CX.js';
+import AA from './programs/AA.js';
 export default {
+  IB,
+  AA,
+  CX,
   A3,
   AT,
   AY,
@@ -67,8 +70,5 @@ export default {
   UA,
   BR,
   SU,
-  AC,
-  AA,
-  IB,
-  CX,
+  AC
 };

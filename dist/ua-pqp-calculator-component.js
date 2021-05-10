@@ -1,8 +1,8 @@
 import BaseComponent from './base-component.js';
 import translate from './helper/translate.js';
 import translations from './translations.js';
-import template from './templates/ua-pqp-calculator.js';
-//import { calculateMiles } from './programs/UA.js';
+import template from './templates/ua-pqp-calculator.js'; //import {calculateMiles} from './programs/UA';
+
 export default class extends BaseComponent {
   constructor() {
     super();

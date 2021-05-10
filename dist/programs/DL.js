@@ -6,8 +6,12 @@ function countSegments(segments, data) {
       return acc;
     }
 
-    if(mileage.rdm){
-      return 0 < mileage.rdm[0] ? acc+1 : acc;}else{return acc;}  }, 0);
+    if (mileage.rdm) {
+      return 0 < mileage.rdm[0] ? acc + 1 : acc;
+    } else {
+      return acc;
+    }
+  }, 0);
 }
 
 function getmqd(segments, data) {
