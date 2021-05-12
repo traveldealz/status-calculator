@@ -25,7 +25,6 @@
   "Points": "Punkte",
   "Total": "Gesamt",
   "Distance": "Entfernung",
-  "miles": "Meilen",
   "From": "Von",
   "To": "Nach",
   "Award Miles": "Prämienmeilen"

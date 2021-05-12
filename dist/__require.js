@@ -8,5 +8,5 @@ export default function require(library) {
         library // removes version pinned, if any
   );
   if (idx === -1) throw new Error(`Import ${library} not found in project scope: ${modules}`);
-  return import('https://srv.divriots.com/packd/').then((module) => module['packd_export_'+idx]);
+  return import('https://srv.divriots.com/packd/?env.NODE_ENV=development').then((module) => module['packd_export_'+idx]);
 }
