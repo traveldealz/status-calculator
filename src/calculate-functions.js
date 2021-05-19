@@ -1,8 +1,8 @@
 export default {
-    countSegments: (arg) =>
-        arg.data.reduce((acc, itinerary) => {
+    countSegments: ({ data, program }) =>
+        data.reduce((acc, itinerary) => {
             let mileage = itinerary.value?.totals?.find(
-                (item) => arg.program.code === item.id
+                (item) => program.code === item.id
             );
             if (!mileage) {
                 return acc;
@@ -14,11 +14,11 @@ export default {
             }
         }, 0),
 
-    getmqd: (arg) =>
-        arg.data.reduce(
+    getmqd: ({ data, program }) =>
+        data.reduce(
             (acc, itinerary) => {
                 let mileage = itinerary.value?.totals?.find(
-                    (item) => arg.program.code === item.id
+                    (item) => program.code === item.id
                 );
                 if (!mileage) {
                     return [acc[0], acc[1] + 1];
@@ -30,8 +30,8 @@ export default {
             [0, 0]
         )[0],
 
-    calculateAMExecutivebonus: (segments) =>
-        segments.data.reduce((miles, itinerary) => {
+    calculateAMExecutivebonus: ({ data }) =>
+        data.reduce((miles, itinerary) => {
             let item = itinerary.value.totals.find((item) => "AM" === item.id);
             if (!item) {
                 return miles;
@@ -42,14 +42,14 @@ export default {
             else return miles + item.rdm[0];
         }, 0),
 
-    countAMDLMiles: (arg) =>
-        arg.data.reduce(
+    countAMDLMiles: ({ data, segments }) =>
+        data.reduce(
             (acc, itinerary) => {
                 let mileage = itinerary.value?.totals?.find((item) => "AM" === item.id);
                 if (!mileage) {
                     return [acc[0], acc[1] + 1];
                 }
-                if (["AM", "DL"].includes(arg.segments[acc[1]].carrier)) {
+                if (["AM", "DL"].includes(segments[acc[1]].carrier)) {
                     if (50000 > acc[0]) return [acc[0] + mileage.rdm[0], acc[1] + 1];
                     if (80000 > acc[0]) return [acc[0] + mileage.rdm[1], acc[1] + 1];
                     if (100000 > acc[0]) return [acc[0] + mileage.rdm[2], acc[1] + 1];
@@ -61,21 +61,21 @@ export default {
             [0, 0]
         )[0],
 
-    calculateSegments: (arg) =>
-        arg.segments.filter((segment) =>
-            arg.program.airlines.map((x) => x.iatacode).includes(segment.carrier)
+    calculateSegments: ({ segments, program }) =>
+        segments.filter((segment) =>
+            program.airlines.map((x) => x.iatacode).includes(segment.carrier)
         ).length,
 
-    countMiles: (arg) =>
-        arg.data.reduce(
+    countMiles: ({ data, program, segments }) =>
+        data.reduce(
             (acc, itinerary) => {
                 let mileage = itinerary.value?.totals?.find(
-                    (item) => arg.program.code === item.id
+                    (item) => program.code === item.id
                 );
                 if (!mileage) {
                     return [acc[0], acc[1] + 1];
                 }
-                if ([arg.program.code].includes(arg.segments[acc[1]].carrier)) {
+                if ([program.code].includes(segments[acc[1]].carrier)) {
                     return [acc[0] + mileage.qm[0], acc[1] + 1];
                 } else {
                     return [acc[0], acc[1] + 1];
@@ -84,8 +84,8 @@ export default {
             [0, 0]
         )[0],
 
-    calculateAZExecutivebonus: (segments) =>
-        segments.data.reduce((miles, itinerary) => {
+    calculateAZExecutivebonus: ({ data }) =>
+        data.reduce((miles, itinerary) => {
             let item = itinerary.value.totals.find((item) => "AZ" === item.id);
             if (!item) {
                 return miles;
@@ -101,16 +101,16 @@ export default {
             }
         }, 0),
 
-    calculateLHMSegements: (arg) =>
-        arg.segments.filter((segment) =>
+    calculateLHMSegements: ({ segments }) =>
+        segments.filter((segment) =>
             ["EN", "OS", "SN", "OU", "EW", "LO", "LH", "LG", "LX"].includes(
                 segment.carrier
             )
         ).length,
 
-    calculateLHMExecutivebonus: (arg) => {
+    calculateLHMExecutivebonus: ({ data }) => {
         // If >35000 miles, take Executive Bonus
-        return arg.data.reduce((miles, itinerary) => {
+        return data.reduce((miles, itinerary) => {
             let item = itinerary.value.totals.find((item) => "LHM" === item.id);
             if (!item) {
                 return miles;
@@ -118,8 +118,8 @@ export default {
             return 35000 < miles ? miles + item.qm[1] : miles + item.qm[0];
         }, 0);
     },
-    calcLHM2021: (arg) =>
-        arg.data.reduce(
+    calcLHM2021: ({ data, segments }) =>
+        data.reduce(
             (acc, itinerary) => {
                 let mileage = itinerary.value?.totals?.find(
                     (item) => "LHM" === item.id
@@ -129,7 +129,7 @@ export default {
                 }
                 if (
                     ["EN", "OS", "SN", "OU", "EW", "LO", "LH", "LG", "LX", "WK"].includes(
-                        arg.segments[acc[1]].carrier
+                        segments[acc[1]].carrier
                     )
                 ) {
                     return acc[0] > 35000
@@ -144,17 +144,15 @@ export default {
             [0, 0]
         )[0],
 
-    calculateS7SegmentsWeight: (segments) =>
-        segments.data.reduce(
+    calculateS7SegmentsWeight: ({ data, segments }) =>
+        data.reduce(
             (acc, itinerary) => {
                 let mileage = itinerary.value?.totals?.find((item) => "S7" === item.id);
                 if (!mileage) {
                     return [acc[0], acc[1] + 1];
                 }
-                if (["S7"].includes(segments.segments[acc[1]].carrier)) {
-                    if (
-                        ["J", "C", "D"].includes(segments.segments[acc[1]].bookingClass)
-                    ) {
+                if (["S7"].includes(segments[acc[1]].carrier)) {
+                    if (["J", "C", "D"].includes(segments[acc[1]].bookingClass)) {
                         return [acc[0] + 2, acc[1] + 1];
                     } else {
                         return [acc[0] + 1, acc[1] + 1];
@@ -166,14 +164,12 @@ export default {
             [0, 0]
         )[0],
 
-    calculateSKSegments: (segments) =>
-        segments.segments.filter((segment) =>
-            ["SK", "WF"].includes(segment.carrier)
-        ).length,
+    calculateSKSegments: ({ segments }) =>
+        segments.filter((segment) => ["SK", "WF"].includes(segment.carrier)).length,
 
-    calculateSQExecutivebonus: (segments) => {
+    calculateSQExecutivebonus: ({ data }) => {
         // If >25000 miles, take Executive Bonus
-        return segments.data.reduce((miles, itinerary) => {
+        return data.reduce((miles, itinerary) => {
             let item = itinerary.value.totals.find((item) => "SQ" === item.id);
             if (!item) {
                 return miles;
@@ -182,8 +178,8 @@ export default {
         }, 0);
     },
 
-    countSUBusinessSegments: (segments) =>
-        segments.data.reduce((acc, itinerary) => {
+    countSUBusinessSegments: ({ data }) =>
+        data.reduce((acc, itinerary) => {
             let mileage = itinerary.value?.totals?.find((item) => "SU" === item.id);
             if (!mileage) {
                 return acc;
@@ -195,18 +191,18 @@ export default {
             return acc;
         }, 0),
 
-    countSVSegments: (segments) =>
-        segments.data.reduce(
+    countSVSegments: ({ data, program, segments }) =>
+        data.reduce(
             (acc, itinerary) => {
                 let mileage = itinerary.value?.totals?.find(
-                    (item) => segments.program === item.id
+                    (item) => program === item.id
                 );
                 if (!mileage) {
                     return [acc[0], acc[1] + 1];
                 }
                 if (
-                    segments.airports[segments.segments[acc[1]].origin].country_code !=
-                    segments.airports[segments.segments[acc[1]].destination].country_code
+                    airports[segments[acc[1]].origin].country_code !=
+                    airports[segments[acc[1]].destination].country_code
                 ) {
                     return 0 < mileage.rdm[0]
                         ? [acc[0] + 1, acc[1] + 1]
@@ -217,63 +213,51 @@ export default {
             [0, 0]
         )[0],
 
-    calculateTGSegments: (segments) =>
-        segments.segments
+    calculateTGSegments: ({ segments }) =>
+        segments
             .filter((segment) => ["TG"].includes(segment.carrier))
             .filter((segment) => !["G", "V", "W"].includes(segment.bookingClass))
             .length,
 
-    calculateUXMiles: (segments) =>
-        segments.data.reduce(
+    calculateUXMiles: ({ data, program, segments, airports }) =>
+        data.reduce(
             (acc, itinerary) => {
                 let mileage = itinerary.value?.totals?.find(
-                    (item) => segments.program === item.id
+                    (item) => program === item.id
                 );
                 if (!mileage) {
                     return [acc[0], acc[1] + 1];
                 }
-                if (
-                    segments.segments[acc[1]].carrier &&
-                    segments.segments[acc[1]].ticketer
-                ) {
+                if (segments[acc[1]].carrier && segments[acc[1]].ticketer) {
                     if (
-                        [segments.program].includes(segments.segments[acc[1]].carrier) ||
-                        [segments.program].includes(segments.segments[acc[1]].ticketer)
+                        [program].includes(segments[acc[1]].carrier) ||
+                        [program].includes(segments[acc[1]].ticketer)
                     ) {
                         let multiplier = 5;
-                        if (
-                            ["C", "J", "D", "I"].includes(
-                                segments.segments[acc[1]].bookingClass
-                            )
-                        ) {
+                        if (["C", "J", "D", "I"].includes(segments[acc[1]].bookingClass)) {
                             multiplier += 3;
                         }
                         if (
-                            segments.airports[segments.segments[acc[1]].origin]
-                                .country_code == "US" ||
-                            segments.airports[segments.segments[acc[1]].destination]
-                                .country_code == "US"
+                            airports[segments[acc[1]].origin].country_code == "US" ||
+                            airports[segments[acc[1]].destination].country_code == "US"
                         ) {
                             multiplier += 1;
                         }
                         if (18000 > acc[0])
-                            return [
-                                acc[0] + segments.segments[acc[1]].price * multiplier,
-                                acc[1] + 1,
-                            ];
+                            return [acc[0] + segments[acc[1]].price * multiplier, acc[1] + 1];
                         if (32000 > acc[0])
                             return [
-                                acc[0] + segments.segments[acc[1]].price * multiplier * 1.5,
+                                acc[0] + segments[acc[1]].price * multiplier * 1.5,
                                 acc[1] + 1,
                             ];
                         if (60000 > acc[0])
                             return [
-                                acc[0] + segments.segments[acc[1]].price * multiplier * 1.75,
+                                acc[0] + segments[acc[1]].price * multiplier * 1.75,
                                 acc[1] + 1,
                             ];
                         if (60000 < acc[0])
                             return [
-                                acc[0] + segments.segments[acc[1]].price * multiplier * 2,
+                                acc[0] + segments[acc[1]].price * multiplier * 2,
                                 acc[1] + 1,
                             ];
                     }
@@ -285,8 +269,8 @@ export default {
             [0, 0]
         )[0],
 
-    calculateVNExecutivebonus: (segments) =>
-        segments.data.reduce((miles, itinerary) => {
+    calculateVNExecutivebonus: ({ data }) =>
+        data.reduce((miles, itinerary) => {
             let item = itinerary.value.totals.find((item) => "VN" === item.id);
             if (!item) {
                 return miles;
