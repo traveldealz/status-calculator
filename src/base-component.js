@@ -95,7 +95,7 @@ export default class extends HTMLElement {
     } } ));
 
     Promise.all([
-      fetch('https://farecollection.travel-dealz.de/api/calculate/mileage', {
+      fetch('https://mileage.travel-dealz.eu/api/calculate/mileage', {
         method: 'POST',
         headers: {
         'Content-Type': 'application/json'
