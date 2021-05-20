@@ -59,7 +59,11 @@ export default class extends HTMLElement {
         let bookingClass = parts[1];
         let route = parts[2].split("-").map((v) => v.trim());
         let ticketer = parts[3];
-        let price = parseInt(parts[4] / (parts[2].split("-").length - 1));
+        let price = parseInt(parts[4]) / (parts[2].split("-").length - 1);
+        let currency =
+          parts[4] && parts[4].match(/[A-Z]{3}|[$€£]/u)
+            ? parts[4].match(/[A-Z]{3}|[$€£]/u)[0]
+            : this.$currency;
 
         return route.reduce((accumulator, airport, index, route) => {
           if (0 === index || !accumulator) {
@@ -72,6 +76,7 @@ export default class extends HTMLElement {
             destination: airport,
             ticketer,
             price,
+            currency,
           });
           return accumulator;
         }, []);
@@ -80,11 +85,8 @@ export default class extends HTMLElement {
     this.$segments = itineraries.flat();
     this.update_hash();
     this.query(itineraries);
-    console.log("SEGEMTNE");
-    console.log(this.$segments);
+
     for (elem in this.$segments.carrier) {
-      console.log("Elem");
-      console.log(elem);
       if (elem.carrier == "AY") {
         var warningSpan = document.createElement("span");
         warningSpan.className = "redTextClass";
@@ -103,7 +105,9 @@ export default class extends HTMLElement {
           ...(itinerary.ticketer
             ? { ticketingCarrier: itinerary.ticketer }
             : {}),
-          ...(itinerary.price ? { baseFare: itinerary.price } : {}),
+          ...(itinerary.price
+            ? { baseFare: itinerary.price, currency: itinerary.currency }
+            : {}),
           segments: [itinerary],
         };
       })

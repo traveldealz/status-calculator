@@ -42,7 +42,7 @@ export default class extends BaseComponent {
             ? { ticketingCarrier: itinerary.ticketer }
             : { ticketingCarrier: "null" }),
           ...(itinerary.price
-            ? { baseFare: itinerary.price }
+            ? { baseFare: itinerary.price, currency: itinerary.currency }
             : { baseFare: 0 }),
           segments: [itinerary],
         };
