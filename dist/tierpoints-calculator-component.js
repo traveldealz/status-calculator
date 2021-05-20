@@ -1,23 +1,23 @@
-import BaseComponent from './base-component.js';
-import translate from './helper/translate.js';
-import translations from './translations.js';
-import template from './templates/tierpoints-calculator.js';
+import BaseComponent from "./base-component.js";
+import translate from "./helper/translate.js";
+import translations from "./translations.js";
+import template from "./templates/tierpoints-calculator.js";
 export default class extends BaseComponent {
   constructor() {
     super();
     this.$template = template;
-    this.$program = 'BA';
+    this.$program = "BA";
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this.$program = this.hasAttribute('program') ? this.getAttribute('program') : 'BA';
-    this.$points_label = this.hasAttribute('points_label') ? this.getAttribute('points_label') : null;
-    this.$awardmiles_label = this.hasAttribute('awardmiles_label') ? this.getAttribute('awardmiles_label') : null;
-    this.$status_labels = this.hasAttribute('status_labels') ? this.getAttribute('status_labels').split(',') : ['None', 'Silver', 'Gold', 'Platinum'];
+    this.$program = this.hasAttribute("program") ? this.getAttribute("program") : "BA";
+    this.$points_label = this.hasAttribute("points_label") ? this.getAttribute("points_label") : null;
+    this.$awardmiles_label = this.hasAttribute("awardmiles_label") ? this.getAttribute("awardmiles_label") : null;
+    this.$status_labels = this.hasAttribute("status_labels") ? this.getAttribute("status_labels").split(",") : ["None", "Silver", "Gold", "Platinum"];
     this.el_status = this.querySelector('[name="status"]');
     this.$status_labels.forEach((status, index) => {
-      let el_option = document.createElement('option');
+      let el_option = document.createElement("option");
       el_option.value = index;
       el_option.innerHTML = status;
       this.el_status.appendChild(el_option);
@@ -39,10 +39,10 @@ export default class extends BaseComponent {
         segments: [itinerary]
       };
     }));
-    fetch('https://farecollection.travel-dealz.de/api/calculate/mileage?programs=' + this.$program, {
-      method: 'POST',
+    fetch("https://mileage.travel-dealz.eu/api/calculate/mileage?programs=" + this.$program, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body
     }).then(response => response.json()).then(response => this.calculate_totals(response)); // .catch(error => {
@@ -58,8 +58,8 @@ export default class extends BaseComponent {
     airports
   }, totals) {
     super.display();
-    this.el_list.innerHTML = '';
-    let el_thead = document.createElement('thead');
+    this.el_list.innerHTML = "";
+    let el_thead = document.createElement("thead");
     el_thead.innerHTML = translate(
     /*html*/
     `
@@ -67,21 +67,21 @@ export default class extends BaseComponent {
         <th></th>
         <th class="text-center">__(Route)</th>
         <th class="text-center">__(Bookingclass)</th>
-        <th class="text-right">${this.$awardmiles_label ? this.$awardmiles_label : '__(Award Miles)'}</th>
-        <th class="text-right">${this.$points_label ? this.$points_label : '__(Points)'}</th>
+        <th class="text-right">${this.$awardmiles_label ? this.$awardmiles_label : "__(Award Miles)"}</th>
+        <th class="text-right">${this.$points_label ? this.$points_label : "__(Points)"}</th>
       </tr>
     `, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_list.appendChild(el_thead);
     const status_key = this.el_status.value;
     const cabinclass = {
-      Y: 'Economy',
-      W: 'Premium Eco',
-      C: 'Business',
-      F: 'First'
+      Y: "Economy",
+      W: "Premium Eco",
+      C: "Business",
+      F: "First"
     };
     this.$segments.forEach((segment, index) => {
       const earning = data[index].value.totals.find(item => item.id === this.$program);
-      let el = document.createElement('tr');
+      let el = document.createElement("tr");
       el.innerHTML = translate(
       /*html*/
       `
@@ -106,16 +106,16 @@ export default class extends BaseComponent {
             </div>
             <div>
               <div><code>${segment.bookingClass}</code></div>
-              <div class="text-xs text-grey-dark font-light">${airlines[segment.carrier]?.bookingclass ? cabinclass[airlines[segment.carrier]?.bookingclass[segment.bookingClass]?.cabinclass] : ''} ${airlines[segment.carrier]?.bookingclass ? airlines[segment.carrier]?.bookingclass[segment.bookingClass]?.fare : ''}</div>
+              <div class="text-xs text-grey-dark font-light">${airlines[segment.carrier]?.bookingclass ? cabinclass[airlines[segment.carrier]?.bookingclass[segment.bookingClass]?.cabinclass] : ""} ${airlines[segment.carrier]?.bookingclass ? airlines[segment.carrier]?.bookingclass.fare ? airlines[segment.carrier]?.bookingclass[segment.bookingClass]?.fare : "" : ""}</div>
             </div>
           </div>
         </td>
-        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning.rdm ? earning.rdm[status_key]?.toLocaleString() : '-'}`}</td>
+        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning.rdm ? earning.rdm[status_key]?.toLocaleString() : "-"}`}</td>
         <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning.qm ? earning.qm[0]?.toLocaleString() : 0}`}</td>
         `, translations[this.$locale] ? translations[this.$locale] : []);
       this.el_list.appendChild(el);
     });
-    let el_foot = document.createElement('tfoot');
+    let el_foot = document.createElement("tfoot");
     el_foot.innerHTML = translate(
     /*html*/
     `
