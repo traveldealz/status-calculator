@@ -171,7 +171,7 @@ export default class extends BaseComponent {
         <td class="text-right">${
           false === data[index].success
             ? data[index].errorMessage
-            : `${earning.qm ? earning.qm[0]?.toLocaleString() : 0}`
+            : `${earning.qm ? earning.qm[status_key]?.toLocaleString() : 0}`
         }</td>
         `,
         translations[this.$locale] ? translations[this.$locale] : []
