@@ -25,14 +25,21 @@ export default class extends BaseComponent {
   }
 
   async query(itineraries) {
+    //for (var i = 0; i < itineraries.length; i++) {
+    //  if (i > 0) {
+    //console.log(itineraries[i]);
+    //    itineraries[i].price = 0;
+    //  }
+    //}
     let body = JSON.stringify(itineraries.map(itinerary => {
-      return { ...(itinerary.price ? {
+      return { ...(itinerary.ticketer ? {
           ticketingCarrier: itinerary.ticketer
         } : {
           ticketingCarrier: "null"
         }),
         ...(itinerary.price ? {
-          baseFare: itinerary.price
+          baseFare: itinerary.price,
+          currency: itinerary.currency
         } : {
           baseFare: 0
         }),

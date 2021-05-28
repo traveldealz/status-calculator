@@ -31,5 +31,5 @@ BA:W:LHR-HKG</textarea>
   <div class="loading hidden">__(Loading & calculating...)</div>
   <div class="error hidden"></div>
   <table id="list"></table>
-  <p><small>__(Points Data provided by Travel-Dealz.eu)</small></p>
+  <p><small>__(Data provided by Travel-Dealz.eu)</small></p>
 `;

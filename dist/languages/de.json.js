@@ -4,7 +4,7 @@
   "Calculate": "Berechnen",
   "Data provided by": "Daten bereitgestellt von",
   "Award Miles Data provided by": "Prämienmeilen-Daten bereitgestellt von",
-  "Points Data provided by Travel-Dealz.eu": "Punkte-Daten bereitgestellt von Travel-Dealz.de",
+  "Data provided by Travel-Dealz.eu": "Daten bereitgestellt von Travel-Dealz.de",
   "miles": "Meilen",
   "segment": "Segment",
   "segments": "Segmenten",
