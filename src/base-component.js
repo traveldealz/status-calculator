@@ -59,7 +59,7 @@ export default class extends HTMLElement {
         let bookingClass = parts[1];
         let route = parts[2].split("-").map((v) => v.trim());
         let ticketer = parts[3];
-        let price = parseInt(parts[4]) / (parts[2].split("-").length - 1);
+        let price = parts[4];
         let currency =
           parts[4] && parts[4].match(/[A-Z]{3}|[$€£]/u)
             ? parts[4].match(/[A-Z]{3}|[$€£]/u)[0]
@@ -75,7 +75,7 @@ export default class extends HTMLElement {
             origin: route[index - 1],
             destination: airport,
             ticketer,
-            price,
+            price: index == 1 ? parseInt(price) : 0,
             currency,
           });
           return accumulator;
