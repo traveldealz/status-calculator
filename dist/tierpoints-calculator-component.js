@@ -66,6 +66,8 @@ export default class extends BaseComponent {
   }, totals) {
     super.display();
     this.el_list.innerHTML = "";
+    let totalqm = 0;
+    let totalrm = 0;
     let el_thead = document.createElement("thead");
     el_thead.innerHTML = translate(
     /*html*/
@@ -88,6 +90,12 @@ export default class extends BaseComponent {
     };
     this.$segments.forEach((segment, index) => {
       const earning = data[index].value.totals.find(item => item.id === this.$program);
+      let rd_status_key = status_key;
+      status_key > earning.rdm.length - 1 ? rd_status_key = earning.rdm.length - 1 : {};
+      let qm_status_key = status_key;
+      status_key > earning.qm.length - 1 ? qm_status_key = earning.qm.length - 1 : {};
+      earning.rdm ? totalrm += earning.rdm[rd_status_key] : {};
+      earning.qm ? totalqm += earning.qm[qm_status_key] : {};
       let el = document.createElement("tr");
       el.innerHTML = translate(
       /*html*/
@@ -117,8 +125,8 @@ export default class extends BaseComponent {
             </div>
           </div>
         </td>
-        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning.rdm ? earning.rdm[status_key]?.toLocaleString() : "-"}`}</td>
-        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning.qm ? earning.qm[status_key]?.toLocaleString() : 0}`}</td>
+        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning.rdm ? earning.rdm[rd_status_key]?.toLocaleString() : "-"}`}</td>
+        <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning.qm ? earning.qm[qm_status_key]?.toLocaleString() : 0}`}</td>
         `, translations[this.$locale] ? translations[this.$locale] : []);
       this.el_list.appendChild(el);
     });
@@ -128,8 +136,8 @@ export default class extends BaseComponent {
     `
       <tr>
         <th class="text-right" colspan="3">__(Total)</th>
-        <th class="text-right">${totals[this.$program].rdm ? totals[this.$program].rdm[status_key]?.toLocaleString() : 0}</th>
-        <th class="text-right">${totals[this.$program].qm[status_key]?.toLocaleString()}</th>
+        <th class="text-right">${totalrm.toLocaleString()}</th>
+        <th class="text-right">${totalqm.toLocaleString()}</th>
       </tr>
     `, translations[this.$locale] ? translations[this.$locale] : []);
     this.el_list.appendChild(el_foot);
