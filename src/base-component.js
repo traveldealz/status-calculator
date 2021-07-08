@@ -142,8 +142,6 @@ export default class extends HTMLElement {
   }
 
   merge_responses(td_data, wtc_data) {
-    console.log("WTCDATA");
-    console.log(wtc_data);
     if (wtc_data.success == false) {
       throw Error(wtc_data.errorMessage);
     }
@@ -151,8 +149,6 @@ export default class extends HTMLElement {
       ...wtc_data,
       ...td_data,
     };
-
-    console.log(td_data);
 
     if (false === wtc_data.success && true === response.success) {
       response.success = wtc_data.success;
