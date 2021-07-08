@@ -33,7 +33,6 @@ export default class extends BaseComponent {
     this.el_list.innerHTML = "";
     Object.keys(totals).map(id => {
       const program = this.$programs[id];
-      console.log(program);
 
       if (!program) {
         return [];

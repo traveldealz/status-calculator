@@ -99,16 +99,19 @@ export default class extends HTMLElement {
       body
     })]).then(responses => Promise.all(responses.map(response => response.json()))).then(responses => this.merge_responses(responses[0], responses[1])).then(response => this.calculate_totals(response)).catch(error => {
       this.loading_end();
-      this.el_error.innerHTML = `Error: ${error.toString()}`;
+      this.el_error.innerHTML = `${error.toString()}`;
       this.el_error.classList.remove("hidden");
     });
   }
 
   merge_responses(td_data, wtc_data) {
+    if (wtc_data.success == false) {
+      throw Error(wtc_data.errorMessage);
+    }
+
     let response = { ...wtc_data,
       ...td_data
     };
-    console.log(td_data);
 
     if (false === wtc_data.success && true === response.success) {
       response.success = wtc_data.success;
