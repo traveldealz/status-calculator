@@ -136,12 +136,17 @@ export default class extends HTMLElement {
       .then((response) => this.calculate_totals(response))
       .catch((error) => {
         this.loading_end();
-        this.el_error.innerHTML = `Error: ${error.toString()}`;
+        this.el_error.innerHTML = `${error.toString()}`;
         this.el_error.classList.remove("hidden");
       });
   }
 
   merge_responses(td_data, wtc_data) {
+    console.log("WTCDATA");
+    console.log(wtc_data);
+    if (wtc_data.success == false) {
+      throw Error(wtc_data.errorMessage);
+    }
     let response = {
       ...wtc_data,
       ...td_data,
