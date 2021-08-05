@@ -15,7 +15,7 @@ export default class extends BaseComponent {
 
   renderTemplate() {
     this.innerHTML
-      ? (this.template = innerHTML)
+      ? (this.template = this.innerHTML)
       : (this.innerHTML = translate(
           this.$template,
           translations[this.$locale] ? translations[this.$locale] : []
