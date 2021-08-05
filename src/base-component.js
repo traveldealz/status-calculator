@@ -21,10 +21,7 @@ export default class extends HTMLElement {
       ? this.getAttribute("currency")
       : "EUR";
 
-    this.innerHTML = translate(
-      this.$template,
-      translations[this.$locale] ? translations[this.$locale] : []
-    );
+    this.renderTemplate();
 
     this.el_route = this.querySelector('[name="route"]');
     this.el_list = this.querySelector("#list");
@@ -47,6 +44,13 @@ export default class extends HTMLElement {
     if (location.hash) {
       this.loadParameters();
     }
+  }
+
+  renderTemplate() {
+    this.innerHTML = translate(
+      this.$template,
+      translations[this.$locale] ? translations[this.$locale] : []
+    );
   }
 
   calculate() {

@@ -12,6 +12,125 @@
 <body class="entry-content">
 	<h2>Status Calculator</h2>
 	<status-calculator></status-calculator>
+	<h2>Miles Calculator</h2>
+	<miles-calculator>
+		<style>
+			button[disabled] {
+				background-color: gray;
+			}
+		</style>
+		<form>
+			<label for="route">Strecken</label>
+			<lt-mirror class="lt--mac-os" style="display: none;" contenteditable="false">
+				<lt-highlighter class="lt--mac-os" style="display: none;" contenteditable="false">
+					<lt-div spellcheck="false" class="lt-highlighter__wrapper"
+						style="width: 429.833px !important; height: 223px !important; transform: none !important; transform-origin: 215.917px 112.5px 0px !important; margin-top: 33px !important; margin-left: 1px !important;">
+						<lt-div class="lt-highlighter__scrollElement"
+							style="top: 0px !important; left: 0px !important; width: 429.833px !important; height: 223px !important;">
+							<canvas class="lt-highlighter__canvas" style="display: none; top: 10px !important; left: 51px !important;"
+								width="115" height="21"></canvas></lt-div>
+					</lt-div>
+				</lt-highlighter>
+				<lt-div spellcheck="false" class="lt-mirror__wrapper notranslate"
+					style="border-width: 1px !important; border-style: solid !important; direction: ltr !important; font: 400 16px / 24px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji !important; font-synthesis: weight style !important; hyphens: auto !important; letter-spacing: normal !important; line-break: auto !important; margin: 32px 0px 4px !important; padding: 8px 12px !important; text-align: start !important; text-decoration: rgb(0, 0, 0) !important; text-indent: 0px !important; text-rendering: optimizelegibility !important; text-transform: none !important; transform: none !important; transform-origin: 215.917px 112.5px 0px !important; unicode-bidi: normal !important; white-space: pre-wrap !important; word-spacing: 0px !important; overflow-wrap: break-word !important; writing-mode: horizontal-tb !important; width: 405.833px !important; height: 207px !important;"
+					data-lt-scroll-top="0" data-lt-scroll-left="0" data-lt-scroll-top-scaled="0" data-lt-scroll-left-scaled="0"
+					data-lt-scroll-top-scaled-and-zoomed="0" data-lt-scroll-left-scaled-and-zoomed="0">
+					<lt-div class="lt-mirror__canvas"
+						style="margin-top: 0px !important; margin-left: 0px !important; width: 405.833px !important; height: 207px !important;">
+						LH:A:FRA-HKG-MUC</lt-div>
+				</lt-div>
+				<lt-div class="lt-mirror__measurer"></lt-div>
+			</lt-mirror>
+			<textarea name="route" class="w-full my-1" rows="8" spellcheck="false" data-gramm="false">LH:A:FRA-HKG-MUC</textarea>
+			<small></small>
+			<div class="my-3">
+				<button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">Berechnen</button>
+			</div>
+		</form>
+		<div class="loading hidden">Laden &amp; berechnen...</div>
+		<div class="error hidden"></div>
+		<ol id="list">
+			<li>
+				45.435 Kilometer
+				bei Air China PhoenixMiles
+			</li>
+			<li>
+				33.878 Punkte
+				bei SAS EuroBonus
+			</li>
+			<li>
+				33.878 Meilen
+				bei Aegean Miles+Bonus
+			</li>
+			<li>
+				33.878 Meilen
+				bei Ethiopian ShebaMiles
+			</li>
+			<li>
+				33.878 Meilen
+				bei Copa ConnectMiles
+			</li>
+			<li>
+				33.878 Meilen
+				bei TAP Miles&amp;Go
+			</li>
+			<li>
+				33.876 Meilen
+				bei Miles&amp;More
+			</li>
+			<li>
+				22.585 Meilen
+				bei Avianca LifeMiles
+			</li>
+			<li>
+				22.585 Meilen
+				bei Thai Royal Orchid Plus
+			</li>
+			<li>
+				22.585 Meilen
+				bei Turkish Airlines Miles&amp;Smiles
+			</li>
+			<li>
+				22.585 Meilen
+				bei Egyptair Plus
+			</li>
+			<li>
+				22.585 Meilen
+				bei LATAM Pass
+			</li>
+			<li>
+				22.585 Meilen
+				bei Singapore KrisFlyer
+			</li>
+			<li>
+				22.584 Prämienmeilen
+				+ 3.000 PQP bei United MileagePlus
+			</li>
+			<li>
+				16.939 Meilen
+				bei ANA Mileage Club
+			</li>
+			<li>
+				16.939 Meilen
+				bei EVA Infinity MileageLands
+			</li>
+			<li>
+				16.939 Meilen
+				bei Air Canada Aeroplan
+			</li>
+			<li>
+				16.939 Meilen
+				bei Asiana Club
+			</li>
+			<li>
+				16.938 AsiaMiles
+				bei Asia Miles
+			</li>
+		</ol>
+		<p>
+			<small>Daten bereitgestellt von <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a></small>
+		</p>
+	</miles-calculator>
 	<h2>Tier Points Calculator - British Airways Executive Club</h2>
 	<tierpoints-calculator program="BA" awardmiles_label="Avios" points_label="Tier Points"
 		status_labels="Blue,Bronze,Silver,Gold">
