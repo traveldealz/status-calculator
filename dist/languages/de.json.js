@@ -10,6 +10,7 @@
   "segments": "Segmenten",
   "month": "Monat",
   "months": "Monate",
+  "and": "und",
   "Validity": "Gültigkeit",
   "Qualification period": "Qualifikationszeitraum",
   "Calendar year": "Kalenderjahr",
@@ -27,6 +28,8 @@
   "Distance": "Entfernung",
   "From": "Von",
   "To": "Nach",
-  "Award Miles": "Prämienmeilen"
+  "Award Miles": "Prämienmeilen",
+  "on": "bei",
+  "Status Miles": "Statusmeilen"
 }
         
