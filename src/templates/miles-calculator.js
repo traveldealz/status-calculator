@@ -21,4 +21,5 @@ export default /*html*/ `
   <div class="error hidden"></div>
   <ul id="list"></ul>
   <p><small>__(Data provided by) <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a> __(and) Travel-Dealz.de</small> </p>
+  <p><small>__(See instructions on) <a href="__(https://www.travel-dealz.eu/tools/miles-calculator)" target="_blank">__(travel-dealz.eu)</a> </small> </p>
 `;
