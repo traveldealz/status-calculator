@@ -30,6 +30,9 @@
   "To": "Nach",
   "Award Miles": "Prämienmeilen",
   "on": "bei",
-  "Status Miles": "Statusmeilen"
+  "Status Miles": "Statusmeilen",
+  "See instructions on": "Mehr Infos zur Verwendung auf",
+  "travel-dealz.eu": "travel-dealz.de",
+  "https://www.travel-dealz.eu/tools/miles-calculator": "https://www.travel-dealz.de/tools/meilenrechner"
 }
         
