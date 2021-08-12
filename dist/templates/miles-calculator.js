@@ -15,6 +15,7 @@ export default
     <label for="route">__(Routings)</label>
     <textarea name="route" class="w-full my-1" rows="2">LH:A:FRA-HKG-MUC</textarea>
     <small></small>
+    <p><small>__(See instructions on) <a href="__(https://travel-dealz.eu/tools/miles-calculator)" target="_blank">__(mileage calculator)</a> </small> </p>
     <div class="my-3">
       <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
     </div>
@@ -23,5 +24,4 @@ export default
   <div class="error hidden"></div>
   <ul id="list"></ul>
   <p><small>__(Data provided by) <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a> __(and) Travel-Dealz.de</small> </p>
-  <p><small>__(See instructions on) <a href="__(https://www.travel-dealz.eu/tools/miles-calculator)" target="_blank">__(travel-dealz.eu)</a> </small> </p>
 `;

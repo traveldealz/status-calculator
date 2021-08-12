@@ -31,8 +31,9 @@
   "Award Miles": "Prämienmeilen",
   "on": "bei",
   "Status Miles": "Statusmeilen",
-  "See instructions on": "Mehr Infos zur Verwendung auf",
+  "See instructions on": "Mehr Infos zur Eingabe von Flügen unter",
+  "mileage calculator": "Meilenrechner",
   "travel-dealz.eu": "travel-dealz.de",
-  "https://www.travel-dealz.eu/tools/miles-calculator": "https://www.travel-dealz.de/tools/meilenrechner"
+  "https://travel-dealz.eu/tools/miles-calculator": "https://www.travel-dealz.de/tools/meilenrechner"
 }
         
