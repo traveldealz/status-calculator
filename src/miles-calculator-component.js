@@ -14,12 +14,12 @@ export default class extends BaseComponent {
   }
 
   renderTemplate() {
-    this.innerHTML
+    /*this.innerHTML
       ? (this.template = this.innerHTML)
-      : (this.innerHTML = translate(
-          this.$template,
-          translations[this.$locale] ? translations[this.$locale] : []
-        ));
+      : */ this.innerHTML = translate(
+      this.$template,
+      translations[this.$locale] ? translations[this.$locale] : []
+    );
   }
 
   calculate() {
