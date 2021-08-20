@@ -18,7 +18,7 @@ export default
   </style>
   <form>
     <label for="route">__(Routings)</label>
-    <textarea name="route" class="w-full my-1" rows="8">BA:K:FRA-LHR
+    <textarea name="route" class="w-full my-1" rows="3">BA:K:FRA-LHR
 BA:W:LHR-HKG</textarea>
     <small></small>
     <div class="my-3">

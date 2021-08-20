@@ -13,7 +13,7 @@ export default
   </style>
   <form>
     <label for="route">__(Routings)</label>
-    <textarea name="route" class="w-full my-1" rows="2">LH:A:FRA-HKG-MUC</textarea>
+    <textarea name="route" class="w-full my-1" rows="2">LH:P:HAM-FRA-EZE</textarea>
     <small></small>
     <p><small>__(See instructions on) <a href="__(https://travel-dealz.eu/tools/miles-calculator)" target="_blank">__(mileage calculator)</a> </small> </p>
     <div class="my-3">
