@@ -16,11 +16,6 @@ export default /*html*/ `
     <p><small>__(See instructions on) <a href="__(https://travel-dealz.eu/tools/miles-calculator)" target="_blank">__(mileage calculator)</a> </small> </p>
     <div class="my-3">
       <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
-      <label for="Berechnungsart">__(Berechnungsart)</label>
-      <select name="Oneway">
-      <option selected>Hin und Rückflug</option>
-          <option>Oneway</option>
-      </select>
     </div>
   </form>
   <div class="loading hidden">__(Loading & calculating...)</div>
