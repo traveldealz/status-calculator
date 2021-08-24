@@ -3,11 +3,7 @@ export default /*html*/ `
   button[disabled] {
     background-color: gray;
   }
-  ul {
-    -webkit-column-count: 2;
-    -moz-column-count: 2;
-    column-count: 2;
-}
+  
   </style>
   <form>
     <label for="route">__(Routings)</label>
@@ -20,6 +16,6 @@ export default /*html*/ `
   </form>
   <div class="loading hidden">__(Loading & calculating...)</div>
   <div class="error hidden"></div>
-  <ul id="list"></ul>
+  <ul class="col-2" id="list"></ul>
   <p><small>__(Data provided by) <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a> __(and) Travel-Dealz.de</small> </p>
 `;
