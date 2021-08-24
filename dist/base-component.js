@@ -82,7 +82,7 @@ export default class extends HTMLElement {
       return { ...(itinerary.ticketer ? {
           ticketingCarrier: itinerary.ticketer
         } : {}),
-        ...(itinerary.price ? {
+        ...(itinerary.price || itinerary.price === 0 ? {
           baseFare: itinerary.price,
           currency: itinerary.currency
         } : {}),
