@@ -9,11 +9,22 @@ export default class extends BaseComponent {
     super();
     this.$template = template;
     this.$status = "Star Alliance Gold";
+    this.$whitelist = [];
   }
 
   connectedCallback() {
     super.connectedCallback();
-
+    var selectedStatus = this.hasAttribute("status")
+      ? this.getAttribute("status")
+      : "Star Alliance Gold";
+    var eid = document.getElementById("statusselector");
+    for (var i = 0; i < eid.options.length; ++i) {
+      if (eid.options[i].text === selectedStatus)
+        eid.options[i].selected = true;
+    }
+    this.$whitelist = this.hasAttribute("whitelist")
+      ? this.getAttribute("whitelist").split(",")
+      : [];
     this.$programs = [];
     fetch(
       "https://mileage.travel-dealz.eu/api/airline_programs?include=airlines&filter[has_qualification]=true&fields[airline_programs]=code,name,alliance,qualification&fields[airlines]=iatacode,name,alliance,airline_program_code"
@@ -42,7 +53,11 @@ export default class extends BaseComponent {
     Object.keys(totals)
       .map((id) => {
         const program = this.$programs[id];
-        if (!program) {
+        if (
+          !program ||
+          (this.$whitelist.length !== 0 &&
+            !this.$whitelist.includes(program.code))
+        ) {
           return [];
         }
 
