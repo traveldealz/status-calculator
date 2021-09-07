@@ -13,7 +13,11 @@ export default class extends BaseComponent {
 
   connectedCallback() {
     super.connectedCallback();
+    var selectedStatus = this.hasAttribute("status")
+      ? this.getAttribute("status")
+      : "Gold";
 
+    document.getElementById("statusoptions").value = selectedStatus;
     this.$programs = [];
     fetch(
       "https://mileage.travel-dealz.eu/api/airline_programs?include=airlines&filter[has_qualification]=true&fields[airline_programs]=code,name,alliance,qualification&fields[airlines]=iatacode,name,alliance,airline_program_code"

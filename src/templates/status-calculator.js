@@ -1,4 +1,4 @@
-export default /*html*/`
+export default /*html*/ `
   <style>
   button[disabled] {
     background-color: gray;
@@ -11,19 +11,19 @@ export default /*html*/`
     <div class="my-3">
       <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
       <label for="status">__(Status)</label>
-      <select name="status">
+      <select id="statusoptions" name="status">
         <optgroup label="Star Alliance">
-          <option>Star Alliance Silver</option>
-          <option selected>Star Alliance Gold</option>
+          <option value="Silver">Star Alliance Silver</option>
+          <option value="Gold">Star Alliance Gold</option>
         </optgroup>
         <optgroup label="SkyTeam">
-          <option>SkyTeam Elite</option>
-          <option>SkyTeam Elite Plus</option>
+          <option value="Elite">SkyTeam Elite</option>
+          <option value="Elite Plus">SkyTeam Elite Plus</option>
         </optgroup>
         <optgroup label="Oneworld">
-          <option>Oneworld Ruby</option>
-          <option>Oneworld Sapphire</option>
-          <option>Oneworld Emerald</option>
+          <option value="Ruby">Oneworld Ruby</option>
+          <option value="Sapphire">Oneworld Sapphire</option>
+          <option value="Emerald">Oneworld Emerald</option>
         </optgroup>
       </select>
     </div>
