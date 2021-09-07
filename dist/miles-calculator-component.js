@@ -59,7 +59,7 @@ export default class extends BaseComponent {
       build.collected = totals[id].rdm[0];
       build.statusmiles = totals[id].qm[0] > 1 ? totals[id].qm[0] : 0;
 
-      if (program.translations.en.rdm == "Award Miles" && program.translations.en.qm == "Tier Miles" && build.statusmiles == build.collected) {
+      if (build.statusmiles == build.collected) {
         build.rdmname = "miles";
       }
 
