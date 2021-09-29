@@ -7,33 +7,134 @@ export default class extends BaseComponent {
   constructor() {
     super();
     this.$template = template;
-    this.$program = "BA";
+    this.$program;
+    this.$alliance;
+  }
+
+  async getPrograms() {
+    let response;
+    if (this.$alliance.length > 3) {
+      response = await fetch(
+        "https://mileage.travel-dealz.eu/api/airline_programs?include=airlines&filter[has_qualification]=true&filter[alliance]=" +
+          this.$alliance
+      )
+        .then((response) => response.json())
+        .then((data) =>
+          data.reduce((programs, item) => {
+            programs[item.code] = item;
+            return programs;
+          }, {})
+        )
+        .then((programs) => (this.$programs = programs));
+    } else {
+      response = await fetch(
+        "https://mileage.travel-dealz.eu/api/airline_programs?include=airlines&filter[has_qualification]=true&filter[code]=" +
+          this.$alliance
+      )
+        .then((response) => response.json())
+        .then((data) =>
+          data.reduce((programs, item) => {
+            programs[item.code] = item;
+            return programs;
+          }, {})
+        )
+        .then((programs) => (this.$programs = programs));
+    }
+    return await response;
+  }
+
+  async buildOptions() {
+    this.progs = await this.getPrograms();
+    let progs = this.progs;
+    this.el_program = this.querySelector('[name="program"]');
+    for (const programm of Object.entries(this.progs)) {
+      let el_option = document.createElement("option");
+      el_option.value = programm[0];
+      el_option.innerHTML = programm[1].name;
+      this.el_program.appendChild(el_option);
+    }
+
+    var tmpAry = new Array();
+    for (var i = 0; i < this.el_program.options.length; i++) {
+      tmpAry[i] = new Array();
+      tmpAry[i][0] = this.el_program.options[i].text;
+      tmpAry[i][1] = this.el_program.options[i].value;
+    }
+    tmpAry.sort();
+    while (this.el_program.options.length > 0) {
+      this.el_program.options[0] = null;
+    }
+    for (var i = 0; i < tmpAry.length; i++) {
+      var op = new Option(tmpAry[i][0], tmpAry[i][1]);
+      this.el_program.options[i] = op;
+    }
+
+    for (const option of this.el_program) {
+      if (option.value == this.$program) {
+        option.selected = true;
+      }
+    }
+
+    let el_tier = this.querySelector('[name="status"]');
+    for (const programm of Object.entries(progs)) {
+      if (this.$program === programm[0]) {
+        programm[1].translations.en.tiers.forEach((status, index) => {
+          let el_option = document.createElement("option");
+          el_option.value = index;
+          el_option.innerHTML = status;
+          el_tier.appendChild(el_option);
+        });
+      }
+    }
+    let change = this;
+    this.querySelector('[name="program"]').addEventListener(
+      "change",
+      function (e) {
+        el_tier.options.length = 0;
+        for (const programm of Object.entries(progs)) {
+          if (e.target.value === programm[0]) {
+            programm[1].translations.en.tiers.forEach((status, index) => {
+              let el_option = document.createElement("option");
+              el_option.value = index;
+              el_option.innerHTML = status;
+              el_tier.appendChild(el_option);
+            });
+          }
+        }
+        change.update_table();
+      }
+    );
+
+    this.querySelector('[name="status"]').addEventListener(
+      "change",
+      (event) => {
+        this.update_table();
+      }
+    );
+
+    this.$program = this.querySelector('[name="program"]');
+    this.el_status = this.querySelector('[name="status"]');
+  }
+
+  update_table() {
+    if (this.$value != undefined) {
+      this.display(this.$value, this.$totals);
+    }
   }
 
   connectedCallback() {
     super.connectedCallback();
+
     this.$program = this.hasAttribute("program")
       ? this.getAttribute("program")
       : "BA";
-    this.$points_label = this.hasAttribute("points_label")
-      ? this.getAttribute("points_label")
-      : null;
-    this.$awardmiles_label = this.hasAttribute("awardmiles_label")
-      ? this.getAttribute("awardmiles_label")
-      : null;
-    this.$status_labels = this.hasAttribute("status_labels")
-      ? this.getAttribute("status_labels").split(",")
-      : ["None", "Silver", "Gold", "Platinum"];
-
-    this.el_status = this.querySelector('[name="status"]');
-    this.$status_labels.forEach((status, index) => {
-      let el_option = document.createElement("option");
-      el_option.value = index;
-      el_option.innerHTML = status;
-      this.el_status.appendChild(el_option);
-    });
+    this.$alliance = this.hasAttribute("alliance")
+      ? this.getAttribute("alliance")
+      : "";
+    this.buildOptions();
   }
 
+  /*
   async query(itineraries) {
     //for (var i = 0; i < itineraries.length; i++) {
     //  if (i > 0) {
@@ -57,7 +158,7 @@ export default class extends BaseComponent {
 
     fetch(
       "https://mileage.travel-dealz.eu/api/calculate/mileage?programs=" +
-        this.$program,
+        this.$program.value,
       {
         method: "POST",
         headers: {
@@ -73,14 +174,23 @@ export default class extends BaseComponent {
     //   this.el_error.innerHTML = `Error: ${error.toString()}`;
     //   this.el_error.classList.remove('hidden');
     // });
-  }
+  }*/
 
   display({ value: data, airlines, airports }, totals) {
+    this.$value = { value: data, airlines, airports };
+    console.log(this.$value);
+
+    this.$totals = totals;
+
     super.display();
     this.el_list.innerHTML = "";
     let totalqm = 0;
     let totalrm = 0;
     let el_thead = document.createElement("thead");
+    this.rm_label = this.progs[this.$program.value].translations.en.rdm;
+    this.qm_label = this.progs[this.$program.value].translations.en.qm;
+    console.log(this.rm_label);
+    console.log(this.qm_label);
     el_thead.innerHTML = translate(
       /*html*/ `
       <tr>
@@ -88,10 +198,10 @@ export default class extends BaseComponent {
         <th class="text-center">__(Route)</th>
         <th class="text-center">__(Bookingclass)</th>
         <th class="text-right">${
-          this.$awardmiles_label ? this.$awardmiles_label : "__(Award Miles)"
+          this.rm_label ? this.rm_label : "__(Award Miles)"
         }</th>
         <th class="text-right">${
-          this.$points_label ? this.$points_label : "__(Points)"
+          this.qm_label ? this.qm_label : "__(Status Miles)"
         }</th>
       </tr>
     `,
@@ -108,9 +218,14 @@ export default class extends BaseComponent {
     };
 
     this.$segments.forEach((segment, index) => {
-      const earning = data[index].value.totals.find(
-        (item) => item.id === this.$program
+      let earning = data[index].value.totals.find(
+        (item) => item.id == this.$program.value
       );
+      console.log(earning);
+
+      if (earning == undefined) {
+        earning = { id: this.$program.value, qm: [0, 0], rdm: [0, 0] };
+      }
 
       let rd_status_key = status_key;
       status_key > earning.rdm.length - 1
