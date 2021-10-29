@@ -187,8 +187,10 @@ export default class extends BaseComponent {
     let totalqm = 0;
     let totalrm = 0;
     let el_thead = document.createElement("thead");
-    this.rm_label = this.progs[this.$program.value].translations.en.rdm;
-    this.qm_label = this.progs[this.$program.value].translations.en.qm;
+    this.rm_label =
+      this.progs[this.$program.value].translations[this.$locale].rdm;
+    this.qm_label =
+      this.progs[this.$program.value].translations[this.$locale].qm;
     console.log(this.rm_label);
     console.log(this.qm_label);
     el_thead.innerHTML = translate(
@@ -196,7 +198,7 @@ export default class extends BaseComponent {
       <tr>
         <th></th>
         <th class="text-center">__(Route)</th>
-        <th class="text-center">__(Bookingclass)</th>
+        <th class="text-center">__(Booking Class)</th>
         <th class="text-right">${
           this.rm_label ? this.rm_label : "__(Award Miles)"
         }</th>
