@@ -149,6 +149,9 @@ export default class extends HTMLElement {
     if (wtc_data.success == false) {
       throw Error(wtc_data.errorMessage);
     }
+    if (td_data.success == false) {
+      throw Error(td_data.errorMessage);
+    }
     let response = {
       ...wtc_data,
       ...td_data,
