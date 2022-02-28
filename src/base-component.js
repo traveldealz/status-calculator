@@ -16,6 +16,7 @@ export default class extends HTMLElement {
       ? navigator.language
       : "en";
     this.$locale = this.$locale.split("-")[0];
+    this.$locale = translations[this.$locale] ? this.$locale : "en";
 
     this.$currency = this.hasAttribute("currency")
       ? this.getAttribute("currency")
