@@ -9,6 +9,7 @@ export default class extends BaseComponent {
     this.$template = template;
     this.$program;
     this.$alliance;
+    this.$locale != ("en" || "de") ? (this.$locale = "en") : {};
   }
 
   async getPrograms() {
@@ -44,6 +45,7 @@ export default class extends BaseComponent {
   }
 
   async buildOptions() {
+    this.$locale != ("en" || "de") ? (this.$locale = "en") : {};
     this.progs = await this.getPrograms();
     let progs = this.progs;
     this.el_program = this.querySelector('[name="program"]');
@@ -207,7 +209,9 @@ export default class extends BaseComponent {
         }</th>
       </tr>
     `,
-      translations[this.$locale] ? translations[this.$locale] : []
+      translations[this.$locale]
+        ? translations[this.$locale]
+        : translations["en"]
     );
     this.el_list.appendChild(el_thead);
 
@@ -306,7 +310,9 @@ export default class extends BaseComponent {
             : `${earning.qm ? earning.qm[qm_status_key]?.toLocaleString() : 0}`
         }</td>
         `,
-        translations[this.$locale] ? translations[this.$locale] : []
+        translations[this.$locale]
+          ? translations[this.$locale]
+          : translations["en"]
       );
       this.el_list.appendChild(el);
     });
@@ -320,7 +326,9 @@ export default class extends BaseComponent {
         <th class="text-right">${totalqm.toLocaleString()}</th>
       </tr>
     `,
-      translations[this.$locale] ? translations[this.$locale] : []
+      translations[this.$locale]
+        ? translations[this.$locale]
+        : translations["en"]
     );
     this.el_list.appendChild(el_foot);
   }

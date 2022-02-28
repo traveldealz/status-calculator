@@ -18,7 +18,10 @@ export default class extends BaseComponent {
       ? (this.template = this.innerHTML)
       : */ this.innerHTML = translate(
       this.$template,
-      translations[this.$locale] ? translations[this.$locale] : []
+      translations[this.$locale]
+        ? translations[this.$locale]
+        : translations["en"],
+      this.$locale != ("en" || "de") ? (this.$locale = "en") : {}
     );
   }
 
@@ -86,7 +89,9 @@ export default class extends BaseComponent {
 
         el.innerHTML = translate(
           text,
-          translations[this.$locale] ? translations[this.$locale] : []
+          translations[this.$locale]
+            ? translations[this.$locale]
+            : translations["en"]
         );
         this.el_list.appendChild(el);
       });

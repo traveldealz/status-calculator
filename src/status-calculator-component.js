@@ -10,9 +10,11 @@ export default class extends BaseComponent {
     this.$template = template;
     this.$status = "Star Alliance Gold";
     this.$whitelist = [];
+    this.$locale != ("en" || "de") ? (this.$locale = "en") : {};
   }
 
   connectedCallback() {
+    this.$locale != ("en" || "de") ? (this.$locale = "en") : {};
     super.connectedCallback();
     var selectedStatus = this.hasAttribute("status")
       ? this.getAttribute("status")
@@ -47,6 +49,7 @@ export default class extends BaseComponent {
 
   display({ value: data, programs, airports }, totals) {
     super.display();
+    this.$locale != ("en" || "de") ? (this.$locale = "en") : {};
 
     this.el_list.innerHTML = "";
 
