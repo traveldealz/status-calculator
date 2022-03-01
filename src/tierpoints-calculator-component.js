@@ -183,7 +183,9 @@ export default class extends BaseComponent {
     this.$totals = totals;
 
     super.display();
-    this.$locale !== ("en" && "de" && "es") ? (this.$locale = "en") : {};
+    this.$locale !== "en" && this.$locale !== "de" && this.$locale !== "es"
+      ? (this.$locale = "en")
+      : {};
 
     this.el_list.innerHTML = "";
     let totalqm = 0;

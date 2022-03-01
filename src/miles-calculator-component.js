@@ -40,7 +40,9 @@ export default class extends BaseComponent {
 
   display({ value: data, programs, airports }, totals) {
     super.display();
-    this.$locale !== ("en" && "de" && "es") ? (this.$locale = "en") : {};
+    this.$locale !== "en" && this.$locale !== "de" && this.$locale !== "es"
+      ? (this.$locale = "en")
+      : {};
 
     this.el_list.innerHTML = "";
 
