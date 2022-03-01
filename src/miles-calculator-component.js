@@ -20,8 +20,7 @@ export default class extends BaseComponent {
       this.$template,
       translations[this.$locale]
         ? translations[this.$locale]
-        : translations["en"],
-      this.$locale != ("en" || "de") ? (this.$locale = "en") : {}
+        : translations["en"]
     );
   }
 
@@ -41,6 +40,7 @@ export default class extends BaseComponent {
 
   display({ value: data, programs, airports }, totals) {
     super.display();
+    this.$locale !== ("en" && "de" && "es") ? (this.$locale = "en") : {};
 
     this.el_list.innerHTML = "";
 
