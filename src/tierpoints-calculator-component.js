@@ -9,7 +9,6 @@ export default class extends BaseComponent {
     this.$template = template;
     this.$program;
     this.$alliance;
-    this.$locale != ("en" || "de") ? (this.$locale = "en") : {};
   }
 
   async getPrograms() {
@@ -45,7 +44,6 @@ export default class extends BaseComponent {
   }
 
   async buildOptions() {
-    this.$locale != ("en" || "de") ? (this.$locale = "en") : {};
     this.progs = await this.getPrograms();
     let progs = this.progs;
     this.el_program = this.querySelector('[name="program"]');
@@ -185,6 +183,8 @@ export default class extends BaseComponent {
     this.$totals = totals;
 
     super.display();
+    this.$locale !== ("en" && "de" && "es") ? (this.$locale = "en") : {};
+
     this.el_list.innerHTML = "";
     let totalqm = 0;
     let totalrm = 0;
