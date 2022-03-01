@@ -16,7 +16,7 @@ export default class extends BaseComponent {
     /*this.innerHTML
       ? (this.template = this.innerHTML)
       : */
-    this.innerHTML = translate(this.$template, translations[this.$locale] ? translations[this.$locale] : []);
+    this.innerHTML = translate(this.$template, translations[this.$locale] ? translations[this.$locale] : translations["en"]);
   }
 
   calculate() {
@@ -34,6 +34,7 @@ export default class extends BaseComponent {
     airports
   }, totals) {
     super.display();
+    this.$locale !== ("en" && "de" && "es") ? this.$locale = "en" : {};
     this.el_list.innerHTML = "";
     Object.keys(totals).map(id => {
       const program = this.$programs[id];
@@ -70,7 +71,7 @@ export default class extends BaseComponent {
         ${item.collected.toLocaleString()} __(${item.rdmname}) 
         ${item.statusmiles != item.collected && item.statusmiles > 1 ? " + " + item.statusmiles.toLocaleString() + " " + item.qmname : ""} __(on) ${item.programname} </div>
         `;
-      el.innerHTML = translate(text, translations[this.$locale] ? translations[this.$locale] : []);
+      el.innerHTML = translate(text, translations[this.$locale] ? translations[this.$locale] : translations["en"]);
       this.el_list.appendChild(el);
     });
   }

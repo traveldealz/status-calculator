@@ -169,6 +169,7 @@ export default class extends BaseComponent {
     console.log(this.$value);
     this.$totals = totals;
     super.display();
+    this.$locale !== ("en" && "de" && "es") ? this.$locale = "en" : {};
     this.el_list.innerHTML = "";
     let totalqm = 0;
     let totalrm = 0;
@@ -187,7 +188,7 @@ export default class extends BaseComponent {
         <th class="text-right">${this.rm_label ? this.rm_label : "__(Award Miles)"}</th>
         <th class="text-right">${this.qm_label ? this.qm_label : "__(Status Miles)"}</th>
       </tr>
-    `, translations[this.$locale] ? translations[this.$locale] : []);
+    `, translations[this.$locale] ? translations[this.$locale] : translations["en"]);
     this.el_list.appendChild(el_thead);
     const status_key = this.el_status.value;
     const cabinclass = {
@@ -245,7 +246,7 @@ export default class extends BaseComponent {
         </td>
         <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning.rdm ? earning.rdm[rd_status_key]?.toLocaleString() : "-"}`}</td>
         <td class="text-right">${false === data[index].success ? data[index].errorMessage : `${earning.qm ? earning.qm[qm_status_key]?.toLocaleString() : 0}`}</td>
-        `, translations[this.$locale] ? translations[this.$locale] : []);
+        `, translations[this.$locale] ? translations[this.$locale] : translations["en"]);
       this.el_list.appendChild(el);
     });
     let el_foot = document.createElement("tfoot");
@@ -257,7 +258,7 @@ export default class extends BaseComponent {
         <th class="text-right">${totalrm.toLocaleString()}</th>
         <th class="text-right">${totalqm.toLocaleString()}</th>
       </tr>
-    `, translations[this.$locale] ? translations[this.$locale] : []);
+    `, translations[this.$locale] ? translations[this.$locale] : translations["en"]);
     this.el_list.appendChild(el_foot);
   }
 

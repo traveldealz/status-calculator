@@ -39,6 +39,11 @@ export default class extends BaseComponent {
     airports
   }, totals) {
     super.display();
+
+    if (this.$locale !== ("en" && "de" && "es")) {
+      this.$locale = "en";
+    }
+
     this.el_list.innerHTML = "";
     Object.keys(totals).map(id => {
       const program = this.$programs[id];
