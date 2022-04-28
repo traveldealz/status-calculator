@@ -7,7 +7,9 @@ export default /*html*/ `
   </style>
   <form>
     <label for="route">__(Routings)</label>
-    <textarea id="route" name="route" class="w-full my-1" rows="2">LH:P:HAM-FRA-EZE</textarea>
+    <autocomplete-airports>
+      <textarea id="route" name="route" class="w-full my-1" rows="2">LH:P:HAM-FRA-EZE</textarea>
+    </autocomplete-airports>
     <small></small>
     <p><small>__(See instructions on) <a href="__(https://travel-dealz.eu/tools/miles-calculator)" target="_blank">__(mileage calculator)</a> </small> </p>
     <div class="my-3">

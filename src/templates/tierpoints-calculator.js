@@ -16,8 +16,10 @@ export default /*html*/ `
   </style>
   <form>
     <label for="route">__(Routings)</label>
-    <textarea id="route" name="route" class="w-full my-1" rows="3">AF:L:FRA-AMS-FRA
+    <autocomplete-airports>
+      <textarea id="route" name="route" class="w-full my-1" rows="3">AF:L:FRA-AMS-FRA
 AF:X:ATL-CDG-ATL</textarea>
+    </autocomplete-airports>
     <small></small>
     <div class="my-3">
       <label for="program">__(Program)</label>
