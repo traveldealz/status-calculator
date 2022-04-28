@@ -6,7 +6,9 @@ export default /*html*/ `
   </style>
   <form>
     <label for="route">__(Routings)</label>
-    <textarea name="route" class="w-full my-1" rows="8">LH:A:FRA-HKG-MUC</textarea>
+    <autocomplete-airports>
+      <textarea name="route" class="w-full my-1" rows="8">LH:A:FRA-HKG-MUC</textarea>
+    </autocomplete-airports>
     <small></small>
     <div class="my-3">
       <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
