@@ -1,6 +1,6 @@
 {
-  "name": "@wcd/traveldealz.status-calculator",
-  "version": "0.1",
+  "name": "@traveldealz/status-calculator",
+  "version": "1.0.1",
   "description": "",
   "license": "ISC",
   "type": "module",
