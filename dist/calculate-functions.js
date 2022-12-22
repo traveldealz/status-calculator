@@ -15,6 +15,23 @@ export default {
       return acc;
     }
   }, 0),
+  countMilesLHM: ({
+    data,
+    program,
+    segments
+  }) => data.reduce((acc, itinerary) => {
+    let mileage = itinerary.value?.totals?.find(item => program.code === item.id);
+
+    if (!mileage) {
+      return [acc[0], acc[1] + 1];
+    }
+
+    if (["EN", "OS", "SN", "OU", "EW", "LO", "LH", "LG", "LX", "4Y"].includes(segments[acc[1]].carrier)) {
+      return [acc[0] + mileage.qm[0], acc[1] + 1];
+    } else {
+      return [acc[0], acc[1] + 1];
+    }
+  }, [0, 0])[0],
   getmqd: ({
     data,
     program

@@ -3,7 +3,9 @@ export default
 `
   <form>
     <label for="route">__(Routings)</label>
-    <textarea id="route" name="route" class="w-full my-1" rows="8">LH:A:FRA-HKG-MUC</textarea>
+    <autocomplete-airports>
+      <textarea id="route" name="route" class="w-full my-1" rows="8">LH:A:FRA-HKG-MUC</textarea>
+    </autocomplete-airports>
     <small></small>
     <div class="my-3">
       <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
