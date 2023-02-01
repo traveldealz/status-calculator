@@ -58,10 +58,14 @@ export default {
       if (!item) {
         return miles;
       }
-      if (50000 < miles) return miles + item.rdm[1];
-      else if (80000 < miles) return miles + item.rdm[2];
-      else if (100000 < miles) return miles + item.rdm[3];
-      else return miles + item.rdm[0];
+      if (item.rdm) {
+        if (50000 < miles) return miles + item.rdm[1];
+        else if (80000 < miles) return miles + item.rdm[2];
+        else if (100000 < miles) return miles + item.rdm[3];
+        else return miles + item.rdm[0];
+      } else {
+        return miles;
+      }
     }, 0),
 
   countAMDLMiles: ({ data, segments }) =>
@@ -112,14 +116,18 @@ export default {
       if (!item) {
         return miles;
       }
-      if (20000 < miles) {
-        return miles + item.rdm[1];
-      } else if (50000 < miles) {
-        return miles + item.rdm[2];
-      } else if (80000 < miles) {
-        return miles + item.rdm[3];
+      if (item.rdm) {
+        if (20000 < miles) {
+          return miles + item.rdm[1];
+        } else if (50000 < miles) {
+          return miles + item.rdm[2];
+        } else if (80000 < miles) {
+          return miles + item.rdm[3];
+        } else {
+          return miles + item.rdm[0];
+        }
       } else {
-        return miles + item.rdm[0];
+        return miles;
       }
     }, 0),
 
@@ -137,7 +145,11 @@ export default {
       if (!item) {
         return miles;
       }
-      return 35000 < miles ? miles + item.qm[1] : miles + item.qm[0];
+      if (item.qm) {
+        return 35000 < miles ? miles + item.qm[1] : miles + item.qm[0];
+      } else {
+        return miles;
+      }
     }, 0);
   },
   calcLHM2021: ({ data, segments }) =>
@@ -196,7 +208,11 @@ export default {
       if (!item) {
         return miles;
       }
-      return 25000 < miles ? miles + item.rdm[1] : miles + item.rdm[0];
+      if (item.rdm) {
+        return 25000 < miles ? miles + item.rdm[1] : miles + item.rdm[0];
+      } else {
+        return miles;
+      }
     }, 0);
   },
 
@@ -297,14 +313,18 @@ export default {
       if (!item) {
         return miles;
       }
-      if (15000 < miles) {
-        return miles + item.rdm[1];
-      } else if (30000 < miles) {
-        return miles + item.rdm[2];
-      } else if (50000 < miles) {
-        return miles + item.rdm[3];
+      if (item.rdm) {
+        if (15000 < miles) {
+          return miles + item.rdm[1];
+        } else if (30000 < miles) {
+          return miles + item.rdm[2];
+        } else if (50000 < miles) {
+          return miles + item.rdm[3];
+        } else {
+          return miles + item.rdm[0];
+        }
       } else {
-        return miles + item.rdm[0];
+        return miles;
       }
     }, 0),
 };
