@@ -232,7 +232,11 @@ export default class extends BaseComponent {
       console.log(earning);
 
       if (earning == undefined) {
-        earning = { id: this.$program.value, qm: [0, 0], rdm: [0, 0] };
+        earning = {
+          id: this.$program.value,
+          qm: [null, null],
+          rdm: [null, null],
+        };
       }
 
       let rd_status_key = status_key;
@@ -303,13 +307,19 @@ export default class extends BaseComponent {
           false === data[index].success
             ? data[index].errorMessage
             : `${
-                earning.rdm ? earning.rdm[rd_status_key]?.toLocaleString() : "-"
+                earning.rdm && earning.rdm[rd_status_key]
+                  ? earning.rdm[rd_status_key]?.toLocaleString()
+                  : "-"
               }`
         }</td>
         <td class="text-right">${
           false === data[index].success
             ? data[index].errorMessage
-            : `${earning.qm ? earning.qm[qm_status_key]?.toLocaleString() : 0}`
+            : `${
+                earning.qm && earning.qm[qm_status_key]
+                  ? earning.qm[qm_status_key]?.toLocaleString()
+                  : "-"
+              }`
         }</td>
         `,
         translations[this.$locale]
