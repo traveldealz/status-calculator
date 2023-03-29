@@ -29,6 +29,7 @@ export default class extends HTMLElement {
     this.el_button = this.querySelector('button[type="submit"]');
     this.el_loading = this.querySelector(".loading");
     this.el_error = this.querySelector(".error");
+    this.el_flightmap_container = this.querySelector('[name="flightmap"]');
 
     this.querySelector("form").addEventListener("submit", (event) => {
       event.preventDefault();

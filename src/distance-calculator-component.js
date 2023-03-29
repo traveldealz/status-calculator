@@ -27,6 +27,7 @@ export default class extends BaseComponent {
       <div class="loading hidden">__(Loading & calculating...)</div>
       <div class="error hidden"></div>
       <table id="list" name="list"></table>
+      <div name="flightmap"></div>
       <p><small>__(Data provided by Travel-Dealz.eu)</small></p>
     `;
   }
@@ -45,9 +46,12 @@ export default class extends BaseComponent {
   }
 
   calculate() {
-    let itineraries = this.el_route.value
-      .trim()
-      .replace("\n", ",")
+    let routes = this.el_route.value.trim().replace("\n", ",");
+    this.el_flightmap_container.innerHTML = "";
+    let el_flightmap = document.createElement("flight-map");
+    el_flightmap.setAttribute("routes", routes);
+    this.el_flightmap_container.appendChild(el_flightmap);
+    let itineraries = routes
       .split(",")
       .map((value) => {
         let route = value.split("-").map((v) => v.trim());
