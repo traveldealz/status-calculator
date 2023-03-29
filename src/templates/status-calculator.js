@@ -12,7 +12,7 @@ export default /*html*/ `
     <small></small>
     <div class="my-3">
       <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
-      <label for="status">__(Status)</label>
+      <label for="statusselector">__(Status)</label>
       <select id="statusselector" name="status">
         <optgroup label="Star Alliance">
           <option>Star Alliance Silver</option>
