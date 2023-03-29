@@ -73,8 +73,8 @@ export default class extends BaseComponent {
       })
       .flat();
     this.$segments = itineraries.flat();
-    // TODO
-    // this.update_hash();
+
+    this.update_hash();
     this.query(this.$segments);
   }
 
