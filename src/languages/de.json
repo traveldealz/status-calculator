@@ -28,12 +28,17 @@
   "From": "Von",
   "To": "Nach",
   "Award Miles": "Prämienmeilen",
+  "Miles": "Meilen",
+  "Unit": "Einheit",
+  "Return": "hin und zurück",
   "Current status": "Jetziger Status",
   "on": "bei",
   "Status Miles": "Statusmeilen",
   "Tier Miles": "Statusmeilen",
   "See instructions on": "Mehr Infos zur Eingabe von Flügen unter",
   "mileage calculator": "Meilenrechner",
+  "distance calculator": "Entfernungsrechner",
   "travel-dealz.eu": "travel-dealz.de",
-  "https://travel-dealz.eu/tools/miles-calculator": "https://www.travel-dealz.de/tools/meilenrechner"
+  "https://travel-dealz.eu/tools/miles-calculator": "https://www.travel-dealz.de/tools/meilenrechner",
+  "https://travel-dealz.eu/tools/distance-calculator": "https://travel-dealz.de/tools/entfernungsrechner"
 }
