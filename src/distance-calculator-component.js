@@ -3,8 +3,6 @@ import translate from "./helper/translate";
 import translations from "./translations";
 
 export default class extends BaseComponent {
-  $unit = "mile";
-
   constructor() {
     super();
     this.$template = /*html*/ `
@@ -24,11 +22,6 @@ export default class extends BaseComponent {
         <p><small>__(See instructions on) <a href="__(https://travel-dealz.eu/tools/distance-calculator)" target="_blank">__(distance calculator)</a> </small> </p>
         <div class="my-3">
           <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
-          <label for="unitselect">__(Unit)</label>
-          <select id="unitselect" name="unit">
-            <option value="mile">__(Miles)</option>
-            <option value="kilometer">__(Kilometer)</option>
-          </select>
         </div>
       </form>
       <div class="loading hidden">__(Loading & calculating...)</div>
@@ -40,7 +33,6 @@ export default class extends BaseComponent {
 
   connectedCallback() {
     super.connectedCallback();
-    this.el_unit = this.querySelector('[name="unit"]');
   }
 
   renderTemplate() {
@@ -53,7 +45,6 @@ export default class extends BaseComponent {
   }
 
   calculate() {
-    this.$unit = this.el_unit.value;
     let itineraries = this.el_route.value
       .trim()
       .replace("\n", ",")
@@ -117,7 +108,8 @@ export default class extends BaseComponent {
       <tr>
         <th class="text-center">__(From)</th>
         <th class="text-center">__(To)</th>
-        <th class="text-right">__(Distance)</th>
+        <th class="text-right">__(Miles)</th>
+        <th class="text-right">__(Kilometer)</th>
       </tr>
     `,
       translations[this.$locale]
@@ -131,9 +123,7 @@ export default class extends BaseComponent {
     this.$segments.forEach((segment, index) => {
       let el = document.createElement("tr");
       let route = routes[segment.origin + "-" + segment.destination] ?? null;
-      total += route.miles
-        ? route.miles * ("kilometer" === this.$unit ? 1.60934 : 1)
-        : 0;
+      total += route.miles ?? 0;
       el.innerHTML = translate(
         /*html*/ `
         <td class="text-center">
@@ -148,17 +138,28 @@ export default class extends BaseComponent {
             route.to_airport ? route.to_airport.location : ""
           }</div>
         </td>
-        <td class="text-right">${
-          route.miles
-            ? (
-                route.miles * ("kilometer" === this.$unit ? 1.60934 : 1)
-              ).toLocaleString(undefined, {
-                style: "unit",
-                unit: this.$unit,
-                maximumFractionDigits: 0,
-              })
-            : "-"
-        }</td>
+        <td class="text-right">
+          ${
+            route.miles
+              ? route.miles.toLocaleString(undefined, {
+                  style: "unit",
+                  unit: "mile",
+                  maximumFractionDigits: 0,
+                })
+              : "-"
+          }
+        </td>
+        <td class="text-right">
+          ${
+            route.miles
+              ? (route.miles * 1.60934).toLocaleString(undefined, {
+                  style: "unit",
+                  unit: "kilometer",
+                  maximumFractionDigits: 0,
+                })
+              : "-"
+          }
+        </td>
         `,
         translations[this.$locale] ? translations[this.$locale] : []
       );
@@ -169,19 +170,36 @@ export default class extends BaseComponent {
       /*html*/ `
       <tr>
         <th class="text-right" colspan="2">__(Total)</th>
-        <th class="text-right">${total.toLocaleString(undefined, {
-          style: "unit",
-          unit: this.$unit,
-          maximumFractionDigits: 0,
-        })}</th>
+        <th class="text-right">
+          ${total.toLocaleString(undefined, {
+            style: "unit",
+            unit: "mile",
+            maximumFractionDigits: 0,
+          })}
+        </th>
+        <th class="text-right">
+          ${(total * 1.60934).toLocaleString(undefined, {
+            style: "unit",
+            unit: "kilometer",
+            maximumFractionDigits: 0,
+          })}
+        </th>
       </tr>
       <tr class="text-sm">
         <th class="text-right" colspan="2">__(Return)</th>
         <th class="text-right">${(total * 2).toLocaleString(undefined, {
           style: "unit",
-          unit: this.$unit,
+          unit: "mile",
           maximumFractionDigits: 0,
         })}</th>
+        <th class="text-right">${(total * 2 * 1.60934).toLocaleString(
+          undefined,
+          {
+            style: "unit",
+            unit: "kilometer",
+            maximumFractionDigits: 0,
+          }
+        )}</th>
       </tr>
     `,
       translations[this.$locale] ? translations[this.$locale] : []
