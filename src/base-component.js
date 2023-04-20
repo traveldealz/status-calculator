@@ -70,6 +70,7 @@ export default class extends HTMLElement {
           parts[4] && parts[4].match(/[A-Z]{3}|[$€£]/u)
             ? parts[4].match(/[A-Z]{3}|[$€£]/u)[0]
             : this.$currency;
+        let fareName = parts[5];
 
         return route.reduce((accumulator, airport, index, route) => {
           if (0 === index || !accumulator) {
@@ -83,6 +84,7 @@ export default class extends HTMLElement {
             ticketer,
             price: index == 1 ? parseInt(price) : 0,
             currency,
+            fareName,
           });
           return accumulator;
         }, []);
@@ -114,6 +116,7 @@ export default class extends HTMLElement {
           ...(itinerary.price || itinerary.price === 0
             ? { baseFare: itinerary.price, currency: itinerary.currency }
             : {}),
+          ...(itinerary.fareName ? { fareName: itinerary.fareName } : {}),
           segments: [itinerary],
         };
       })
