@@ -130,19 +130,11 @@ export default class extends HTMLElement {
         },
         body,
       }),
-      fetch("https://www.wheretocredit.com/api/2.0/calculate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body,
-      }),
     ])
       .then((responses) =>
         Promise.all(responses.map((response) => response.json()))
       )
-      .then((responses) => this.merge_responses(responses[0], responses[1]))
-      .then((response) => this.calculate_totals(response))
+      .then((responses) => this.calculate_totals(responses[0]))
       .catch((error) => {
         this.loading_end();
         this.el_error.innerHTML = `${error.toString()}`;
@@ -150,89 +142,8 @@ export default class extends HTMLElement {
       });
   }
 
-  merge_responses(td_data, wtc_data) {
-    if (wtc_data.success == false) {
-      throw Error(wtc_data.errorMessage);
-    }
-    if (td_data.success == false) {
-      throw Error(td_data.errorMessage);
-    }
-    let response = {
-      ...wtc_data,
-      ...td_data,
-    };
-
-    if (false === wtc_data.success && true === response.success) {
-      response.success = wtc_data.success;
-      response.errorMessage = wtc_data.errorMessage;
-    }
-
-    response.value = response.value.map((segment, segmentIndex) => {
-      segment = {
-        ...segment,
-
-        value: {
-          ...(wtc_data.value[segmentIndex].value
-            ? wtc_data.value[segmentIndex].value
-            : {}),
-          ...segment.value,
-        },
-      };
-
-      if (
-        false === wtc_data.value[segmentIndex].success &&
-        true === segment.success
-      ) {
-        segment.success = wtc_data.value[segmentIndex].success;
-        segment.errorMessage = wtc_data.value[segmentIndex].errorMessage;
-      }
-
-      let ids = [
-        ...new Set([
-          ...segment.value.totals.map((program) => program.id),
-          ...(wtc_data.value[segmentIndex].value
-            ? wtc_data.value[segmentIndex].value.totals.map(
-                (program) => program.id
-              )
-            : []),
-        ]),
-      ];
-
-      let totals = ids.map((program) => {
-        let wtc_total = wtc_data.value[segmentIndex].value?.totals?.find(
-          (item) => program === item.id
-        )
-          ? wtc_data.value[segmentIndex].value.totals.find(
-              (item) => program === item.id
-            )
-          : {};
-        return {
-          ...wtc_total,
-          qm: wtc_total.rdm ? wtc_total.rdm : [0, 0, 0, 0],
-          qd: wtc_total.qd ? wtc_total.qd : 0,
-          ...segment.value.totals.find((item) => program === item.id),
-        };
-      });
-
-      segment.value.totals = totals;
-
-      return segment;
-    });
-
-    if (false === response.success) {
-      throw response.errorMessage;
-    }
-
-    response.value.forEach((item) => {
-      if (false === item.success) {
-        throw item.errorMessage;
-      }
-    });
-
-    return response;
-  }
-
   calculate_totals(response) {
+    console.log(response);
     let totals = response.value.reduce((totals, itinerary) => {
       itinerary.value.totals.forEach((item) => {
         item.rdm

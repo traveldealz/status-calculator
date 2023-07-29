@@ -34,5 +34,5 @@ AF:X:ATL-CDG-ATL</textarea>
   <div class="loading hidden">__(Loading & calculating...)</div>
   <div class="error hidden"></div>
   <table id="list" name="list"></table>
-  <p><small>__(Data provided by Travel-Dealz.eu)</small></p>
+  <p><small>__(Data provided by Travel-Dealz.com)</small></p>
 `;

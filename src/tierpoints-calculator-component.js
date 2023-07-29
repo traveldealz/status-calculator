@@ -9,6 +9,7 @@ export default class extends BaseComponent {
     this.$template = template;
     this.$program;
     this.$alliance;
+    this.$status;
   }
 
   async getPrograms() {
@@ -75,15 +76,20 @@ export default class extends BaseComponent {
       }
     }
 
-    let el_tier = this.querySelector('[name="status"]');
+    this.el_tier = this.querySelector('[name="status"]');
     for (const programm of Object.entries(progs)) {
       if (this.$program === programm[0]) {
         programm[1].translations.en.tiers.forEach((status, index) => {
           let el_option = document.createElement("option");
           el_option.value = index;
           el_option.innerHTML = status;
-          el_tier.appendChild(el_option);
+          this.el_tier.appendChild(el_option);
         });
+      }
+    }
+    for (const option of this.el_tier.options) {
+      if (option.value == this.$status) {
+        option.selected = true;
       }
     }
     let change = this;
@@ -125,12 +131,10 @@ export default class extends BaseComponent {
   connectedCallback() {
     super.connectedCallback();
 
-    this.$program = this.hasAttribute("program")
-      ? this.getAttribute("program")
-      : "BA";
-    this.$alliance = this.hasAttribute("alliance")
-      ? this.getAttribute("alliance")
-      : "";
+    const urlSearchParams = new URLSearchParams(window.location.hash.slice(1));
+    this.$program = urlSearchParams.get("program") || "BA";
+    this.$alliance = urlSearchParams.get("alliance") || "";
+    this.$status = urlSearchParams.get("status") || 0;
     this.buildOptions();
   }
 
