@@ -76,18 +76,18 @@ export default class extends BaseComponent {
       }
     }
 
-    this.el_tier = this.querySelector('[name="status"]');
+    let el_tier = this.querySelector('[name="status"]');
     for (const programm of Object.entries(progs)) {
       if (this.$program === programm[0]) {
         programm[1].translations.en.tiers.forEach((status, index) => {
           let el_option = document.createElement("option");
           el_option.value = index;
           el_option.innerHTML = status;
-          this.el_tier.appendChild(el_option);
+          el_tier.appendChild(el_option);
         });
       }
     }
-    for (const option of this.el_tier.options) {
+    for (const option of el_tier.options) {
       if (option.value == this.$status) {
         option.selected = true;
       }
