@@ -16,7 +16,7 @@ export default class extends BaseComponent {
     let response;
     if (this.$alliance.length > 3) {
       response = await fetch(
-        "https://mileage.travel-dealz.eu/api/airline_programs?include=airlines&filter[has_qualification]=true&filter[alliance]=" +
+        "https://miles.travel-dealz.com/api/airline_programs?include=airlines&filter[has_qualification]=true&filter[alliance]=" +
           this.$alliance
       )
         .then((response) => response.json())
@@ -29,7 +29,7 @@ export default class extends BaseComponent {
         .then((programs) => (this.$programs = programs));
     } else {
       response = await fetch(
-        "https://mileage.travel-dealz.eu/api/airline_programs?include=airlines&filter[has_qualification]=true&filter[code]=" +
+        "https://miles.travel-dealz.com/api/airline_programs?include=airlines&filter[has_qualification]=true&filter[code]=" +
           this.$alliance
       )
         .then((response) => response.json())
@@ -161,7 +161,7 @@ export default class extends BaseComponent {
     );
 
     fetch(
-      "https://mileage.travel-dealz.eu/api/calculate/mileage?programs=" +
+      "https://miles.travel-dealz.com/api/calculate/mileage?programs=" +
         this.$program.value,
       {
         method: "POST",

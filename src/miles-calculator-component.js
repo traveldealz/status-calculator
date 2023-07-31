@@ -26,7 +26,7 @@ export default class extends BaseComponent {
 
   calculate() {
     this.$programs = [];
-    fetch("https://mileage.travel-dealz.eu/api/airline_programs")
+    fetch("https://miles.travel-dealz.com/api/airline_programs")
       .then((response) => response.json())
       .then((data) =>
         data.reduce((programs, item) => {
