@@ -19,5 +19,5 @@ export default /*html*/ `
   <div class="loading hidden">__(Loading & calculating...)</div>
   <div class="error hidden"></div>
   <ul class="col-2" id="list"></ul>
-  <p><small>__(Data provided by) <a href="https://www.wheretocredit.com" target="_blank">wheretocredit.com</a> __(and) Travel-Dealz.de</small> </p>
+  <p><small>__(Data provided by) <a href="https://miles.travel-dealz.com" target="_blank">miles.travel-dealz.com</a></small></p>
 `;

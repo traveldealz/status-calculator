@@ -9,6 +9,7 @@ export default class extends BaseComponent {
     this.$template = template;
     this.$program;
     this.$alliance;
+    this.$status;
   }
 
   async getPrograms() {
@@ -86,6 +87,11 @@ export default class extends BaseComponent {
         });
       }
     }
+    for (const option of el_tier.options) {
+      if (option.value == this.$status) {
+        option.selected = true;
+      }
+    }
     let change = this;
     this.querySelector('[name="program"]').addEventListener(
       "change",
@@ -125,12 +131,10 @@ export default class extends BaseComponent {
   connectedCallback() {
     super.connectedCallback();
 
-    this.$program = this.hasAttribute("program")
-      ? this.getAttribute("program")
-      : "BA";
-    this.$alliance = this.hasAttribute("alliance")
-      ? this.getAttribute("alliance")
-      : "";
+    const urlSearchParams = new URLSearchParams(window.location.hash.slice(1));
+    this.$program = urlSearchParams.get("program") || "BA";
+    this.$alliance = urlSearchParams.get("alliance") || "";
+    this.$status = urlSearchParams.get("status") || 0;
     this.buildOptions();
   }
 
