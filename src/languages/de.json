@@ -3,7 +3,7 @@
   "Calculate": "Berechnen",
   "Data provided by": "Daten bereitgestellt von",
   "Award Miles Data provided by": "Prämienmeilen-Daten bereitgestellt von",
-  "Data provided by Travel-Dealz.eu": "Daten bereitgestellt von Travel-Dealz.de",
+  "Data provided by Travel-Dealz.com": "Daten bereitgestellt von Travel-Dealz.com",
   "miles": "Meilen",
   "segment": "Segment",
   "segments": "Segmenten",
@@ -38,7 +38,7 @@
   "See instructions on": "Mehr Infos zur Eingabe von Flügen unter",
   "mileage calculator": "Meilenrechner",
   "distance calculator": "Entfernungsrechner",
-  "travel-dealz.eu": "travel-dealz.de",
-  "https://travel-dealz.eu/tools/miles-calculator": "https://www.travel-dealz.de/tools/meilenrechner",
-  "https://travel-dealz.eu/tools/distance-calculator": "https://travel-dealz.de/tools/entfernungsrechner"
+  "travel-dealz.com": "travel-dealz.de",
+  "https://travel-dealz.com/tools/miles-calculator": "https://travel-dealz.de/tools/meilenrechner",
+  "https://travel-dealz.com/tools/distance-calculator": "https://travel-dealz.de/tools/entfernungsrechner"
 }

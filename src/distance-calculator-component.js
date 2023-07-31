@@ -19,7 +19,7 @@ export default class extends BaseComponent {
         </autocomplete-airports>
         <small></small>
         
-        <p><small>__(See instructions on) <a href="__(https://travel-dealz.eu/tools/distance-calculator)" target="_blank">__(distance calculator)</a> </small> </p>
+        <p><small>__(See instructions on) <a href="__(https://travel-dealz.com/tools/distance-calculator)" target="_blank">__(distance calculator)</a> </small> </p>
         <div class="my-3">
           <button class="mr-3 px-3 py-1 bg-brand hover:bg-gray-darker text-white" type="submit">__(Calculate)</button>
         </div>
@@ -28,7 +28,7 @@ export default class extends BaseComponent {
       <div class="error hidden"></div>
       <table id="list" name="list"></table>
       <div name="flightmap"></div>
-      <p><small>__(Data provided by Travel-Dealz.eu)</small></p>
+      <p><small>__(Data provided by Travel-Dealz.com)</small></p>
     `;
   }
 
@@ -81,7 +81,7 @@ export default class extends BaseComponent {
       .toString();
 
     fetch(
-      "https://data.travel-dealz.eu/api/routes?locale=" +
+      "https://miles.travel-dealz.com/api/routes?locale=" +
         this.$locale +
         "&filter[route]=" +
         filter_route +
