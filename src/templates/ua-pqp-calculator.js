@@ -21,5 +21,5 @@ export default /*html*/ `
   <div class="loading hidden">__(Loading & calculating...)</div>
   <div class="error hidden"></div>
   <table id="list"></table>
-  <p><small>__(Data provided by) <a href="https://www.travel-dealz.com" target="_blank">travel-dealz.com</a></small></p>
+  <p><small>__(Data provided by) <a href="https://miles.travel-dealz.com" target="_blank">miles.travel-dealz.com</a></small></p>
 `;
