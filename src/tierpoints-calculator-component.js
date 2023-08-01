@@ -130,11 +130,25 @@ export default class extends BaseComponent {
 
   connectedCallback() {
     super.connectedCallback();
-
     const urlSearchParams = new URLSearchParams(window.location.hash.slice(1));
-    this.$program = urlSearchParams.get("program") || "BA";
-    this.$alliance = urlSearchParams.get("alliance") || "";
-    this.$status = urlSearchParams.get("status") || 0;
+    this.$program =
+      urlSearchParams.get("program") != null
+        ? urlSearchParams.get("program")
+        : this.hasAttribute("program")
+        ? this.getAttribute("program")
+        : "BA";
+    this.$alliance =
+      urlSearchParams.get("alliance") != null
+        ? urlSearchParams.get("alliance")
+        : this.hasAttribute("alliance")
+        ? this.getAttribute("alliance")
+        : "";
+    this.$status =
+      urlSearchParams.get("status") != null
+        ? urlSearchParams.get("status")
+        : this.hasAttribute("status")
+        ? this.getAttribute("status")
+        : 0;
     this.buildOptions();
   }
 
