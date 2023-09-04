@@ -264,7 +264,7 @@ export default class extends BaseComponent {
         <td class="align-top text-vertical text-center text-xs text-grey-dark font-light">${data[
           index
         ].value.distance?.toLocaleString()} __(miles)</td>
-        <td class="text-center">
+        <th class="text-center" scope="row">
           <div class="grid grid-cols-1 md:grid-cols-2">
             <div>
               <div><code>${segment.origin}</code></div>
@@ -279,8 +279,8 @@ export default class extends BaseComponent {
               }</div>
             </div>
           </div>
-        </td>
-        <td class="text-center">
+        </th>
+        <th class="text-center" scope="row">
           <div class="grid grid-cols-1 md:grid-cols-2">
             <div>
               <div><code>${segment.carrier}</code></div>
@@ -314,7 +314,7 @@ export default class extends BaseComponent {
         }</div>
             </div>
           </div>
-        </td>
+        </th>
         <td class="text-right">${
           false === data[index].success
             ? data[index].errorMessage
