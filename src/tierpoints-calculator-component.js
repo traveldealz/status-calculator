@@ -289,7 +289,13 @@ export default class extends BaseComponent {
               }</div>
             </div>
             <div>
-              <div><code>${segment.bookingClass}</code></div>
+              <div><code><a href="https://miles.travel-dealz.com/${
+                segment.carrier
+              }/${
+          segment.bookingClass
+        }" target="_blank" title="__(Show earnings for) ${segment.carrier} ${
+          segment.bookingClass
+        }">${segment.bookingClass}</a></code></div>
               <div class="text-xs text-grey-dark font-light">${
                 airlines[segment.carrier]?.bookingclass
                   ? cabinclass[
