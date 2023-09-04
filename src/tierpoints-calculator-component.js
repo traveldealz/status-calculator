@@ -14,33 +14,21 @@ export default class extends BaseComponent {
 
   async getPrograms() {
     let response;
-    if (this.$alliance.length > 3) {
-      response = await fetch(
-        "https://miles.travel-dealz.com/api/airline_programs?include=airlines&filter[has_qualification]=true&filter[alliance]=" +
-          this.$alliance
+    response = await fetch(
+      `https://miles.travel-dealz.com/api/airline_programs?include=airlines&filter[has_qualification]=true${
+        3 < this.$alliance.length
+          ? `&filter[alliance]=${this.$alliance}`
+          : `&filter[code]=${this.$alliance}`
+      }`
+    )
+      .then((response) => response.json())
+      .then((data) =>
+        data.reduce((programs, item) => {
+          programs[item.code] = item;
+          return programs;
+        }, {})
       )
-        .then((response) => response.json())
-        .then((data) =>
-          data.reduce((programs, item) => {
-            programs[item.code] = item;
-            return programs;
-          }, {})
-        )
-        .then((programs) => (this.$programs = programs));
-    } else {
-      response = await fetch(
-        "https://miles.travel-dealz.com/api/airline_programs?include=airlines&filter[has_qualification]=true&filter[code]=" +
-          this.$alliance
-      )
-        .then((response) => response.json())
-        .then((data) =>
-          data.reduce((programs, item) => {
-            programs[item.code] = item;
-            return programs;
-          }, {})
-        )
-        .then((programs) => (this.$programs = programs));
-    }
+      .then((programs) => (this.$programs = programs));
     return await response;
   }
 
@@ -301,7 +289,13 @@ export default class extends BaseComponent {
               }</div>
             </div>
             <div>
-              <div><code>${segment.bookingClass}</code></div>
+              <div><code><a href="https://miles.travel-dealz.com/${
+                segment.carrier
+              }/${
+          segment.bookingClass
+        }" target="_blank" title="__(Show earnings for) ${segment.carrier} ${
+          segment.bookingClass
+        }">${segment.bookingClass}</a></code></div>
               <div class="text-xs text-grey-dark font-light">${
                 airlines[segment.carrier]?.bookingclass
                   ? cabinclass[
