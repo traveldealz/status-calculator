@@ -143,7 +143,6 @@ export default class extends HTMLElement {
   }
 
   calculate_totals(response) {
-    console.log(response);
     let totals = response.value.reduce((totals, itinerary) => {
       itinerary.value.totals.forEach((item) => {
         item.rdm
@@ -152,7 +151,9 @@ export default class extends HTMLElement {
                   rdm: totals[item.id].rdm
                     ? totals[item.id].rdm.map((m, i) => m + item.rdm[i])
                     : item.rdm,
-                  qm: totals[item.id].qm.map((m, i) => m + item.qm[i]),
+                  qm: totals[item.id].qm
+                    ? totals[item.id].qm.map((m, i) => m + item.qm[i])
+                    : item.qm,
                   qd: totals[item.id].qd + item.qd,
                 }
               : {

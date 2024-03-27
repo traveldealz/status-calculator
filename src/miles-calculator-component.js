@@ -67,7 +67,8 @@ export default class extends BaseComponent {
           build.programname = program.name;
         }
         build.collected = totals[id].rdm[0];
-        build.statusmiles = totals[id].qm[0] > 1 ? totals[id].qm[0] : 0;
+        build.statusmiles =
+          totals[id].qm && totals[id].qm[0] > 1 ? totals[id].qm[0] : 0;
         if (build.statusmiles == build.collected) {
           build.rdmname = "miles";
         }
