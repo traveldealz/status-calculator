@@ -235,15 +235,13 @@ export default class extends BaseComponent {
       let earning = data[index].value.totals.find(
         (item) => item.id == this.$program.value
       );
-      console.log(earning);
 
-      if (earning == undefined) {
-        earning = {
-          id: this.$program.value,
-          qm: [null, null],
-          rdm: [null, null],
-        };
-      }
+      earning = {
+        id: this.$program.value,
+        qm: [null, null],
+        rdm: [null, null],
+        ...earning,
+      };
 
       let rd_status_key = status_key;
       status_key > earning.rdm.length - 1
