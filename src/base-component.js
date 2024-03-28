@@ -153,7 +153,7 @@ export default class extends HTMLElement {
                     : item.rdm,
                   qm: totals[item.id].qm
                     ? totals[item.id].qm.map((m, i) => m + item.qm[i])
-                    : item.qm,
+                    : item.qm ?? 0,
                   qd: totals[item.id].qd + item.qd,
                 }
               : {
