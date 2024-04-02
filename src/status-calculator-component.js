@@ -76,7 +76,7 @@ export default class extends BaseComponent {
               switch (qualification.type) {
                 case "miles":
                   build.needed = qualification.number;
-                  build.collected = totals[id].qm[0];
+                  build.collected = totals[id].qm ? totals[id].qm[0] : 0;
                   build.progress = build.collected / build.needed;
                   qualification.milesName
                     ? (build.milesname = qualification.milesName[this.$locale])
@@ -105,7 +105,7 @@ export default class extends BaseComponent {
                 switch (qualification.secType) {
                   case "miles":
                     build.secNeeded = qualification.secNumber;
-                    build.secCollected = totals[id].qm[0];
+                    build.secCollected = totals[id].qm ? totals[id].qm[0] : 0;
                     build.secProgress = build.secCollected / build.secNeeded;
                     build.secNote = qualification.secNote;
                     qualification.secmilesName
