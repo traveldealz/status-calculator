@@ -28,7 +28,7 @@ export default {
             segments[acc[1]].carrier
           )
         ) {
-          return [acc[0] + mileage.qm[0], acc[1] + 1];
+          return [acc[0] + (mileage.qm ? mileage.qm[0] : 0), acc[1] + 1];
         } else {
           return [acc[0], acc[1] + 1];
         }
@@ -102,7 +102,7 @@ export default {
           return [acc[0], acc[1] + 1];
         }
         if ([program.code].includes(segments[acc[1]].carrier)) {
-          return [acc[0] + mileage.qm[0], acc[1] + 1];
+          return [acc[0] + (mileage.qm ? mileage.qm[0] : 0), acc[1] + 1];
         } else {
           return [acc[0], acc[1] + 1];
         }
@@ -167,12 +167,12 @@ export default {
           )
         ) {
           return acc[0] > 35000
-            ? [acc[0] + mileage.qm[1] * 2, acc[1] + 1]
-            : [acc[0] + mileage.qm[0] * 2, acc[1] + 1];
+            ? [acc[0] + (mileage.qm ? mileage.qm[1] : 0) * 2, acc[1] + 1]
+            : [acc[0] + (mileage.qm ? mileage.qm[0] : 0) * 2, acc[1] + 1];
         } else {
           return acc[0] > 35000
-            ? [acc[0] + mileage.qm[1], acc[1] + 1]
-            : [acc[0] + mileage.qm[0], acc[1] + 1];
+            ? [acc[0] + (mileage.qm ? mileage.qm[1] : 0), acc[1] + 1]
+            : [acc[0] + (mileage.qm ? mileage.qm[0] : 0), acc[1] + 1];
         }
       },
       [0, 0]
