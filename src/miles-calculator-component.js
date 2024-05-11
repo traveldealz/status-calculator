@@ -84,7 +84,7 @@ export default class extends BaseComponent {
         let text = `
         ${
           item.collected > 0
-            ? item.collected.toLocaleString()
+            ? item.collected.toLocaleString() + " "
             : "Spending based "
         }__(${item.rdmname})  
         ${
