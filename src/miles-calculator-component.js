@@ -76,13 +76,17 @@ export default class extends BaseComponent {
         return build;
       })
       .flat()
-      .filter((build) => 1 < build.collected)
+      .filter((build) => 1 < build.collected || 1 < build.statusmiles)
       .flat()
       .sort((a, b) => b.collected - a.collected)
       .forEach((item) => {
         let el = document.createElement("li");
         let text = `
-        ${item.collected.toLocaleString()} __(${item.rdmname}) 
+        ${
+          item.collected > 0
+            ? item.collected.toLocaleString()
+            : "Spending based "
+        }__(${item.rdmname})  
         ${
           item.statusmiles != item.collected && item.statusmiles > 1
             ? " + " + item.statusmiles.toLocaleString() + " " + item.qmname
