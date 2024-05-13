@@ -85,7 +85,7 @@ export default class extends BaseComponent {
         ${
           item.collected > 0
             ? item.collected.toLocaleString() + " "
-            : "Spending based "
+            : "__(Spending-based)" + " "
         }__(${item.rdmname})  
         ${
           item.statusmiles != item.collected && item.statusmiles > 1
