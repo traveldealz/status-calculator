@@ -46,6 +46,7 @@ export default class extends BaseComponent {
   }
 
   calculate() {
+    this.el_route.value = this.el_route.value.toUpperCase();
     let routes = this.el_route.value.trim().replace("\n", ",");
     this.el_flightmap_container.innerHTML = "";
     let el_flightmap = document.createElement("flight-map");
