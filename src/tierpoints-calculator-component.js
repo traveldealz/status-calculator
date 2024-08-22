@@ -15,7 +15,7 @@ export default class extends BaseComponent {
   async getPrograms() {
     let response;
     response = await fetch(
-      `https://miles.travel-dealz.com/api/airline_programs?include=airlines&filter[has_qualification]=true${
+      `https://miles.travel-dealz.com/api/airline_programs?include=airlines&filter[active]=true${
         3 < this.$alliance.length
           ? `&filter[alliance]=${this.$alliance}`
           : `&filter[code]=${this.$alliance}`
