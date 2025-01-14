@@ -47,13 +47,20 @@ export default class extends BaseComponent {
 
   calculate() {
     this.el_route.value = this.el_route.value.toUpperCase();
-    let routes = this.el_route.value.trim().replace("\n", ",");
+    console.log(this.el_route.value);
+    let routes = this.el_route.value
+      .trim()
+      .replace(/\n+/g, ",")
+      .replace(/\s+/g, "");
+    console.log(routes);
     this.el_flightmap_container.innerHTML = "";
     let el_flightmap = document.createElement("flight-map");
     el_flightmap.setAttribute("routes", routes);
     this.el_flightmap_container.appendChild(el_flightmap);
     let itineraries = routes
       .split(",")
+      .map((value) => value.trim())
+      .filter((value) => value)
       .map((value) => {
         let route = value.split("-").map((v) => v.trim());
         return route.reduce((accumulator, airport, index, route) => {
@@ -128,24 +135,26 @@ export default class extends BaseComponent {
     this.$segments.forEach((segment, index) => {
       let el = document.createElement("tr");
       let route = routes[segment.origin + "-" + segment.destination] ?? null;
-      total += route.miles ?? 0;
+      if (route) {
+        total += route.miles ?? 0;
+      }
       el.innerHTML = translate(
         /*html*/ `
         <td class="text-center">
           <div><code>${segment.origin}</code></div>
           <div class="text-xs text-grey-dark font-light">${
-            route.from_airport ? route.from_airport.location : ""
+            route?.from_airport ? route.from_airport.location : ""
           }</div>
         </td>
         <td class="text-center">
           <div><code>${segment.destination}</code></div>
           <div class="text-xs text-grey-dark font-light">${
-            route.to_airport ? route.to_airport.location : ""
+            route?.to_airport ? route.to_airport.location : ""
           }</div>
         </td>
         <td class="text-right">
           ${
-            route.miles
+            route?.miles
               ? route.miles.toLocaleString(undefined, {
                   style: "unit",
                   unit: "mile",
@@ -156,7 +165,7 @@ export default class extends BaseComponent {
         </td>
         <td class="text-right">
           ${
-            route.miles
+            route?.miles
               ? (route.miles * 1.60934).toLocaleString(undefined, {
                   style: "unit",
                   unit: "kilometer",
