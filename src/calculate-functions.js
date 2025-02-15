@@ -24,9 +24,19 @@ export default {
           return [acc[0], acc[1] + 1];
         }
         if (
-          ["EN", "OS", "SN", "OU", "EW", "LO", "LH", "LG", "LX", "4Y"].includes(
-            segments[acc[1]].carrier
-          )
+          [
+            "EN",
+            "OS",
+            "SN",
+            "OU",
+            "EW",
+            "LO",
+            "LH",
+            "LG",
+            "LX",
+            "4Y",
+            "AZ",
+          ].includes(segments[acc[1]].carrier)
         ) {
           return [acc[0] + (mileage.qm ? mileage.qm[0] : 0), acc[1] + 1];
         } else {
@@ -162,9 +172,19 @@ export default {
           return [acc[0], acc[1] + 1];
         }
         if (
-          ["EN", "OS", "SN", "OU", "EW", "LO", "LH", "LG", "LX", "WK"].includes(
-            segments[acc[1]].carrier
-          )
+          [
+            "EN",
+            "OS",
+            "SN",
+            "OU",
+            "EW",
+            "LO",
+            "LH",
+            "LG",
+            "LX",
+            "WK",
+            "AZ",
+          ].includes(segments[acc[1]].carrier)
         ) {
           return acc[0] > 35000
             ? [acc[0] + (mileage.qm ? mileage.qm[1] : 0) * 2, acc[1] + 1]
