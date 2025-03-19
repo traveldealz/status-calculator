@@ -76,13 +76,14 @@ export default class extends HTMLElement {
           if (0 === index || !accumulator) {
             return accumulator;
           }
+          console.log(parseInt(parseInt(price) / (route.length - 1)));
           accumulator.push({
             carrier,
             bookingClass,
             origin: route[index - 1],
             destination: airport,
             ticketer,
-            price: index == 1 ? parseInt(price) : 0,
+            price: parseInt(parseInt(price) / (route.length - 1)),
             currency,
             fareName,
           });
