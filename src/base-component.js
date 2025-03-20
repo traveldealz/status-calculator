@@ -82,7 +82,7 @@ export default class extends HTMLElement {
             origin: route[index - 1],
             destination: airport,
             ticketer,
-            price: index == 1 ? parseInt(price) : 0,
+            price: parseInt(parseInt(price) / (route.length - 1)),
             currency,
             fareName,
           });
