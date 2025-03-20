@@ -76,7 +76,6 @@ export default class extends HTMLElement {
           if (0 === index || !accumulator) {
             return accumulator;
           }
-          console.log(parseInt(parseInt(price) / (route.length - 1)));
           accumulator.push({
             carrier,
             bookingClass,
