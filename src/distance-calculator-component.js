@@ -89,7 +89,7 @@ export default class extends BaseComponent {
       .toString();
 
     fetch(
-      "https://miles.travel-dealz.com/api/routes?locale=" +
+      "https://data.travel-dealz.net/api/routes?locale=" +
         this.$locale +
         "&filter[route]=" +
         filter_route +

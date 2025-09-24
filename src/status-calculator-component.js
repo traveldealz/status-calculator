@@ -27,7 +27,7 @@ export default class extends BaseComponent {
       : [];
     this.$programs = [];
     fetch(
-      "https://miles.travel-dealz.com/api/airline_programs?include=airlines&filter[has_qualification]=true&fields[airline_programs]=code,name,alliance,qualification&fields[airlines]=iatacode,name,alliance,airline_program_code"
+      "https://data.travel-dealz.net/api/airline_programs?include=airlines&filter[has_qualification]=true&fields[airline_programs]=code,name,alliance,qualification&fields[airlines]=iatacode,name,alliance,airline_program_code"
     )
       .then((response) => response.json())
       .then((data) =>
