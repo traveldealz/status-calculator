@@ -15,7 +15,7 @@ export default class extends BaseComponent {
   async getPrograms() {
     let response;
     response = await fetch(
-      `https://miles.travel-dealz.com/api/airline_programs?include=airlines&filter[active]=true${
+      `https://data.travel-dealz.net/api/airline_programs?include=airlines&filter[active]=true${
         3 < this.$alliance.length
           ? `&filter[alliance]=${this.$alliance}`
           : `&filter[code]=${this.$alliance}`
@@ -163,7 +163,7 @@ export default class extends BaseComponent {
     );
 
     fetch(
-      "https://miles.travel-dealz.com/api/calculate/mileage?programs=" +
+      "https://data.travel-dealz.net/api/calculate/mileage?programs=" +
         this.$program.value,
       {
         method: "POST",
@@ -287,7 +287,7 @@ export default class extends BaseComponent {
               }</div>
             </div>
             <div>
-              <div><code><a href="https://miles.travel-dealz.com/${
+              <div><code><a href="https://data.travel-dealz.net/${
                 segment.carrier
               }/${
           segment.bookingClass
