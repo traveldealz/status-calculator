@@ -34,5 +34,5 @@ AF:X:ATL-CDG-ATL</textarea>
   <div class="loading hidden">__(Loading & calculating...)</div>
   <div class="error hidden"></div>
   <table id="list" name="list"></table>
-  <p><small>__(Data provided by) <a href="https://miles.travel-dealz.com" target="_blank">miles.travel-dealz.com</a></small></p>
+  <p><small>__(Data provided by) <a href="https://wheretocredit.com" target="_blank">wheretocredit.com</a></small></p>
 `;
