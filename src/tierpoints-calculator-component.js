@@ -15,7 +15,7 @@ export default class extends BaseComponent {
   async getPrograms() {
     let response;
     response = await fetch(
-      `https://data.travel-dealz.net/api/airline_programs?include=airlines&filter[active]=true${
+      `https://wheretocredit.com/api/airline_programs?include=airlines&filter[active]=true${
         3 < this.$alliance.length
           ? `&filter[alliance]=${this.$alliance}`
           : `&filter[code]=${this.$alliance}`
@@ -163,7 +163,7 @@ export default class extends BaseComponent {
     );
 
     fetch(
-      "https://data.travel-dealz.net/api/calculate/mileage?programs=" +
+      "https://wheretocredit.com/api/calculate/mileage?programs=" +
         this.$program.value,
       {
         method: "POST",
@@ -287,7 +287,7 @@ export default class extends BaseComponent {
               }</div>
             </div>
             <div>
-              <div><code><a href="https://data.travel-dealz.net/${
+              <div><code><a href="https://wheretocredit.com/${
                 segment.carrier
               }/${
           segment.bookingClass

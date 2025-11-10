@@ -123,7 +123,7 @@ export default class extends HTMLElement {
     );
 
     Promise.all([
-      fetch("https://data.travel-dealz.net/api/calculate/mileage", {
+      fetch("https://wheretocredit.com/api/calculate/mileage", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

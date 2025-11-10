@@ -33,5 +33,5 @@ export default /*html*/ `
   <div class="loading hidden">__(Loading & calculating...)</div>
   <div class="error hidden"></div>
   <ol id="list"></ol>
-  <p><small>__(Data provided by) <a href="https://miles.travel-dealz.com" target="_blank">miles.travel-dealz.com</a></small></p>
+  <p><small>__(Data provided by) <a href="https://wheretocredit.com" target="_blank">wheretocredit.com</a></small></p>
 `;
