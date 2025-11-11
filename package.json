@@ -6,10 +6,10 @@
   "type": "module",
   "homepage": "{{ homepage }}",
   "scripts": {
-    "serve": "wcd-cli serve noBCrTZDCSPOWNT8rVxN --open"
+    "build": "esbuild src/index.js --bundle --outdir=dist $WATCH_FLAG",
+    "watch": "WATCH_FLAG=--watch npm run build"
   },
   "devDependencies": {
-    "wcd-cli": "latest"
-  },
-  "dependencies": {}
+    "esbuild": "0.27.0"
+  }
 }
