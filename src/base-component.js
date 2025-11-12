@@ -2,6 +2,19 @@ import template from "./templates/base";
 import translate from "./helper/translate";
 import translations from "./translations";
 
+const SYMBOL_TO_CURRENCY = {
+  $: "USD",
+  "€": "EUR",
+  "£": "GBP",
+};
+
+const normalizeCurrency = (value) => {
+  if (!value) {
+    return "";
+  }
+  return SYMBOL_TO_CURRENCY[value] || value.toUpperCase();
+};
+
 export default class extends HTMLElement {
   constructor() {
     super();
@@ -22,25 +35,63 @@ export default class extends HTMLElement {
       ? this.getAttribute("currency")
       : "EUR";
 
+    this.$translations = translations[this.$locale]
+      ? translations[this.$locale]
+      : [];
+
     this.renderTemplate();
 
     this.el_route = this.querySelector('[name="route"]');
+    this.el_route_builder = this.querySelector("route-builder");
+    this.el_route_textarea = this.querySelector("#route-textarea");
+    this.el_route_toggle = this.querySelector("#toggle-expert-mode");
     this.el_list = this.querySelector("#list");
     this.el_button = this.querySelector('button[type="submit"]');
     this.el_loading = this.querySelector(".loading");
     this.el_error = this.querySelector(".error");
     this.el_flightmap_container = this.querySelector('[name="flightmap"]');
 
+    if (this.el_route_builder?.setTranslations) {
+      this.el_route_builder.setTranslations(this.$translations);
+    }
+
     this.querySelector("form").addEventListener("submit", (event) => {
       event.preventDefault();
+      this.syncRouteValue();
       this.loading_start();
       this.calculate();
     });
 
     if (this.hasAttribute("route")) {
-      this.querySelector('[name="route"]').innerHTML = this.getAttribute(
-        "route"
-      ).replaceAll(",", "\n");
+      const defaultRoute = this.getAttribute("route").replaceAll(",", "\n");
+      if (this.el_route_builder) {
+        this.el_route_builder.setAttribute("value", defaultRoute);
+      }
+      if (this.el_route_textarea) {
+        this.el_route_textarea.value = defaultRoute;
+      }
+    }
+
+    if (this.el_route_builder) {
+      this.el_route_builder.addEventListener("route-builder-change", () => {
+        if (!this.el_route_toggle?.checked) {
+          this.syncRouteValue();
+        }
+      });
+    }
+
+    if (this.el_route_toggle) {
+      this.el_route_toggle.addEventListener("change", () => {
+        this.toggleRouteMode();
+      });
+    }
+
+    if (this.el_route_textarea) {
+      this.el_route_textarea.addEventListener("input", () => {
+        if (this.el_route_toggle?.checked) {
+          this.syncRouteValue();
+        }
+      });
     }
 
     if (location.hash) {
@@ -51,12 +102,15 @@ export default class extends HTMLElement {
   renderTemplate() {
     this.innerHTML = translate(
       this.$template,
-      translations[this.$locale] ? translations[this.$locale] : []
+      this.$translations
     );
   }
 
   calculate() {
-    let itineraries = this.el_route.value
+    const sourceValue = this.el_route_toggle?.checked
+      ? this.el_route_textarea?.value
+      : this.el_route_builder?.value || this.el_route?.value || "";
+    let itineraries = sourceValue
       .trim()
       .split("\n")
       .map((value) => {
@@ -64,13 +118,30 @@ export default class extends HTMLElement {
         let carrier = parts[0];
         let bookingClass = parts[1];
         let route = parts[2].split("-").map((v) => v.trim());
-        let ticketer = parts[3];
+        let ticketer = parts[3] ? parts[3].trim() : carrier;
         let price = parts[4];
+        const explicitCurrency =
+          parts[5] && /^[A-Z]{3}$/i.test(parts[5])
+            ? normalizeCurrency(parts[5])
+            : "";
+        let fareName = explicitCurrency ? parts[6] : parts[5];
         let currency =
-          parts[4] && parts[4].match(/[A-Z]{3}|[$€£]/u)
-            ? parts[4].match(/[A-Z]{3}|[$€£]/u)[0]
-            : this.$currency;
-        let fareName = parts[5];
+          explicitCurrency ||
+          (parts[4] && parts[4].match(/[A-Z]{3}|[$€£]/u)
+            ? normalizeCurrency(parts[4].match(/[A-Z]{3}|[$€£]/u)[0])
+            : this.$currency);
+
+        const legCount = route.length > 1 ? route.length - 1 : 0;
+        const priceValue = parseFloat(price);
+        const hasPrice =
+          price !== undefined &&
+          price !== null &&
+          price !== "" &&
+          !Number.isNaN(priceValue);
+        const perSegmentPrice =
+          hasPrice && legCount > 0
+            ? Math.floor(priceValue / legCount)
+            : undefined;
 
         return route.reduce((accumulator, airport, index, route) => {
           if (0 === index || !accumulator) {
@@ -82,7 +153,7 @@ export default class extends HTMLElement {
             origin: route[index - 1],
             destination: airport,
             ticketer,
-            price: parseInt(parseInt(price) / (route.length - 1)),
+            price: hasPrice ? perSegmentPrice : undefined,
             currency,
             fareName,
           });
@@ -207,5 +278,34 @@ export default class extends HTMLElement {
         (parameters[el.name] = "checkbox" === el.type ? el.checked : el.value)
     );
     location.hash = new URLSearchParams(parameters).toString();
+  }
+
+  toggleRouteMode() {
+    const expertMode = this.el_route_toggle?.checked;
+    const builderSection = this.querySelector(".route-mode--builder");
+    const expertSection = this.querySelector(".route-mode--expert");
+
+    if (builderSection && expertSection) {
+      builderSection.classList.toggle("hidden", expertMode);
+      expertSection.classList.toggle("hidden", !expertMode);
+    }
+
+    if (expertMode && this.el_route_builder && this.el_route_textarea) {
+      this.el_route_textarea.value =
+        this.el_route_builder.value || this.el_route?.value || "";
+    } else if (!expertMode && this.el_route_builder && this.el_route_textarea) {
+      this.el_route_builder.value = this.el_route_textarea.value;
+    }
+  }
+
+  syncRouteValue() {
+    const expertMode = this.el_route_toggle?.checked;
+    const routeValue = expertMode
+      ? this.el_route_textarea?.value
+      : this.el_route_builder?.value;
+
+    if (this.el_route && typeof routeValue === "string") {
+      this.el_route.value = routeValue;
+    }
   }
 }

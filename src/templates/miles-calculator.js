@@ -1,15 +1,27 @@
-export default /*html*/ `
+const template = /*html*/ `
   <style>
   button[disabled] {
     background-color: gray;
   }
-  
+  .route-mode--expert.hidden,
+  .route-mode--builder.hidden {
+    display: none;
+  }
   </style>
   <form>
-    <label for="route">__(Routings)</label>
-    <autocomplete-airports>
-      <textarea id="route" name="route" class="w-full my-1" rows="2">LH:P:HAM-FRA-EZE</textarea>
-    </autocomplete-airports>
+    <label class="block font-semibold mb-1">__(Routings)</label>
+    <label class="flex items-center gap-3 mb-2 text-sm">
+      <input type="checkbox" class="form-switch" role="switch" id="toggle-expert-mode" />
+      <span>__(Expert mode)</span>
+    </label>
+    <div class="route-mode route-mode--builder">
+      <route-builder id="route-builder" value="LH:P:HAM-FRA-EZE"></route-builder>
+    </div>
+    <div class="route-mode route-mode--expert hidden">
+      <textarea id="route-textarea" class="w-full my-1" rows="4">LH:P:HAM-FRA-EZE</textarea>
+      <small class="block text-xs text-gray">__(Manual input: carrier:class:AAA-BBB-CCC)</small>
+    </div>
+    <input type="hidden" name="route" value="LH:P:HAM-FRA-EZE" />
     <small></small>
     <p><small>__(See instructions on) <a href="__(https://travel-dealz.com/tools/miles-calculator)" target="_blank">__(mileage calculator)</a> </small> </p>
     <div class="my-3">
@@ -21,3 +33,5 @@ export default /*html*/ `
   <ul class="col-2" id="list"></ul>
   <p><small>__(Data provided by) <a href="https://wheretocredit.com" target="_blank">wheretocredit.com</a></small></p>
 `;
+
+export default template;

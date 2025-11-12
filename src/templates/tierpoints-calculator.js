@@ -13,13 +13,28 @@ export default /*html*/ `
   .font-light {
     font-weight: 300;
   }
+  .route-mode--expert.hidden,
+  .route-mode--builder.hidden {
+    display: none;
+  }
   </style>
   <form>
     <label for="route">__(Routings)</label>
-    <autocomplete-airports>
-      <textarea id="route" name="route" class="w-full my-1" rows="3">AF:L:FRA-AMS-FRA
+    <label class="flex items-center gap-3 mb-2 text-sm">
+      <input type="checkbox" class="form-switch" role="switch" id="toggle-expert-mode" />
+      <span>__(Expert mode)</span>
+    </label>
+    <div class="route-mode route-mode--builder">
+      <route-builder id="route-builder" value="AF:L:FRA-AMS-FRA
+AF:X:ATL-CDG-ATL"></route-builder>
+    </div>
+    <div class="route-mode route-mode--expert hidden">
+      <textarea id="route-textarea" class="w-full my-1" rows="3">AF:L:FRA-AMS-FRA
 AF:X:ATL-CDG-ATL</textarea>
-    </autocomplete-airports>
+      <small class="block text-xs text-gray">__(Manual input: carrier:class:AAA-BBB-CCC)</small>
+    </div>
+    <input type="hidden" name="route" value="AF:L:FRA-AMS-FRA
+AF:X:ATL-CDG-ATL" />
     <small></small>
     <div class="my-3">
       <label for="program">__(Program)</label>

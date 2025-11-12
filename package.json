@@ -6,7 +6,7 @@
   "type": "module",
   "homepage": "{{ homepage }}",
   "scripts": {
-    "build": "esbuild src/index.js --bundle --outdir=dist $WATCH_FLAG",
+    "build": "esbuild src/index.js --bundle --outdir=dist --sourcemap $WATCH_FLAG",
     "watch": "WATCH_FLAG=--watch npm run build"
   },
   "devDependencies": {

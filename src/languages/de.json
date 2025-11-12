@@ -42,5 +42,20 @@
   "travel-dealz.com": "travel-dealz.de",
   "Show earnings for": "Zeige Gutschriften für",
   "https://travel-dealz.com/tools/miles-calculator": "https://travel-dealz.de/tools/meilenrechner",
-  "https://travel-dealz.com/tools/distance-calculator": "https://travel-dealz.de/tools/entfernungsrechner"
+  "https://travel-dealz.com/tools/distance-calculator": "https://travel-dealz.de/tools/entfernungsrechner",
+  "Mode": "Modus",
+  "Expert mode": "Expertenmodus",
+  "Manual input: carrier:class:AAA-BBB-CCC": "Manuelle Eingabe: Airline:Klasse:AAA-BBB-CCC",
+  "Select airline": "Fluggesellschaft wählen",
+  "Loading airlines…": "Fluggesellschaften werden geladen…",
+  "Booking class must be A-Z": "Buchungsklasse muss A-Z sein",
+  "Ticketing airline": "Ausstellende Airline",
+  "Same as airline": "Gleich wie Airline",
+  "Select ticketing airline": "Ausstellende Airline wählen",
+  "Flight price": "Flugpreis",
+  "Currency": "Währung",
+  "Add route": "Route hinzufügen",
+  "Remove route": "Route entfernen",
+  "Remove airport": "Flughafen entfernen",
+  "optional": "optional"
 }
