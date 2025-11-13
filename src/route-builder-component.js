@@ -680,7 +680,8 @@ export default class RouteBuilder extends HTMLElement {
       const el_input = document.createElement("input");
       el_input.type = "text";
       el_input.maxLength = 3;
-      el_input.placeholder = "ABC";
+      el_input.placeholder =
+        airportPlaceholders[airportIndex % airportPlaceholders.length] || "AAA";
       el_input.value = airport;
       el_input.dataset.field = "airport";
       el_input.dataset.routeIndex = `${routeIndex}`;
@@ -972,3 +973,7 @@ function formatAirlines(records = []) {
     .filter(Boolean)
     .sort((a, b) => a.name.localeCompare(b.name));
 }
+const airportPlaceholders = Array.from({ length: 26 }, (_, i) => {
+  const letter = String.fromCharCode(65 + i);
+  return `${letter}${letter}${letter}`;
+});

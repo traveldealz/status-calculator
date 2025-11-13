@@ -15,13 +15,13 @@ const template = /*html*/ `
       <span>__(Expert mode)</span>
     </label>
     <div class="route-mode route-mode--builder">
-      <route-builder id="route-builder" value="LH:P:HAM-FRA-EZE"></route-builder>
+      <route-builder id="route-builder"></route-builder>
     </div>
     <div class="route-mode route-mode--expert hidden">
-      <textarea id="route-textarea" class="w-full my-1" rows="4">LH:P:HAM-FRA-EZE</textarea>
+      <textarea id="route-textarea" class="w-full my-1" rows="4"></textarea>
       <small class="block text-xs text-gray">__(Manual input: carrier:class:AAA-BBB-CCC)</small>
     </div>
-    <input type="hidden" name="route" value="LH:P:HAM-FRA-EZE" />
+    <input type="hidden" name="route" value="" />
     <small></small>
     <p><small>__(See instructions on) <a href="__(https://travel-dealz.com/tools/miles-calculator)" target="_blank">__(mileage calculator)</a> </small> </p>
     <div class="my-3">

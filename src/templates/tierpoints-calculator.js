@@ -25,16 +25,13 @@ export default /*html*/ `
       <span>__(Expert mode)</span>
     </label>
     <div class="route-mode route-mode--builder">
-      <route-builder id="route-builder" value="AF:L:FRA-AMS-FRA
-AF:X:ATL-CDG-ATL"></route-builder>
+      <route-builder id="route-builder"></route-builder>
     </div>
     <div class="route-mode route-mode--expert hidden">
-      <textarea id="route-textarea" class="w-full my-1" rows="3">AF:L:FRA-AMS-FRA
-AF:X:ATL-CDG-ATL</textarea>
+      <textarea id="route-textarea" class="w-full my-1" rows="3"></textarea>
       <small class="block text-xs text-gray">__(Manual input: carrier:class:AAA-BBB-CCC)</small>
     </div>
-    <input type="hidden" name="route" value="AF:L:FRA-AMS-FRA
-AF:X:ATL-CDG-ATL" />
+    <input type="hidden" name="route" value="" />
     <small></small>
     <div class="my-3">
       <label for="program">__(Program)</label>
