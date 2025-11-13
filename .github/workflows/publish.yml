@@ -17,7 +17,7 @@ jobs:
     - name: Change name in package.json
       run: sed -i 's/wcd\/goaround\./traveldealz\//g' package.json
     - name: Update Version in package.json
-      run: npm version "${{ github.event.release.tag_name }}" --no-git-tag-version
+      run: npm version "${{ github.event.release.tag_name }}" --no-git-tag-version --allow-same-version
     - name: Publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
