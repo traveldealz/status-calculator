@@ -1,10 +1,11 @@
 {
   "name": "@traveldealz/status-calculator",
-  "version": "1.9.1",
-  "description": "",
-  "license": "ISC",
+  "version": "1.9.2",
   "type": "module",
-  "homepage": "{{ homepage }}",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "scripts": {
     "build": "esbuild src/index.js --bundle --outdir=dist --sourcemap $WATCH_FLAG",
     "watch": "WATCH_FLAG=--watch npm run build"
