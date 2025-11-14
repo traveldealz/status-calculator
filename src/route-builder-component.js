@@ -1,4 +1,4 @@
-import translate from "./helper/translate";
+import translate from "./helper/translate.js";
 
 const STYLE_ID = "route-builder-styles";
 

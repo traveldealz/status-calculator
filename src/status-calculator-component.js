@@ -1,8 +1,8 @@
-import BaseComponent from "./base-component";
-import translate from "./helper/translate";
-import translations from "./translations";
-import template from "./templates/status-calculator";
-import calculate from "./calculate-functions";
+import BaseComponent from "./base-component.js";
+import translate from "./helper/translate.js";
+import translations from "./translations.js";
+import template from "./templates/status-calculator.js";
+import calculate from "./calculate-functions.js";
 
 export default class extends BaseComponent {
   constructor() {

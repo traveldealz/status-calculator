@@ -1,7 +1,7 @@
-import BaseComponent from "./base-component";
-import translate from "./helper/translate";
-import translations from "./translations";
-import template from "./templates/tierpoints-calculator";
+import BaseComponent from "./base-component.js";
+import translate from "./helper/translate.js";
+import translations from "./translations.js";
+import template from "./templates/tierpoints-calculator.js";
 
 export default class extends BaseComponent {
   constructor() {

@@ -1,6 +1,6 @@
-import template from "./templates/base";
-import translate from "./helper/translate";
-import translations from "./translations";
+import template from "./templates/base.js";
+import translate from "./helper/translate.js";
+import translations from "./translations.js";
 
 const SYMBOL_TO_CURRENCY = {
   $: "USD",

@@ -1,9 +1,9 @@
-import StatusCalculator from "./status-calculator-component";
-import TierpointsCalculator from "./tierpoints-calculator-component";
-import UaPqpCalculator from "./ua-pqp-calculator-component";
-import MilesCalculator from "./miles-calculator-component";
-import DistanceCalculator from "./distance-calculator-component";
-import RouteBuilder from "./route-builder-component";
+import StatusCalculator from "./status-calculator-component.js";
+import TierpointsCalculator from "./tierpoints-calculator-component.js";
+import UaPqpCalculator from "./ua-pqp-calculator-component.js";
+import MilesCalculator from "./miles-calculator-component.js";
+import DistanceCalculator from "./distance-calculator-component.js";
+import RouteBuilder from "./route-builder-component.js";
 
 customElements.define("status-calculator", StatusCalculator);
 customElements.define("tierpoints-calculator", TierpointsCalculator);
