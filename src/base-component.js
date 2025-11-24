@@ -289,12 +289,16 @@ export default class extends HTMLElement {
   }
 
   update_hash() {
-    let parameters = {};
-    [...this.querySelectorAll("[name]")].forEach(
-      (el) =>
-        (parameters[el.name] = "checkbox" === el.type ? el.checked : el.value)
-    );
-    location.hash = new URLSearchParams(parameters).toString();
+    const routeValue = this.el_route?.value
+      ? this.el_route.value.replaceAll("\n", ",")
+      : "";
+
+    const params = new URLSearchParams();
+    if (routeValue) {
+      params.set("route", routeValue);
+    }
+
+    location.hash = params.toString();
   }
 
   toggleRouteMode() {
