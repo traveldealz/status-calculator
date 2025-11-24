@@ -91,6 +91,12 @@ const ensureStyles = () => {
       font-size: 0.95rem;
       text-transform: none;
     }
+    .route-builder__hint {
+      font-size: 0.82rem;
+      color: #6b7280;
+      display: block;
+      line-height: 1;
+    }
     .route-builder__segments {
       flex: 1 1 100%;
       display: flex;
@@ -170,6 +176,9 @@ const ensureStyles = () => {
       .route-builder__remove:hover,
       .route-builder__actions button:hover {
         background: #1f2937;
+      }
+      .route-builder__hint {
+        color: #9ca3af;
       }
     }
   `;
@@ -297,7 +306,7 @@ export default class RouteBuilder extends HTMLElement {
     this.el_actions.className = "route-builder__actions";
     const el_addRouteBtn = document.createElement("button");
     el_addRouteBtn.type = "button";
-    el_addRouteBtn.textContent = this.t("Add Route");
+    el_addRouteBtn.textContent = this.t("Add route");
     el_addRouteBtn.addEventListener("click", () => {
       this.routes.push(createEmptyRoute());
       this.ensureTrailingAirports(this.routes[this.routes.length - 1]);
@@ -540,7 +549,7 @@ export default class RouteBuilder extends HTMLElement {
     el_field.className = "route-builder__field";
 
     const el_label = document.createElement("span");
-    el_label.textContent = `${this.t("Ticketing airline")} (${this.t("optional")})`;
+    el_label.textContent = this.t("Ticketing airline");
     el_field.appendChild(el_label);
 
     const el_select = document.createElement("select");
@@ -582,6 +591,11 @@ export default class RouteBuilder extends HTMLElement {
     });
 
     el_field.appendChild(el_select);
+
+    const el_hint = document.createElement("span");
+    el_hint.className = "route-builder__hint";
+    el_hint.textContent = this.t("optional");
+    el_field.appendChild(el_hint);
     return el_field;
   }
 
@@ -590,7 +604,7 @@ export default class RouteBuilder extends HTMLElement {
     el_field.className = "route-builder__field";
 
     const el_label = document.createElement("span");
-    el_label.textContent = `${this.t("Flight price")} (${this.t("optional")})`;
+    el_label.textContent = this.t("Flight price");
     el_field.appendChild(el_label);
 
     const el_input = document.createElement("input");
@@ -609,6 +623,11 @@ export default class RouteBuilder extends HTMLElement {
     });
 
     el_field.appendChild(el_input);
+
+    const el_hint = document.createElement("span");
+    el_hint.className = "route-builder__hint";
+    el_hint.textContent = this.t("optional");
+    el_field.appendChild(el_hint);
     return el_field;
   }
 
@@ -617,7 +636,7 @@ export default class RouteBuilder extends HTMLElement {
     el_field.className = "route-builder__field";
 
     const el_label = document.createElement("span");
-    el_label.textContent = `${this.t("Currency")} (${this.t("optional")})`;
+    el_label.textContent = this.t("Currency");
     el_field.appendChild(el_label);
 
     const el_select = document.createElement("select");
@@ -649,6 +668,11 @@ export default class RouteBuilder extends HTMLElement {
     });
 
     el_field.appendChild(el_select);
+
+    const el_hint = document.createElement("span");
+    el_hint.className = "route-builder__hint";
+    el_hint.textContent = this.t("optional");
+    el_field.appendChild(el_hint);
     return el_field;
   }
 
