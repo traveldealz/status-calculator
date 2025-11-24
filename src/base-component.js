@@ -260,14 +260,31 @@ export default class extends HTMLElement {
 
   loadParameters() {
     let searchParams = new URLSearchParams(location.hash.replace("#", ""));
+    let routeValue = "";
     let el = {};
     for (let key of searchParams.keys()) {
+      const value = searchParams.get(key);
       el = this.querySelector(`[name="${key}"]`);
       if (el) {
         "checkbox" === el.type
-          ? (el.checked = "true" === searchParams.get(key))
-          : (el.value = searchParams.get(key));
+          ? (el.checked = "true" === value)
+          : (el.value = value);
       }
+
+      if ("route" === key) {
+        routeValue = value?.replaceAll(",", "\n") ?? "";
+      }
+    }
+
+    // Mirror the route hash parameter into the visible inputs so the user sees the pre-filled segments.
+    if (routeValue) {
+      if (this.el_route_builder) {
+        this.el_route_builder.value = routeValue;
+      }
+      if (this.el_route_textarea) {
+        this.el_route_textarea.value = routeValue;
+      }
+      this.syncRouteValue();
     }
   }
 
