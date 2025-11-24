@@ -141,6 +141,37 @@ const ensureStyles = () => {
       display: flex;
       justify-content: flex-start;
     }
+    @media (prefers-color-scheme: dark) {
+      .route-builder__wrapper {
+        background: #0b1220;
+        border-color: #1f2937;
+        color: #e5e7eb;
+      }
+      .route-builder__row {
+        border-color: #1f2937;
+      }
+      .route-builder__field input,
+      .route-builder__field select {
+        background: #0f172a;
+        border-color: #374151;
+        color: #e5e7eb;
+      }
+      .route-builder__field select option {
+        background: #0f172a;
+        color: #e5e7eb;
+      }
+      .route-builder__segment button,
+      .route-builder__remove,
+      .route-builder__actions button {
+        border-color: #374151;
+        color: #e5e7eb;
+      }
+      .route-builder__segment button:hover,
+      .route-builder__remove:hover,
+      .route-builder__actions button:hover {
+        background: #1f2937;
+      }
+    }
   `;
   document.head.appendChild(style);
 };
