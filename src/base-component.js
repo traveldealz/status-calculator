@@ -219,7 +219,7 @@ export default class extends HTMLElement {
     );
 
     return Promise.all([
-      fetch("https://wheretocredit.com/api/calculate/mileage", {
+      fetch("https://data.travel-dealz.net/api/calculate/mileage", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

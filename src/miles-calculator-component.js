@@ -26,7 +26,7 @@ export default class extends BaseComponent {
 
   calculate() {
     this.$programs = [];
-    fetch("https://wheretocredit.com/api/airline_programs")
+    fetch("https://data.travel-dealz.net/api/airline_programs")
       .then((response) => response.json())
       .then((data) =>
         data.reduce((programs, item) => {
@@ -86,7 +86,7 @@ export default class extends BaseComponent {
           item.collected > 0
             ? item.collected.toLocaleString() + " "
             : "__(Spending-based)" + " "
-        }__(${item.rdmname})  
+        }__(${item.rdmname})
         ${
           item.statusmiles != item.collected && item.statusmiles > 1
             ? " + " + item.statusmiles.toLocaleString() + " " + item.qmname

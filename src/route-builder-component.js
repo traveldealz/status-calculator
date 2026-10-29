@@ -290,7 +290,7 @@ const sanitizeCurrency = (value) => {
 };
 
 const AIRLINE_ENDPOINT =
-  "https://data.test/api/airlines?fields[airlines]=iatacode,name,bookingclass&filter[has_earnings]=true";
+  "https://data.travel-dealz.net/api/airlines?fields[airlines]=iatacode,name,bookingclass&filter[has_earnings]=true";
 
 export default class RouteBuilder extends HTMLElement {
   static get observedAttributes() {
