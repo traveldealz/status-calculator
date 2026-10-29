@@ -48,6 +48,11 @@ const ensureStyles = () => {
       flex: 0 0 90px;
       max-width: 110px;
     }
+    .route-builder__field--fare {
+      flex: 1.2 1 180px;
+      min-width: 150px;
+      max-width: 220px;
+    }
     .route-builder__field--ticketing {
       flex: 1.4 1 220px;
       min-width: 170px;
@@ -83,6 +88,8 @@ const ensureStyles = () => {
       padding: 0.5rem;
       font-size: 0.95rem;
       text-transform: uppercase;
+      color: #111827;
+      font-weight: 600;
     }
     .route-builder__field select {
       border: 1px solid #d1d5db;
@@ -90,6 +97,18 @@ const ensureStyles = () => {
       padding: 0.5rem;
       font-size: 0.95rem;
       text-transform: none;
+      color: #111827;
+      font-weight: 600;
+    }
+    .route-builder__field input::placeholder {
+      color: #9ca3af;
+      font-weight: 400;
+      opacity: 1;
+    }
+    .route-builder__select--placeholder {
+      color: #6b7280;
+      font-weight: 400;
+      font-style: italic;
     }
     .route-builder__hint {
       font-size: 0.82rem;
@@ -166,6 +185,10 @@ const ensureStyles = () => {
         background: #0f172a;
         color: #e5e7eb;
       }
+      .route-builder__field input::placeholder,
+      .route-builder__select--placeholder {
+        color: #9ca3af;
+      }
       .route-builder__segment button,
       .route-builder__remove,
       .route-builder__actions button {
@@ -207,6 +230,12 @@ const CURRENCY_SYMBOL_MAP = {
   "€": "EUR",
   "£": "GBP",
 };
+const CABIN_CLASS_LABELS = {
+  Y: "Economy",
+  W: "Premium Economy",
+  C: "Business Class",
+  F: "First Class",
+};
 
 const createEmptyRoute = () => ({
   carrier: "",
@@ -223,6 +252,9 @@ const sanitizeAirline = (value) =>
 
 const sanitizeClass = (value) =>
   value ? value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 1) : "";
+
+const sanitizeFare = (value) =>
+  value ? value.toString().replace(/[:\n\r]/g, "").trim() : "";
 
 const sanitizeAirport = (value) =>
   value ? value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3) : "";
@@ -258,7 +290,7 @@ const sanitizeCurrency = (value) => {
 };
 
 const AIRLINE_ENDPOINT =
-  "https://data.travel-dealz.net/api/airlines?fields[airlines]=iatacode,name&filter[has_earnings]=true";
+  "https://data.test/api/airlines?fields[airlines]=iatacode,name,bookingclass&filter[has_earnings]=true";
 
 export default class RouteBuilder extends HTMLElement {
   static get observedAttributes() {
@@ -271,6 +303,7 @@ export default class RouteBuilder extends HTMLElement {
     this._pendingValue = "";
     this._initialized = false;
     this._pendingFocus = null;
+    this._controlsDisabled = false;
     this.airlines = RouteBuilder._airlinesCache
       ? [...RouteBuilder._airlinesCache]
       : [];
@@ -413,6 +446,7 @@ export default class RouteBuilder extends HTMLElement {
 
     this.restoreFocusState(focusData);
     this._pendingFocus = null;
+    this.applyControlsDisabledState();
 
     this.syncValue();
   }
@@ -431,25 +465,12 @@ export default class RouteBuilder extends HTMLElement {
     const el_airlineField = this.createAirlineField(route, routeIndex);
     el_airlineField.classList.add("route-builder__field--airline");
 
-    const el_classField = this.createInputField(
-      this.t("Booking Class"),
-      route.bookingClass,
-      (value) => {
-        const next = sanitizeClass(value);
-        this.routes[routeIndex].bookingClass = next;
-        this.syncValue();
-        return next;
-      },
-      {
-        maxLength: 1,
-        placeholder: "P",
-        pattern: "[A-Za-z]",
-        inputmode: "text",
-        title: "__(Booking class must be A-Z)",
-        name: this.fieldName("segment_booking_class", routeIndex),
-      }
-    );
+    const el_classField = this.createBookingClassField(route, routeIndex);
     el_classField.classList.add("route-builder__field--class");
+    const el_fareField = this.createFareField(route, routeIndex);
+    if (el_fareField) {
+      el_fareField.classList.add("route-builder__field--fare");
+    }
     const el_segmentsField = this.createSegmentsField(route, routeIndex);
     const el_ticketingField = this.createTicketingField(route, routeIndex);
     el_ticketingField.classList.add("route-builder__field--ticketing");
@@ -480,6 +501,9 @@ export default class RouteBuilder extends HTMLElement {
 
     el_row.appendChild(el_airlineField);
     el_row.appendChild(el_classField);
+    if (el_fareField) {
+      el_row.appendChild(el_fareField);
+    }
     el_row.appendChild(el_metaWrapper);
     el_row.appendChild(el_segmentsField);
     el_row.appendChild(el_removeBtn);
@@ -499,10 +523,12 @@ export default class RouteBuilder extends HTMLElement {
     el_select.dataset.field = "airline";
     el_select.dataset.routeIndex = `${routeIndex}`;
     el_select.disabled = 0 === this.airlines.length;
+    el_select.required = true;
     el_select.name = this.fieldName("segment_airline", routeIndex);
 
     const el_placeholder = document.createElement("option");
     el_placeholder.value = "";
+    el_placeholder.disabled = true;
     el_placeholder.textContent = this.airlines.length
       ? this.t("Select airline")
       : this.t("Loading airlines…");
@@ -526,6 +552,7 @@ export default class RouteBuilder extends HTMLElement {
     }
 
     el_select.value = route.carrier ?? "";
+    this.updateSelectPlaceholderState(el_select);
 
     el_select.addEventListener("change", (event) => {
       const prevCarrier = this.routes[routeIndex].carrier;
@@ -537,10 +564,114 @@ export default class RouteBuilder extends HTMLElement {
       ) {
         this.routes[routeIndex].ticketingCarrier = "";
       }
+      this.clearUnavailableFare(this.routes[routeIndex]);
       this.renderRoutes();
     });
 
     el_field.appendChild(el_select);
+    return el_field;
+  }
+
+  createFareField(route, routeIndex) {
+    const fares = this.getFareOptions(route);
+    if (!fares.length) {
+      return null;
+    }
+
+    const currentFare = sanitizeFare(route.extras);
+    if (currentFare && !fares.some((fare) => fare.value === currentFare)) {
+      fares.push({
+        key: currentFare,
+        value: currentFare,
+        label: formatFareLabel(currentFare),
+      });
+    }
+
+    const el_field = document.createElement("label");
+    el_field.className = "route-builder__field";
+
+    const el_label = document.createElement("span");
+    el_label.textContent = this.t("Fare");
+    el_field.appendChild(el_label);
+
+    const el_select = document.createElement("select");
+    el_select.dataset.field = "fare";
+    el_select.dataset.routeIndex = `${routeIndex}`;
+    el_select.name = this.fieldName("segment_fare", routeIndex);
+
+    const el_placeholder = document.createElement("option");
+    el_placeholder.value = "";
+    el_placeholder.disabled = true;
+    el_placeholder.textContent = this.t("Select fare");
+    el_select.appendChild(el_placeholder);
+
+    fares.forEach((fare) => {
+      const el_option = document.createElement("option");
+      el_option.value = fare.key;
+      el_option.textContent = fare.label;
+      el_select.appendChild(el_option);
+    });
+
+    const selectedFare = fares.find((fare) => fare.value === currentFare);
+    el_select.value = selectedFare?.key || "";
+    this.updateSelectPlaceholderState(el_select);
+    el_select.addEventListener("change", (event) => {
+      const fare = fares.find((option) => option.key === event.target.value);
+      this.routes[routeIndex].extras = fare ? fare.value : "";
+      this.updateSelectPlaceholderState(event.target);
+      if (
+        fare?.bookingClass &&
+        !sanitizeClass(this.routes[routeIndex].bookingClass)
+      ) {
+        this.routes[routeIndex].bookingClass = fare.bookingClass;
+        this.renderRoutes();
+        return;
+      }
+      this.syncValue();
+    });
+
+    el_field.appendChild(el_select);
+    return el_field;
+  }
+
+  createBookingClassField(route, routeIndex) {
+    const el_field = document.createElement("label");
+    el_field.className = "route-builder__field";
+
+    const el_label = document.createElement("span");
+    el_label.textContent = this.t("Booking Class");
+    el_field.appendChild(el_label);
+
+    const el_input = document.createElement("input");
+    el_input.type = "text";
+    el_input.value = route.bookingClass;
+    el_input.maxLength = 1;
+    el_input.placeholder = "P";
+    el_input.inputMode = "text";
+    el_input.pattern = "[A-Za-z]";
+    el_input.required = true;
+    el_input.title = this.t("Booking class must be A-Z");
+    el_input.name = this.fieldName("segment_booking_class", routeIndex);
+    el_input.dataset.field = "booking-class";
+    el_input.dataset.routeIndex = `${routeIndex}`;
+
+    const updateBookingClass = (event) => {
+      const next = sanitizeClass(event.target.value);
+      this.routes[routeIndex].bookingClass = next;
+      this.clearUnavailableFare(this.routes[routeIndex]);
+      this._pendingFocus = {
+        field: "booking-class",
+        routeIndex: `${routeIndex}`,
+        start: next.length,
+        end: next.length,
+      };
+      this.renderRoutes();
+    };
+
+    el_input.addEventListener("input", updateBookingClass);
+    el_input.addEventListener("change", updateBookingClass);
+    el_field.appendChild(el_input);
+
     return el_field;
   }
 
@@ -560,6 +691,7 @@ export default class RouteBuilder extends HTMLElement {
 
     const el_placeholder = document.createElement("option");
     el_placeholder.value = "";
+    el_placeholder.disabled = true;
     el_placeholder.textContent = route.carrier
       ? `${this.t("Same as airline")} (${route.carrier})`
       : this.t("Select ticketing airline");
@@ -583,10 +715,12 @@ export default class RouteBuilder extends HTMLElement {
     }
 
     el_select.value = route.ticketingCarrier || "";
+    this.updateSelectPlaceholderState(el_select);
 
     el_select.addEventListener("change", (event) => {
       const next = sanitizeAirline(event.target.value);
       this.routes[routeIndex].ticketingCarrier = next;
+      this.updateSelectPlaceholderState(event.target);
       this.syncValue();
     });
 
@@ -660,10 +794,12 @@ export default class RouteBuilder extends HTMLElement {
     }
 
     el_select.value = currentCurrency;
+    this.updateSelectPlaceholderState(el_select);
 
     el_select.addEventListener("change", (event) => {
       const next = sanitizeCurrency(event.target.value) || DEFAULT_CURRENCY;
       this.routes[routeIndex].currency = next;
+      this.updateSelectPlaceholderState(event.target);
       this.syncValue();
     });
 
@@ -708,6 +844,12 @@ export default class RouteBuilder extends HTMLElement {
     if (options.name) {
       el_input.name = options.name;
     }
+    if (options.dataField) {
+      el_input.dataset.field = options.dataField;
+    }
+    if (options.routeIndex !== undefined && options.routeIndex !== null) {
+      el_input.dataset.routeIndex = `${options.routeIndex}`;
+    }
     el_input.addEventListener("input", (event) => {
       const nextValue = onInput(event.target.value);
       event.target.value = nextValue ?? "";
@@ -715,6 +857,26 @@ export default class RouteBuilder extends HTMLElement {
     el_field.appendChild(el_input);
 
     return el_field;
+  }
+
+  updateSelectPlaceholderState(select) {
+    select.classList.toggle("route-builder__select--placeholder", !select.value);
+  }
+
+  setDisabled(disabled = false) {
+    this._controlsDisabled = Boolean(disabled);
+    if (this._initialized) {
+      this.renderRoutes();
+    }
+  }
+
+  applyControlsDisabledState() {
+    if (!this._controlsDisabled) {
+      return;
+    }
+    this.querySelectorAll("input, select, button").forEach((control) => {
+      control.disabled = true;
+    });
   }
 
   createSegmentsField(route, routeIndex) {
@@ -735,6 +897,11 @@ export default class RouteBuilder extends HTMLElement {
       const el_input = document.createElement("input");
       el_input.type = "text";
       el_input.maxLength = 3;
+      if (airportIndex < 2) {
+        el_input.required = true;
+      }
+      el_input.pattern = "[A-Za-z]{3}";
+      el_input.title = this.t("Airport code must be three letters");
       el_input.placeholder =
         airportPlaceholders[airportIndex % airportPlaceholders.length] || "AAA";
       el_input.value = airport;
@@ -935,6 +1102,72 @@ export default class RouteBuilder extends HTMLElement {
     };
   }
 
+  getSelectedAirline(route) {
+    const carrier = sanitizeAirline(route.carrier);
+    return this.airlines.find((airline) => airline.code === carrier) ?? null;
+  }
+
+  getFareOptions(route) {
+    const bookingClasses = this.getSelectedAirline(route)?.bookingclass;
+    if (!bookingClasses || "object" !== typeof bookingClasses) {
+      return [];
+    }
+
+    const selectedBookingClass = sanitizeClass(route.bookingClass);
+    const entries = selectedBookingClass
+      ? bookingClasses[selectedBookingClass]
+        ? [[selectedBookingClass, bookingClasses[selectedBookingClass]]]
+        : []
+      : Object.entries(bookingClasses);
+    const fares = new Map();
+
+    entries.forEach(([bookingClass, details]) => {
+      if (!details || "object" !== typeof details) {
+        return;
+      }
+      const fareValues = normalizeFareList(details.fares || details.fare);
+      if (!fareValues.length) {
+        return;
+      }
+      const cabinClass = formatCabinClass(details.cabinclass);
+      fareValues.forEach((fare) => {
+        const key = selectedBookingClass
+          ? fare
+          : `${fare}:${cabinClass || ""}`;
+        const labelParts = [formatFareLabel(fare)];
+        if (cabinClass) {
+          labelParts.push(`- ${cabinClass}`);
+        }
+        if (selectedBookingClass && bookingClass) {
+          labelParts.push(`(${bookingClass})`);
+        }
+        if (fares.has(key)) {
+          return;
+        }
+        fares.set(key, {
+          key,
+          value: fare,
+          label: labelParts.join(" "),
+          bookingClass,
+        });
+      });
+    });
+
+    return [...fares.values()].sort((a, b) => a.label.localeCompare(b.label));
+  }
+
+  clearUnavailableFare(route) {
+    const fare = sanitizeFare(route.extras);
+    if (!fare) {
+      route.extras = "";
+      return;
+    }
+    const fares = this.getFareOptions(route);
+    if (!fares.length || !fares.some((option) => option.value === fare)) {
+      route.extras = "";
+    }
+  }
+
   setTranslations(translations = []) {
     this.translations = translations || [];
     if (this._initialized) {
@@ -1016,17 +1249,72 @@ RouteBuilder.preloadAirlines();
 function formatAirlines(records = []) {
   return records
     .map((item) => {
-      const code = sanitizeAirline(item.code || item.iatacode || "");
+      const attributes = item.attributes || item;
+      const code = sanitizeAirline(
+        attributes.code ||
+          attributes.iatacode ||
+          item.code ||
+          item.iatacode ||
+          ""
+      );
       if (!code) {
         return null;
       }
       return {
         code,
-        name: item.name || code,
+        name: attributes.name || item.name || code,
+        bookingclass: normalizeBookingClasses(
+          attributes.bookingclass || item.bookingclass
+        ),
       };
     })
     .filter(Boolean)
     .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+function normalizeBookingClasses(bookingClasses) {
+  if (!bookingClasses || "object" !== typeof bookingClasses) {
+    return null;
+  }
+
+  return Object.entries(bookingClasses).reduce((normalized, [key, value]) => {
+    const bookingClass = sanitizeClass(key);
+    if (!bookingClass || !value || "object" !== typeof value) {
+      return normalized;
+    }
+    const fares = normalizeFareList(value.fares || value.fare);
+    const cabinclass = sanitizeFare(value.cabinclass);
+    if (!fares.length && !cabinclass) {
+      return normalized;
+    }
+    normalized[bookingClass] = {
+      ...(fares.length ? { fares } : {}),
+      ...(cabinclass ? { cabinclass } : {}),
+    };
+    return normalized;
+  }, {});
+}
+
+function normalizeFareList(fares) {
+  if (Array.isArray(fares)) {
+    return [...new Set(fares.map(sanitizeFare).filter(Boolean))];
+  }
+  if (fares && "object" === typeof fares) {
+    return normalizeFareList(Object.values(fares));
+  }
+  const fare = sanitizeFare(fares);
+  return fare ? [fare] : [];
+}
+
+function formatFareLabel(fare) {
+  return sanitizeFare(fare).replace(/\S+/g, (word) =>
+    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  );
+}
+
+function formatCabinClass(cabinClass) {
+  const sanitizedCabinClass = sanitizeFare(cabinClass);
+  return CABIN_CLASS_LABELS[sanitizedCabinClass] || sanitizedCabinClass;
 }
 const airportPlaceholders = Array.from({ length: 26 }, (_, i) => {
   const letter = String.fromCharCode(65 + i);

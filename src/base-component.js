@@ -15,6 +15,18 @@ const normalizeCurrency = (value) => {
   return SYMBOL_TO_CURRENCY[value] || value.toUpperCase();
 };
 
+const parseApiResponse = async (response) => {
+  const payload = await response.json().catch(() => null);
+  if (!response.ok) {
+    const message =
+      payload?.message ||
+      payload?.error ||
+      `API request failed with status ${response.status}`;
+    throw new Error(message);
+  }
+  return payload;
+};
+
 export default class extends HTMLElement {
   constructor() {
     super();
@@ -57,9 +69,20 @@ export default class extends HTMLElement {
 
     this.querySelector("form").addEventListener("submit", (event) => {
       event.preventDefault();
+      if (!event.currentTarget.checkValidity()) {
+        event.currentTarget.reportValidity();
+        return;
+      }
       this.syncRouteValue();
       this.loading_start();
-      this.calculate();
+      try {
+        const result = this.calculate();
+        if (result && "function" === typeof result.catch) {
+          result.catch((error) => this.handleError(error));
+        }
+      } catch (error) {
+        this.handleError(error);
+      }
     });
 
     if (this.hasAttribute("route")) {
@@ -163,7 +186,7 @@ export default class extends HTMLElement {
       .flat();
     this.$segments = itineraries.flat();
     this.update_hash();
-    this.query(itineraries);
+    const query = this.query(itineraries);
 
     for (elem in this.$segments.carrier) {
       if (elem.carrier == "AY") {
@@ -175,6 +198,8 @@ export default class extends HTMLElement {
         //alert('Leider können wir die Finnair-Plus-Punkte für Finnair-Flüge nicht berechnen' );
       }
     }
+
+    return query;
   }
 
   async query(itineraries) {
@@ -193,7 +218,7 @@ export default class extends HTMLElement {
       })
     );
 
-    Promise.all([
+    return Promise.all([
       fetch("https://wheretocredit.com/api/calculate/mileage", {
         method: "POST",
         headers: {
@@ -202,18 +227,15 @@ export default class extends HTMLElement {
         body,
       }),
     ])
-      .then((responses) =>
-        Promise.all(responses.map((response) => response.json()))
-      )
+      .then((responses) => Promise.all(responses.map(parseApiResponse)))
       .then((responses) => this.calculate_totals(responses[0]))
-      .catch((error) => {
-        this.loading_end();
-        this.el_error.innerHTML = `${error.toString()}`;
-        this.el_error.classList.remove("hidden");
-      });
+      .catch((error) => this.handleError(error));
   }
 
   calculate_totals(response) {
+    if (!response?.value || !Array.isArray(response.value)) {
+      throw new Error("Invalid response from mileage API.");
+    }
     let totals = response.value.reduce((totals, itinerary) => {
       itinerary.value.totals.forEach((item) => {
         item.rdm
@@ -256,6 +278,12 @@ export default class extends HTMLElement {
   loading_end() {
     this.el_button.disabled = false;
     this.el_loading.classList.add("hidden");
+  }
+
+  handleError(error) {
+    this.loading_end();
+    this.el_error.textContent = error?.message || error?.toString() || "Error";
+    this.el_error.classList.remove("hidden");
   }
 
   loadParameters() {
@@ -309,6 +337,10 @@ export default class extends HTMLElement {
     if (builderSection && expertSection) {
       builderSection.classList.toggle("hidden", expertMode);
       expertSection.classList.toggle("hidden", !expertMode);
+    }
+
+    if (this.el_route_builder?.setDisabled) {
+      this.el_route_builder.setDisabled(Boolean(expertMode));
     }
 
     if (expertMode && this.el_route_builder && this.el_route_textarea) {
