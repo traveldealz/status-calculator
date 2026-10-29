@@ -1,6 +1,6 @@
 {
   "name": "@traveldealz/status-calculator",
-  "version": "1.9.7",
+  "version": "1.9.8",
   "type": "module",
   "main": "src/index.js",
   "exports": {
